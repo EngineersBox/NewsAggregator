@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    // u6250082 Xuguang Song
     <h1>News Aggregator</h1>
     <br/>
     <input placeholder="Start your search" v-model="query"/>
@@ -51,7 +50,7 @@ export default {
     search: function() {
       var that = this;
       const s = Date.now();
-      this.$http.get('https://anu.jkl.io/search', {params: {query: this.query}}).then(response => {
+      this.$http.get('http://localhost:3001/search', {params: {query: this.query}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
         console.log(response.body);
@@ -78,7 +77,7 @@ export default {
       var keyword = e.target.dataset["val"];
       this.query = keyword;
       const s = Date.now();
-      this.$http.get('https://anu.jkl.io/search', {params: {query: keyword}}).then(response => {
+      this.$http.get('http://localhost:3001/search', {params: {query: keyword}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
         console.log(response.body);
@@ -103,7 +102,7 @@ export default {
       // u6250082 Xuguang Song
       var that = this;
       const s = Date.now();
-      this.$http.get('https://anu.jkl.io/origin_search', {params: {query: this.query}}).then(response => {
+      this.$http.get('http://localhost:3001/origin_search', {params: {query: this.query}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
         console.log(response.body);
@@ -150,3 +149,12 @@ el-button {
   font-weight:870;
 }
 </style>
+
+
+
+
+
+
+
+
+
