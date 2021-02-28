@@ -11,3 +11,6 @@ build_docker_ui:
 
 start_docker_ui:
 	@cd frontend && docker run -it -p $(VUE_APP_PORT):$(VUE_APP_PORT) --rm --name $(DOCKER_BUILD_NAME) vuejs-cookbook/dockerize-vuejs-app && open http://localhost:$(VUE_APP_PORT)
+
+start_flask:
+	@sh ./run_server.sh
