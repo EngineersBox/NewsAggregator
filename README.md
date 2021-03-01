@@ -8,7 +8,7 @@ Setting up this repository is very straight forward, simply run the following to
 make install
 ```
 
-## Build and the Elasticsearch UI
+## Build the UI with Docker
 
 Running the UI for searching keywords is done via a dockerized compilation of the frontend. To compile it into a docker container, run the following:
 
@@ -20,4 +20,10 @@ To run the container use the following:
 
 ```bash
 make start_docker_ui
+```
+
+## Run the flask UI
+
+```bash
+make start_flask
 ```
