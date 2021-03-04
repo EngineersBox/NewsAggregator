@@ -2,3 +2,4 @@
 
 __pycache__
 frontend/package-lock.json
+*.pyc
