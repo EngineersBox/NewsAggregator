@@ -19,7 +19,7 @@ Example of NGINX for rate limiting config:
 limit_req_zone <ADDR> zone=ip:10m rate=5r/s
 
 server {
-    listen 80;
+    listen <PORT>;
     location <URL> {
         limit_req zone=ip burst=<BURST> delay=<DELAY>
         proxy_pass <UPSTREAM>
@@ -31,3 +31,4 @@ server {
 |---------|-------|
 | `LIMIT` | `30`  |
 | `BURST` | `12`  |
+| `PORT`  | `90`  |
