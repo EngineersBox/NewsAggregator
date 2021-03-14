@@ -1,0 +1,11 @@
+{
+  "name": "ratelimiter",
+  "version": "1.0.0",
+  "description": "NGINX style rate limiting implementation for sitting infront of redis cache",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "Apache-2.0"
+}
