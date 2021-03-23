@@ -1,9 +1,11 @@
 [package]
 name = "CuckooFilter"
 version = "0.1.0"
-authors = ["u6940136@anu.edu.au <toastcraft.info@gmail.com>"]
+authors = ["u6940136@anu.edu.au <toastcraft.info@gmail.com>", "WeiXin Fam <wxinfam18@gmail.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+redis = "0.20.0"
+probabilistic-collections = "0.7.0"
