@@ -20,7 +20,7 @@ fn main() {
 
     }
 
-    if action == "delete"{
+    else if action == "delete"{
         cuckoo_filter.remove(&item);
         match delete(item) {
             Ok(_) => println!("Item deleted"),
