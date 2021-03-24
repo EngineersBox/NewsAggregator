@@ -61,6 +61,7 @@ class RateLimiter:
         a HTTP_429_TooManyRequests exception. Otherwise do nothing and return the
         current request count
         '''
+        # TODO: To be completed as part of REDIS-30
         pass
 
     def getExpiryTime(self) -> int:
