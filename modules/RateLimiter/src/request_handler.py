@@ -90,6 +90,5 @@ class RateLimiter:
         '''
         Get an approximation of the duration left for a given IP address
         '''
-        expire = self.redis.pttl(self._rate_limit_key)
-        expire = expire / 1000.0 if expire > 0 else float(self.expiry)
-        return expire if self.has_been_reached() else expire / (self._max_requests - self.get_usage())
+        # TODO: In subsequent ticket
+        pass
