@@ -6,6 +6,6 @@ CONNECTION = {
 LIMITING = {
     "key_prefix": "ratelimit:", # Prefix for rate limiter keys
     # TODO: Find an acceptable value for the max_reqs based on use cases
-    "max_reqs": 30, # Maximum number of requests in the expiry period
+    "max_reqs": 0, # Maximum number of requests in the expiry period
     "expiry": 1 # Expiry period for an IP address in seconds
 }

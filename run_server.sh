@@ -1,1 +1,1 @@
-flask run --port 3001
+python3.8 -m flask run --port 3001
