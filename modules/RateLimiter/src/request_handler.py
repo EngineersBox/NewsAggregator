@@ -1,6 +1,8 @@
 import functools
 from redis import Redis, ConnectionPool
-from config import CONNECTION, LIMITING
+from .config import LIMITING, CONNECTION
+from .exceptions import HTTP_429_TooManyRequests, HTTP_400_BadRequest
+from flask import request, jsonify
 
 REDIS_CONNECTION_CONFIG = ConnectionPool(
     host=CONNECTION["host_address"],
@@ -19,7 +21,7 @@ def keyFormat(ip_addr: str) -> str:
 
 class RateLimiter:
 
-    def __init__(self, client_addr: str, max_reqs: int = LIMITING["max_reqs"], expiry: int = LIMITING["expiry"]):
+    def __init__(self, client_addr: str = "", max_reqs: int = LIMITING["max_reqs"], expiry: int = LIMITING["expiry"]):
         '''
         Creates a rate limiter handler for a given client address (request IP) with
         given arguments
@@ -35,7 +37,7 @@ class RateLimiter:
         self.expiry = expiry
         self.redis = Redis(connection_pool=REDIS_CONNECTION_CONFIG)
 
-    def __call__(self, func: function) -> function:
+    def __call__(self, func):
         '''
         Allows calling as a decorator on a method
 
@@ -45,8 +47,28 @@ class RateLimiter:
 
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            with self:
-                return func(*args, **kwargs)
+            self.client_addr = request.remote_addr
+            try:
+                with self:
+                    return func(*args, **kwargs)
+            except HTTP_429_TooManyRequests:
+                response = {
+                    'status_code': 429,
+                    'status': 'You have exceeded the rate limit of {0} requests per {1} seconds'.format(LIMITING["max_reqs"], LIMITING["expiry"])
+                }
+                return jsonify(response), 429
+            except HTTP_400_BadRequest:
+                response = {
+                    'status_code': 400,
+                    'status': 'Request not formatted correctly'
+                }
+                return jsonify(response), 400
+            except:
+                response = {
+                    'status_code': 500,
+                    'status': 'An unknown internal error occurred'
+                }
+                return jsonify(response), 500
         return wrapper
 
     def __enter__(self):
@@ -68,6 +90,5 @@ class RateLimiter:
         '''
         Get an approximation of the duration left for a given IP address
         '''
-        expire = self.redis.pttl(self._rate_limit_key)
-        expire = expire / 1000.0 if expire > 0 else float(self.expiry)
-        return expire if self.has_been_reached() else expire / (self._max_requests - self.get_usage())
+        # TODO: In subsequent ticket
+        pass
