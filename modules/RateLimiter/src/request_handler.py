@@ -1,8 +1,6 @@
 import functools, socket
 from redis import Redis, ConnectionPool
-from .lua_script_result import LuaScriptResult
-from .invoker import Invoker, InvocationSchema
-from .config import LIMITING, CONNECTION, LUA_INCR_TTL
+from .config import LIMITING, CONNECTION
 from .exceptions import HTTP_429_TooManyRequests, HTTP_400_BadRequest
 from flask import request, jsonify
 
@@ -38,13 +36,6 @@ class RateLimiter:
         self.max_reqs = max_reqs
         self.expiry = expiry
         self.redis = Redis(connection_pool=REDIS_CONNECTION_CONFIG)
-        self.script = RateLimiter.getLuaScript()
-        # Create a schema for the LuaScriptResult constructor arguments:
-        # LuaScriptResult.__init__(reqcount: int, timeleft: int)
-        self.script_result_schema = [
-            InvocationSchema("reqcount", int),
-            InvocationSchema("timeleft", int)
-        ]
 
     def __call__(self, func):
         '''
@@ -72,10 +63,10 @@ class RateLimiter:
                     'status': e.message
                 }
                 return jsonify(response), 400
-            except:
+            except Exception as e:
                 response = {
                     'status_code': 500,
-                    'status': 'An unknown internal error occurred'
+                    'status': 'An unknown internal error occurred: ' + str(e)
                 }
                 return jsonify(response), 500
         return wrapper
@@ -83,7 +74,7 @@ class RateLimiter:
     def __enter__(self):
         return self.incrementRate()
 
-    def __exit__(self):
+    def __exit__(self, a, b, c):
         return
 
     @staticmethod
@@ -108,19 +99,34 @@ class RateLimiter:
             raise HTTP_400_BadRequest("Invalid client address: {0}".format(ip_addr))
         # Format the DB key as  "<PREFIX>:<IP ADDRESS>"
         return LIMITING["key_prefix"] + ip_addr
-    
-    @staticmethod
-    def getLuaScript() -> str:
-        with open(LUA_INCR_TTL["location"], "r") as lua_script:
-            # Return the entire Lua script as a string
-            return lua_script.read()
 
-    def handleRedisResult(self, result: LuaScriptResult):
+    def handleRedisResult(self, reqcount: int, timeleft: int):
         # Check if the request has exceeded the maximum in this time frame
-        if (result.reqcount > self.max_reqs):
+        if (reqcount > self.max_reqs):
             # If the request count has exceeded the max, return an HTTP 429 with the time left
-            raise HTTP_429_TooManyRequests(result.timeleft)
-        return 200
+            raise HTTP_429_TooManyRequests(timeleft)
+        return 0
+
+    def incrementKey(self) -> int:
+        '''
+        Increment the request count for the request IP address
+        '''
+        return self.redis.incr(self.keyFormat(self.client_addr))
+
+    def setKeyExpiry(self) -> int:
+        '''
+        Set the expiry time in milliseconds for the IP address
+        '''
+        return self.redis.pexpire(
+            self.keyFormat(self.client_addr),
+            self.expiry
+        )
+
+    def getKeyExpiryDuration(self):
+        '''
+        Retrieve the time left until requests can be made again in milliseconds
+        '''
+        return self.redis.pttl(self.keyFormat(self.client_addr))
 
     def incrementRate(self) -> int:
         '''
@@ -128,18 +134,15 @@ class RateLimiter:
         a HTTP_429_TooManyRequests exception. Otherwise do nothing and return the
         current request count
         '''
-        # Execute the Lua script with key, max_reqs and expiry arguments
-        result = self.redis.eval(
-            self.script,
-            1, # Number of keys before arguments
-            self.keyFormat(self.client_addr), # KEYS[1]
-            self.max_reqs, # ARGS[1]
-            self.expiry # ARGS[2]
-        )
-        # Create an invoker instance to handle generic argument passing to a LuaScriptResult instance
-        invoker = Invoker(LuaScriptResult, self.script_result_schema)
-        # Invoke an instance of LuaScriptResult with the results from the script (list)
-        lua_result =  invoker.reflectInvoke(result)
-        print(lua_result)
-        # Handle the results accordingly
-        return self.handleRedisResult(lua_result)
+        # Increment the request count
+        keyCount = self.incrementKey()
+        timeleft = 0
+        # Check if we have exceed the request threshold
+        if (keyCount <= self.max_reqs):
+            # If we are still within the threshold, then set the expiry for the key
+            timeleft = self.setKeyExpiry()
+        else:
+            # Otherwise find how much longer till the fixed window expires
+            timeleft = self.getKeyExpiryDuration()
+        # Handle the results of the request theshold
+        return self.handleRedisResult(keyCount, timeleft)

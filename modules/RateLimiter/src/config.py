@@ -9,6 +9,3 @@ LIMITING = {
     "max_reqs": 2, # Maximum number of requests in the expiry period
     "expiry": 1000  # Expiry period for an IP address in milliseconds (E.g. 30000ms = 30s)
 }
-LUA_INCR_TTL = {
-    "location": "resources/ratelimiter/incr_ttl.lua" # Relative location of the lua script
-}
