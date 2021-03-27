@@ -1,8 +1,6 @@
 import functools, socket, time
 from redis import Redis, ConnectionPool
-from .lua_script_result import LuaScriptResult
-from .invoker import Invoker, InvocationSchema
-from .config import LIMITING, CONNECTION, LUA_INCR_TTL
+from .config import LIMITING, CONNECTION
 from .exceptions import HTTP_429_TooManyRequests, HTTP_400_BadRequest
 from flask import request, jsonify
 
@@ -57,10 +55,10 @@ class RateLimiter:
                     'status': e.message
                 }
                 return jsonify(response), 400
-            except:
+            except Exception as e:
                 response = {
                     'status_code': 500,
-                    'status': 'An unknown internal error occurred'
+                    'status': 'An unknown internal error occurred: ' + str(e)
                 }
                 return jsonify(response), 500
         return wrapper
@@ -68,7 +66,7 @@ class RateLimiter:
     def __enter__(self):
         return self.checkWindow()
 
-    def __exit__(self):
+    def __exit__(self, a, b, c):
         return
 
     @staticmethod
@@ -94,34 +92,42 @@ class RateLimiter:
         # Format the DB key as  "<PREFIX>:<IP ADDRESS>"
         return LIMITING["key_prefix"] + ip_addr
 
-    def expireKey(self) -> int:
+    def rangeKey(self) -> list:
         # The current time since epoch in milliseconds
-        currentMillis = time.time() * 1000
+        currentMillis = int(time.time()) * 1000
         # Calculate when the key will expire relative to the window
-        expiresAt = currentMillis - self.window
-        return self.redis.zrevrangebyscore(
+        keyWindow = currentMillis - self.window
+        self.redis.zrangebyscore(
             self.keyFormat(self.client_addr),
-            "-inf",
-            expiresAt
+            0,
+            keyWindow
         )
-    
-    def getKeyCardinality(self) -> int:
-        # Get the cardinality of the key
-        return self.redis.zcard(self.keyFormat(self.client_addr))
+        return self.redis.zrange(
+            self.keyFormat(self.client_addr),
+            0,
+            -1
+        )
     
     def incrementKey(self) -> int:
         # The current time since epoch in milliseconds
         currentMillis = time.time() * 1000
         return self.redis.zadd(
             self.keyFormat(self.client_addr),
-            currentMillis,
-            currentMillis
+            {currentMillis: currentMillis}
         )
 
-    def checkWindow(self):
-        self.expireKey()
-        card = self.getKeyCardinality()
-        if (card < self.expiry):
+    def expirekey(self) -> int:
+        return self.redis.pexpire(
+            self.keyFormat(self.client_addr),
+            self.window
+        )
+
+    def checkWindow(self) -> int:
+        numberOfWindowedRequests = self.rangeKey()
+        print(numberOfWindowedRequests)
+        numberOfWindowedRequests = len(numberOfWindowedRequests)
+        if (max(0, self.max_reqs - numberOfWindowedRequests)):
             self.incrementKey()
-        else:
-            raise HTTP_429_TooManyRequests(card - self.expiry)
+            return self.expirekey()
+        self.expirekey()
+        raise HTTP_429_TooManyRequests(numberOfWindowedRequests - self.expiry)
