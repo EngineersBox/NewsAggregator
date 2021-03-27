@@ -4,8 +4,7 @@ from minitask.simple_search import simple_match_search
 from elasticsearch import Elasticsearch
 from summary_1.summary import body_summary
 from knn_indexing.index import knn_query
-
-
+import redis
 
 # INDEX_NAME = 'news'
 
@@ -20,6 +19,14 @@ app = Flask(__name__)
 cors = CORS(app)
 
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+# reference of kristoff-it 2020 https://github.com/kristoff-it/redis-cuckoofilter
+rd = redis.Redis()
+# load the module in Cuckoofilter remember
+rd.execute_command("cf.init", "test", "64k")
+ 
+def fingerprint(x):
+    return ord(x[0])
 
 @app.route('/')
 def index_page():
@@ -39,13 +46,21 @@ def search():
     query = request.args.get('query', None)
     if query:
         print('query is %s' % query)
-        res = simple_match_search(ES, 'news', query)
-        list_res = res['hits']['hits']
-        for one in list_res:
-            # u6250082 Xuguang Song
-            sum_txt = body_summary(one['_source']['art'])
-            one['_source']['summary'] = ' '.join(sum_txt)
-        return jsonify(list_res)
+
+        in_result = rd.execute_command("cf.check", "test", hash(query), fingerprint(query))
+        if in_result:
+            result_value = rd.execute_command("get", query)
+            return jsonify(result_value)
+        else:
+            res = simple_match_search(ES, 'news', query)
+            list_res = res['hits']['hits']
+            for one in list_res:
+                # u6250082 Xuguang Song
+                sum_txt = body_summary(one['_source']['art'])
+                one['_source']['summary'] = ' '.join(sum_txt)
+            rd.execute_command("cf.add", "test", hash(query), fingerprint(query))
+            rd.execute_command("set", query, list_res)
+            return jsonify(list_res)
     return jsonify([])
 
 @app.route('/search')
