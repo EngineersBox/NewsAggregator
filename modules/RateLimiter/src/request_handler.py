@@ -12,6 +12,15 @@ REDIS_CONNECTION_CONFIG = ConnectionPool(
     db=CONNECTION["db"]
 )
 
+def keyFormat(ip_addr: str) -> str:
+    '''
+    Formats a redis key with the prefix from config
+
+    # Arguments:
+    - ip_addr <str> :: IP address of the request (E.g. "104.25.94.32")
+    '''
+    return LIMITING["key_prefix"] + "{0}".format(ip_addr)
+
 class RateLimiter:
 
     def __init__(self, client_addr: str = "", max_reqs: int = LIMITING["max_reqs"], expiry: int = LIMITING["expiry"]):
