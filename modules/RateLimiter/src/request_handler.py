@@ -93,41 +93,65 @@ class RateLimiter:
         return LIMITING["key_prefix"] + ip_addr
 
     def rangeKey(self) -> list:
+        '''
+        Get a list of all requests within the last windowed period
+        '''
         # The current time since epoch in milliseconds
         currentMillis = int(time.time()) * 1000
-        # Calculate when the key will expire relative to the window
+        # Calculate how far back keys should be taken into account relative to the window
         keyWindow = currentMillis - self.window
         self.redis.zrangebyscore(
             self.keyFormat(self.client_addr),
             0,
             keyWindow
         )
+        # Get a list of all of the entries that are within the window
         return self.redis.zrange(
             self.keyFormat(self.client_addr),
             0,
             -1
         )
     
-    def incrementKey(self) -> int:
+    def addRequestTimestamp(self) -> int:
+        '''
+        Create a request entry with an epoch timestamp for this window
+        '''
         # The current time since epoch in milliseconds
         currentMillis = time.time() * 1000
+        # Create a keyed etry of the epoch time that a request was made
         return self.redis.zadd(
             self.keyFormat(self.client_addr),
             {currentMillis: currentMillis}
         )
 
-    def expirekey(self) -> int:
+    def setTimestampExpiry(self) -> int:
+        '''
+        Set an expiry time relative to the start of the current window
+        for this entry set on this key
+
+        Note: the expiry time is set in milliseconds.
+        '''
+        # Set an expiry time in milliseconds for the key
         return self.redis.pexpire(
             self.keyFormat(self.client_addr),
             self.window
         )
 
     def checkWindow(self) -> int:
-        numberOfWindowedRequests = self.rangeKey()
-        print(numberOfWindowedRequests)
-        numberOfWindowedRequests = len(numberOfWindowedRequests)
+        '''
+        If the current request count is greater than the max requests in the window
+        then raise a HTTP_429_TooManyRequests exception. Otherwise do nothing and
+        return the current request count in this window
+        '''
+        # Remove key timestamps before the window start and find how many are currently in the window
+        numberOfWindowedRequests = len(self.rangeKey())
+        # Check if there are still requests available in the window
         if (max(0, self.max_reqs - numberOfWindowedRequests)):
-            self.incrementKey()
-            return self.expirekey()
-        self.expirekey()
+            # Add a timestamp into the keyed entries for thsi request
+            self.addRequestTimestamp()
+            # Set an expiry time from now + window duration to expire the entry
+            return self.setTimestampExpiry()
+        # Set an expiry time from now + window duration to expire the entry
+        self.setTimestampExpiry()
+        # Since we exceeced the request cound in this window, throw an HTTP 429
         raise HTTP_429_TooManyRequests(numberOfWindowedRequests - self.expiry)
