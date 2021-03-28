@@ -12,7 +12,7 @@ import redis
 
 INDEX_NAME = 'knn_index'
 
-ES = Elasticsearch("https://admin:admin@localhost:9200", verify_certs=False, ssl_show_warn=False)
+ES = Elasticsearch("http://admin:admin@localhost:9200", verify_certs=False, ssl_show_warn=False)
 
 app = Flask(__name__)
 
@@ -23,7 +23,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # reference of kristoff-it 2020 https://github.com/kristoff-it/redis-cuckoofilter
 rd = redis.Redis()
 # load the module in Cuckoofilter remember
-rd.execute_command("cf.init", "test", "64k")
+try:
+    rd.execute_command("cf.init", "test2", "64k")
+except:
+    print("the filter is already initialized")
  
 def fingerprint(x):
     return ord(x[0])
@@ -47,7 +50,7 @@ def search():
     if query:
         print('query is %s' % query)
 
-        in_result = rd.execute_command("cf.check", "test", hash(query), fingerprint(query))
+        in_result = rd.execute_command("cf.check", "test2", hash(query), fingerprint(query))
         if in_result:
             result_value = rd.execute_command("get", query)
             return jsonify(result_value)
@@ -58,7 +61,7 @@ def search():
                 # u6250082 Xuguang Song
                 sum_txt = body_summary(one['_source']['art'])
                 one['_source']['summary'] = ' '.join(sum_txt)
-            rd.execute_command("cf.add", "test", hash(query), fingerprint(query))
+            rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
             rd.execute_command("set", query, list_res)
             return jsonify(list_res)
     return jsonify([])
