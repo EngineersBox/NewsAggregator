@@ -52,9 +52,13 @@ def search():
 
         in_result = rd.execute_command("cf.check", "test2", hash(query), fingerprint(query))
         if in_result:
+            print('query is checked by cuckoofilter')
+            print('query is probably inside cuckoofilter')
             result_value = rd.execute_command("get", query)
             return jsonify(result_value)
         else:
+            print('query is checked by cuckoofilter')
+            print('query is not inside cuckoofilter')
             res = simple_match_search(ES, 'news', query)
             list_res = res['hits']['hits']
             for one in list_res:
