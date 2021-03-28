@@ -73,6 +73,7 @@ def search():
 @app.route('/search')
 @cross_origin()
 def knn_search():
+    
     query = request.args.get('query', None)
     if query:
         res = knn_query(query)
