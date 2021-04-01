@@ -1,0 +1,13 @@
+[package]
+name = "KeyedRateLimiter"
+version = "0.1.0"
+authors = ["Jack Kilrain <toastcraft.info@gmail.com>"]
+
+[lib]
+crate-type = ["dylib"]
+
+[dependencies]
+redis-module = "0.13.0"
+
+[build-dependencies]
+cc = "1.0.28"
