@@ -1,6 +1,16 @@
 # Redis GCRA Rate Limiter
 
-GCRA is a variation of leaky bucket.
+GCRA is a variation of leaky bucket designed for Asynchronous Transfer Mode (ATM) networks.
+GCRA works by tracking remaining limit through a time called the “theoretical arrival time” (TAT),
+which is seeded on the first request by adding a duration representing its cost to the current time.
+The cost is calculated as a multiplier of our “emission interval” (T), which is derived from the rate
+at which we want the bucket to refill. When any subsequent request comes in, we take the existing TAT,
+subtract a fixed buffer representing the limit’s total burst capacity from it (τ + T), and compare the
+result to the current time. This result represents the next time to allow a request. If it’s in the
+past, we allow the incoming request, and if it’s in the future, we don’t. After a successful request,
+a new TAT is calculated by adding T.
+
+![GCRA Flow Chart](https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/Dual_LBC.JPG/443px-Dual_LBC.JPG)
 
 ## Python Example Code to reference
 
