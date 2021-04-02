@@ -25,5 +25,8 @@ pub fn ratelimit_check(ctx: &Context, args: Vec<String>) -> RedisResult {
         "Querying rate limit for: {:?}",
         resolver.all_as_str()
     ).as_str());
+
+    // TODO: Implement check here to get the amount of requests left and time left
+
     return RedisResult::Ok(RedisValue::from(""))
 }

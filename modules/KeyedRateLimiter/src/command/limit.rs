@@ -26,5 +26,8 @@ pub fn ratelimit_limit(ctx: &Context, args: Vec<String>) -> RedisResult {
         "Rate limiting for: {:?}",
         resolver.all_as_str()
     ).as_str());
+
+    // TODO: Implement rate limiting here using the GCRA algorithm (variant of leaky bucket)
+
     return RedisResult::Ok(RedisValue::from(""))
 }
