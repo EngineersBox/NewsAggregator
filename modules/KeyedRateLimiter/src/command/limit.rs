@@ -18,6 +18,10 @@ pub fn ratelimit_limit(ctx: &Context, args: Vec<String>) -> RedisResult {
     let mut resolver: Resolver = Resolver::new(
         Schema::new(
             Box::new(redis_command_error_handler),
+            // This requires constant/compile-time allocation guarantees
+            // as such any allocations should be derivable, which means
+            // that using the vec![...] macro will not work. As such this
+            // method does manual allocation to guarantee it.
             construct_arguments_schema(),
         ),
         args
