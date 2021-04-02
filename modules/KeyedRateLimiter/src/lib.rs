@@ -6,7 +6,9 @@ mod resolver;
 extern crate redis_module;
 extern crate alloc;
 
+#[allow(unused_imports)]
 use command::limit::ratelimit_limit;
+#[allow(unused_imports)]
 use command::check::ratelimit_check;
 
 #[derive(Debug)]
@@ -17,6 +19,7 @@ struct MyType {
 redis_module! {
     name: "ratelimit",
     version: 1,
+    data_types: [],
     commands: [
         ["rl.limit", ratelimit_limit, "write", 1, 1, 1],
         ["rl.check", ratelimit_check, "readonly", 1, 1, 1],

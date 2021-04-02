@@ -1,5 +1,5 @@
 [package]
-name = "KeyedRateLimiter"
+name = "keyed_rate_limiter"
 version = "0.1.0"
 authors = ["Jack Kilrain <toastcraft.info@gmail.com>"]
 
