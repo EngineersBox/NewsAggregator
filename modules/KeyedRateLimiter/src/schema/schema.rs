@@ -1,7 +1,4 @@
-use redis_module::native_types::RedisType;
 use schema::arg_type::ArgType;
-use std::error::Error;
-use alloc::vec::IntoIter;
 use redis_module::RedisError;
 
 pub struct Argument {
@@ -11,9 +8,9 @@ pub struct Argument {
 }
 
 impl Argument {
-    pub fn new(name: &str, idx: usize, arg: ArgType) -> Argument {
+    pub fn new(name: String, idx: usize, arg: ArgType) -> Argument {
         Argument{
-            name,
+            name: name.as_str(),
             idx,
             arg,
         }
@@ -24,14 +21,14 @@ type ErrorHandler = dyn Fn(RedisError) -> bool; // Return true if can continue, 
 
 pub struct Schema {
     pub error_handler: Box<ErrorHandler>,
-    pub args: IntoIter<Argument>,
+    pub args: Vec<Argument>,
 }
 
 impl Schema {
     pub fn new(error_handler: Box<ErrorHandler>, args: Vec<Argument>) -> Schema {
         Schema {
             error_handler,
-            args: args.into_iter()
+            args
         }
     }
 }
