@@ -1,6 +1,16 @@
 # Redis GCRA Rate Limiter
 
+## Leaky Bucket
+
 GCRA is a variation of leaky bucket designed for Asynchronous Transfer Mode (ATM) networks.
+Leaky bucket is essentially just a container that has a capacity, where the input is larger
+than the output. This takes bursty rates and evens it out to a regular rate defined by the
+output size/rate.
+
+![Leaky Bucket](https://brandur.org/assets/images/rate-limiting/leaky-bucket.svg)
+
+## Generic Cell Rate Algorithm (GCRA)
+
 GCRA works by tracking remaining limit through a time called the “theoretical arrival time” (TAT),
 which is seeded on the first request by adding a duration representing its cost to the current time.
 The cost is calculated as a multiplier of our “emission interval” (T), which is derived from the rate
@@ -9,6 +19,16 @@ subtract a fixed buffer representing the limit’s total burst capacity from it 
 result to the current time. This result represents the next time to allow a request. If it’s in the
 past, we allow the incoming request, and if it’s in the future, we don’t. After a successful request,
 a new TAT is calculated by adding T.
+
+#### Allowed Request
+
+![GCRA Allowed Request](https://brandur.org/assets/images/rate-limiting/allowed-request.svg)
+
+#### Blocked Request
+
+![GCRA Blocked Request](https://brandur.org/assets/images/rate-limiting/denied-request.svg)
+
+### Algorithm Flow Chart
 
 ![GCRA Flow Chart](https://upload.wikimedia.org/wikipedia/en/thumb/4/4e/Dual_LBC.JPG/443px-Dual_LBC.JPG)
 
