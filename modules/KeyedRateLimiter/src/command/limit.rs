@@ -3,14 +3,15 @@ use schema::schema::{Schema, Argument};
 use schema::arg_type::ArgType;
 use resolver::resolver::Resolver;
 use command::error_handler::redis_command_error_handler;
+use crate::validate_schema;
 
 fn construct_arguments_schema() -> Vec<Argument> {
     let mut arg_schema: Vec<Argument> = Vec::new();
-    arg_schema.push(Argument::new("key", 0, ArgType::STRING));
-    arg_schema.push(Argument::new("cost", 1, ArgType::INT));
-    arg_schema.push(Argument::new("burst", 2, ArgType::INT));
-    arg_schema.push(Argument::new("rate", 3, ArgType::FLOAT));
-    arg_schema.push(Argument::new("period", 4, ArgType::FLOAT));
+    arg_schema.push(Argument::new("key", ArgType::STRING));
+    arg_schema.push(Argument::new("cost", ArgType::INT));
+    arg_schema.push(Argument::new("burst", ArgType::INT));
+    arg_schema.push(Argument::new("rate", ArgType::FLOAT));
+    arg_schema.push(Argument::new("period", ArgType::FLOAT));
     return arg_schema;
 }
 
@@ -26,6 +27,7 @@ pub fn ratelimit_limit(ctx: &Context, args: Vec<String>) -> RedisResult {
         ),
         args
     );
+    validate_schema!(resolver, ctx);
     ctx.log_debug(format!(
         "Rate limiting for: {:?}",
         resolver.all_as_str()

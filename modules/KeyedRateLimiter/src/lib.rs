@@ -1,6 +1,7 @@
 mod command;
 mod schema;
 mod resolver;
+mod macros;
 
 #[macro_use]
 extern crate redis_module;
