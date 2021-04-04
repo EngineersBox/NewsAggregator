@@ -38,3 +38,14 @@ macro_rules! command_entry_debug_log {
         ).as_str());
     }
 }
+
+#[macro_export]
+macro_rules! push_all {
+    ($vec:expr, $value:expr) => {
+        $vec.push($value);
+    };
+    ($vec:expr, $value:expr, $($values:expr),+) => {
+        $vec.push($value);
+        push_all!($vec,$($values),+)
+    }
+}

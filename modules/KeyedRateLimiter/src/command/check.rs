@@ -3,14 +3,17 @@ use schema::schema::{Schema, Argument};
 use schema::arg_type::ArgType;
 use resolver::resolver::Resolver;
 use command::error_handler::redis_command_error_handler;
-use crate::{command_entry_debug_log, handled_templated_error, validate_schema};
+use crate::{command_entry_debug_log, handled_templated_error, push_all, validate_schema};
 
 fn construct_arguments_schema() -> Vec<Argument> {
     let mut arg_schema: Vec<Argument> = Vec::new();
-    arg_schema.push(Argument::new("key", ArgType::STRING));
-    arg_schema.push(Argument::new("burst", ArgType::INT));
-    arg_schema.push(Argument::new("rate", ArgType::FLOAT));
-    arg_schema.push(Argument::new("period", ArgType::FLOAT));
+    push_all!(
+        arg_schema,
+        Argument::new("key", ArgType::STRING),
+        Argument::new("burst", ArgType::INT),
+        Argument::new("rate", ArgType::FLOAT),
+        Argument::new("period", ArgType::FLOAT)
+    );
     return arg_schema;
 }
 
