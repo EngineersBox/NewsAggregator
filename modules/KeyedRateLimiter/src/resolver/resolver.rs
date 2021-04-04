@@ -2,6 +2,7 @@ use schema::schema::{Schema, Argument};
 use redis_module::RedisError;
 use schema::arg_type::ArgType;
 use std::str::FromStr;
+use std::error::Error;
 
 macro_rules! handled_iter_option {
     ($matcher:expr, $idx:expr) => {
@@ -60,18 +61,24 @@ impl Resolver {
     fn try_coerce(&self, schema_arg: &Argument, cmd_arg: &String) -> Option<RedisError> {
         macro_rules! parse_check_err {
             ($cmd_arg:expr, $parse_to:ty) => {
-                $cmd_arg.as_str().parse::<$parse_to>().is_err()
+                match $cmd_arg.as_str().parse::<$parse_to>() {
+                    Err(e) => return Some(RedisError::String(format!(
+                        "Argument {:?} with value {:?} could not be parsed as type {:?}: {}",
+                        schema_arg.name,
+                        $cmd_arg.as_str(),
+                        schema_arg.arg,
+                        e,
+                    ))),
+                    Ok(v) => true,
+                }
             }
         }
-        let result: bool = match schema_arg.arg {
+        match schema_arg.arg {
             ArgType::INT => parse_check_err!(cmd_arg, usize),
             ArgType::STRING => parse_check_err!(cmd_arg, String),
             ArgType::FLOAT => parse_check_err!(cmd_arg, f32),
             ArgType::BOOL => parse_check_err!(cmd_arg, bool),
         };
-        if !result {
-            return Some(RedisError::String(format!("Argument could not be parsed as type {:?}", schema_arg.arg)))
-        }
         None
     }
     pub fn validate(&self) -> Option<RedisError> {

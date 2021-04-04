@@ -25,7 +25,7 @@ pub fn ratelimit_limit(ctx: &Context, args: Vec<String>) -> RedisResult {
             // method does manual allocation to guarantee it.
             construct_arguments_schema(),
         ),
-        args
+        Vec::from(&args[1..]),
     );
     validate_schema!(resolver, ctx);
     ctx.log_debug(format!(
