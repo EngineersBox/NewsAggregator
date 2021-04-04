@@ -1,9 +1,9 @@
-use redis_module::{RedisResult, RedisValue, Context};
+use redis_module::{RedisError, RedisResult, RedisValue, Context};
 use schema::schema::{Schema, Argument};
 use schema::arg_type::ArgType;
 use resolver::resolver::Resolver;
 use command::error_handler::redis_command_error_handler;
-use crate::validate_schema;
+use crate::{command_entry_debug_log, handled_templated_error, validate_schema};
 
 fn construct_arguments_schema() -> Vec<Argument> {
     let mut arg_schema: Vec<Argument> = Vec::new();
@@ -24,12 +24,13 @@ pub fn ratelimit_reset(ctx: &Context, args: Vec<String>) -> RedisResult {
         Vec::from(&args[1..]),
     );
     validate_schema!(resolver, ctx);
-    ctx.log_debug(format!(
-        "Resetting rate limit for: {:?}",
-        resolver.all_as_str()
-    ).as_str());
+    command_entry_debug_log!(
+        "Rate limiting for:",
+        resolver, ctx,
+        "Could not retrieve arguments"
+    );
 
     // TODO: Implement reset here (essentially just a delete on the key)
 
-    return RedisResult::Ok(RedisValue::from(""))
+    return RedisResult::Ok(RedisValue::from("EXAMPLE RETURN"))
 }

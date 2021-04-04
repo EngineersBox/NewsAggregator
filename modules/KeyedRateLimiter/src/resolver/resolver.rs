@@ -2,7 +2,6 @@ use schema::schema::{Schema, Argument};
 use redis_module::RedisError;
 use schema::arg_type::ArgType;
 use std::str::FromStr;
-use std::error::Error;
 
 macro_rules! handled_iter_option {
     ($matcher:expr, $idx:expr) => {
@@ -33,14 +32,14 @@ impl Resolver {
             let ith_schema_arg: &Argument = handled_iter_option!(self.schema.args, i);
             let ith_cmd_arg: &String = handled_iter_option!(self.cmd_args, i);
             return_string.push_str(format!(
-                "[{:?}: {:?}]",
+                "[{}: {}]",
                 ith_schema_arg.name,
                 ith_cmd_arg
             ).as_str());
         }
         return Ok(return_string)
     }
-    pub fn at<T: FromStr<Err = RedisError>>(&mut self, idx: usize) -> Result<T, RedisError> {
+    pub fn at<T: FromStr>(&mut self, idx: usize) -> Result<T, RedisError> {
         let schema_arg: &Argument = handled_iter_option!(self.schema.args, idx);
         let cmd_arg: &String = handled_iter_option!(self.cmd_args, idx);
         macro_rules! parse_forward_err {
@@ -69,7 +68,7 @@ impl Resolver {
                         schema_arg.arg,
                         e,
                     ))),
-                    Ok(v) => true,
+                    Ok(_) => true,
                 }
             }
         }

@@ -20,7 +20,7 @@ struct MyType {
 }
 
 redis_module! {
-    name: "ratelimit",
+    name: "ratelimiter",
     version: 1,
     data_types: [],
     commands: [
