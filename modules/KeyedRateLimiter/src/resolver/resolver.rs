@@ -1,7 +1,8 @@
-use schema::schema::{Schema, Argument};
+use schema::schema::Schema;
 use redis_module::RedisError;
 use schema::arg_type::ArgType;
 use std::str::FromStr;
+use schema::argument::Argument;
 
 macro_rules! handled_iter_option {
     ($matcher:expr, $idx:expr) => {

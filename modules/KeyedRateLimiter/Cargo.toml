@@ -5,9 +5,10 @@ authors = ["Jack Kilrain <toastcraft.info@gmail.com>"]
 
 [lib]
 crate-type = ["dylib"]
+test = true
 
 [dependencies]
-redis-module = "0.13.0"
+redis-module = { version = "0.13.0", features = ["test"] }
 
 [build-dependencies]
 cc = "1.0.28"

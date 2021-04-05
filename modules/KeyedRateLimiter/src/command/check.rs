@@ -1,9 +1,10 @@
 use redis_module::{RedisError, RedisResult, RedisValue, Context};
-use schema::schema::{Schema, Argument};
+use schema::schema::Schema;
 use schema::arg_type::ArgType;
 use resolver::resolver::Resolver;
 use command::error_handler::redis_command_error_handler;
 use crate::{command_entry_debug_log, handled_templated_error, push_all, validate_schema};
+use schema::argument::Argument;
 
 fn construct_arguments_schema() -> Vec<Argument> {
     let mut arg_schema: Vec<Argument> = Vec::new();

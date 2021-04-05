@@ -1,19 +1,5 @@
-use schema::arg_type::ArgType;
 use redis_module::{RedisError, Context};
-
-pub struct Argument {
-    pub name: &'static str,
-    pub arg: ArgType,
-}
-
-impl Argument {
-    pub fn new(name: &'static str, arg: ArgType) -> Argument {
-        Argument{
-            name,
-            arg,
-        }
-    }
-}
+use schema::argument::Argument;
 
 pub type ErrorHandler = dyn Fn(&Context, RedisError) -> bool; // Return true if can continue, false if should stop parsing
 
