@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Jack Kilrain <toastcraft.info@gmail.com>"]
 
 [lib]
-crate-type = ["dylib"]
+crate-type = ["rlib", "dylib"]
 test = true
 
 [dependencies]

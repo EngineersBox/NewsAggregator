@@ -1,5 +1,5 @@
 mod command;
-mod schema;
+pub mod schema;
 mod resolver;
 mod macros;
 
