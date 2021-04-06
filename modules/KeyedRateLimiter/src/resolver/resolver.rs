@@ -2,6 +2,7 @@ use schema::schema::Schema;
 use redis_module::RedisError;
 use schema::arg_type::ArgType;
 use std::str::FromStr;
+use std::any::type_name;
 use schema::argument::Argument;
 
 macro_rules! handled_iter_option {
@@ -41,21 +42,13 @@ impl Resolver {
         return Ok(return_string)
     }
     pub fn at<T: FromStr>(&mut self, idx: usize) -> Result<T, RedisError> {
-        let schema_arg: &Argument = handled_iter_option!(self.schema.args, idx);
         let cmd_arg: &String = handled_iter_option!(self.cmd_args, idx);
-        macro_rules! parse_forward_err {
-            ($cmd_arg:expr, $schm_arg:expr, $parse_to:ty) => {
-                match FromStr::from_str($cmd_arg.as_str()) {
-                    Err(_) => Err(RedisError::String(format!("Argument could not be parsed as type {:?}", $schm_arg.arg)))?,
-                    Ok(value) => Ok(value),
-                }
-            }
-        }
-        match schema_arg.arg {
-            ArgType::INT => parse_forward_err!(cmd_arg, schema_arg, usize),
-            ArgType::STRING => parse_forward_err!(cmd_arg, schema_arg, String),
-            ArgType::FLOAT => parse_forward_err!(cmd_arg, schema_arg, f32),
-            ArgType::BOOL => parse_forward_err!(cmd_arg, schema_arg, bool),
+        match FromStr::from_str(cmd_arg.as_str()) {
+            Err(_) => Err(RedisError::String(format!(
+                "Argument could not be parsed as type {}",
+                type_name::<T>()
+            )))?,
+            Ok(value) => Ok(value),
         }
     }
     fn try_coerce(&self, schema_arg: &Argument, cmd_arg: &String) -> Option<RedisError> {

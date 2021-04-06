@@ -25,6 +25,16 @@ macro_rules! handled_templated_error {
             },
             Ok(v) => v,
         }
+    };
+    ($matcher:expr, $ctx:expr) => {
+        match $matcher {
+            Err(e) => {
+                let err_msg: String = format!("{}", e);
+                $ctx.log_warning(err_msg.as_str());
+                return RedisResult::Err(RedisError::String(err_msg));
+            },
+            Ok(v) => v,
+        }
     }
 }
 
