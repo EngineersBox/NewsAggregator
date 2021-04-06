@@ -43,38 +43,41 @@ impl Resolver {
     }
     pub fn at<T: FromStr>(&mut self, idx: usize) -> Result<T, RedisError> {
         let cmd_arg: &String = handled_iter_option!(self.cmd_args, idx);
+        let schema_arg: &Argument = handled_iter_option!(self.schema.args, idx);
         match FromStr::from_str(cmd_arg.as_str()) {
             Err(_) => Err(RedisError::String(format!(
-                "Argument could not be parsed as type {}",
+                "Argument {:?} with value {:?} could not be parsed as type {}",
+                schema_arg.name,
+                cmd_arg.as_str(),
                 type_name::<T>()
             )))?,
             Ok(value) => Ok(value),
         }
     }
-    fn try_coerce(&self, schema_arg: &Argument, cmd_arg: &String) -> Option<RedisError> {
+    fn try_coerce(&mut self, idx: usize) -> Option<RedisError> {
+        let schema_arg: &Argument = match self.schema.args.iter().nth(idx) {
+            None => {
+                return Some(RedisError::String(format!("Argument not provided for index {}", idx)))
+            },
+            Some(value) => value
+        };
         macro_rules! parse_check_err {
-            ($cmd_arg:expr, $parse_to:ty) => {
-                match $cmd_arg.as_str().parse::<$parse_to>() {
-                    Err(e) => return Some(RedisError::String(format!(
-                        "Argument {:?} with value {:?} could not be parsed as type {:?}: {}",
-                        schema_arg.name,
-                        $cmd_arg.as_str(),
-                        schema_arg.arg,
-                        e,
-                    ))),
+            ($i:expr, $parse_to:ty) => {
+                match self.at::<$parse_to>($i) {
+                    Err(e) => return Some(e),
                     Ok(_) => true,
                 }
             }
         }
         match schema_arg.arg {
-            ArgType::INT => parse_check_err!(cmd_arg, usize),
-            ArgType::STRING => parse_check_err!(cmd_arg, String),
-            ArgType::FLOAT => parse_check_err!(cmd_arg, f32),
-            ArgType::BOOL => parse_check_err!(cmd_arg, bool),
+            ArgType::INT => parse_check_err!(idx, usize),
+            ArgType::STRING => parse_check_err!(idx, String),
+            ArgType::FLOAT => parse_check_err!(idx, f32),
+            ArgType::BOOL => parse_check_err!(idx, bool),
         };
         None
     }
-    pub fn validate(&self) -> Option<RedisError> {
+    pub fn validate(&mut self) -> Option<RedisError> {
         if self.schema.args.len() != self.cmd_args.len() {
             Some(RedisError::String(format!(
                 "Provided arguments differ in quantity to schema definition: [schema: {:?}] != [provided: {:?}]",
@@ -83,20 +86,16 @@ impl Resolver {
             )));
         }
         macro_rules! iter_some_on_error {
-            ($matcher:expr, $idx:expr, $var:ident) => {
-                if let Some(v) = $matcher.iter().nth($idx) {
-                    $var = v;
-                } else {
+            ($matcher:expr, $idx:expr) => {
+                if let None = $matcher.iter().nth($idx) {
                     return Some(RedisError::String(format!("Argument not provided for index {}", $idx)));
                 }
             }
         }
         for i in 0..self.schema.args.len() {
-            let ith_schema_arg: &Argument;
-            iter_some_on_error!(self.schema.args, i, ith_schema_arg);
-            let ith_cmd_arg: &String;
-            iter_some_on_error!(self.cmd_args, i, ith_cmd_arg);
-            if let Some(e) = self.try_coerce(ith_schema_arg, ith_cmd_arg) {
+            iter_some_on_error!(self.schema.args, i);
+            iter_some_on_error!(self.cmd_args, i);
+            if let Some(e) = self.try_coerce(i) {
                 return Some(e);
             }
         }
