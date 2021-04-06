@@ -1,7 +1,7 @@
 [package]
 name = "keyed_rate_limiter"
 version = "0.1.0"
-authors = ["Jack Kilrain <toastcraft.info@gmail.com>"]
+authors = ["Jack Kilrain"]
 
 [lib]
 crate-type = ["rlib", "dylib"]
