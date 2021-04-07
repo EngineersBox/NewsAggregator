@@ -1,5 +1,7 @@
 DOCKER_BUILD_NAME:=elasticsearch-ui
 VUE_APP_PORT:=8080
+FLASK_APP_PORT:=3001
+GU_WORKER_COUNT:=4
 
 install:
 	@python3.8 -m pip install -r requirements.txt
@@ -14,3 +16,6 @@ start_docker_ui:
 
 start_flask:
 	@sh ./run_server.sh
+
+deploy_flask:
+	@gunicorn -w $(GU_WORKER_COUNT) -b 127.0.0.1:$(FLASK_APP_PORT) app:app

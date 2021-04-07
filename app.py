@@ -1,10 +1,14 @@
-from flask import Flask, request, jsonify, url_for, render_template, send_from_directory
+from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS, cross_origin
 from minitask.simple_search import simple_match_search
 from elasticsearch import Elasticsearch
 from summary_1.summary import body_summary
 from knn_indexing.index import knn_query
+
 import redis
+
+from modules.RateLimiter.src.request_handler import RateLimiter
+
 
 # INDEX_NAME = 'news'
 
@@ -45,6 +49,7 @@ def send_js(filename):
 
 @app.route('/origin_search')
 @cross_origin()
+@RateLimiter()
 def search():
     query = request.args.get('query', None)
     if query:
@@ -72,6 +77,7 @@ def search():
 
 @app.route('/search')
 @cross_origin()
+@RateLimiter()
 def knn_search():
     
     query = request.args.get('query', None)
