@@ -1,7 +1,7 @@
 mod command;
 pub mod schema;
-mod resolver;
-mod macros;
+pub mod resolver;
+pub mod macros;
 
 #[macro_use]
 extern crate redis_module;
