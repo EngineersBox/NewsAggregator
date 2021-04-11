@@ -1,0 +1,16 @@
+[package]
+name = "keyed_rate_limiter"
+version = "0.1.0"
+authors = ["Jack Kilrain"]
+
+[lib]
+crate-type = ["rlib", "dylib"]
+test = true
+
+[dependencies]
+redis-module = { version = "0.13.0", features = ["test"] }
+lazy_static = "1.4.0"
+rand = "0.8.3"
+
+[build-dependencies]
+cc = "1.0.28"
