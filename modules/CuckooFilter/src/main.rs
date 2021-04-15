@@ -1,10 +1,12 @@
 extern crate redis;
 use redis::Commands;
 use probabilistic_collections::cuckoo::CuckooFilter;
+use std::env;
+const REDIS_ADDRESS: &str = "redis://127.0.0.1/";
 
 fn main() {
-    let size = std::env::args().nth(1).expect("Please specify the size of the filter");
-    let action = std::env::args().nth(2).expect("Please specify an action");
+    let size = args().nth(1).expect("Please specify the size of the filter");
+    let action = args().nth(2).expect("Please specify an action");
     let item = std::env::args().nth(3).expect("Please specify an item");
     
     println!("size of the filter {:?}", size);
@@ -33,7 +35,7 @@ fn main() {
 
 
 fn add(item: String) -> redis::RedisResult<()> {
-    let client = redis::Client::open("redis://127.0.0.1/")?;
+    let client = redis::Client::open(REDIS_ADDRESS)?;
     let mut con = client.get_connection()?;
 
     let _: () = redis::cmd("SET")
@@ -45,7 +47,7 @@ fn add(item: String) -> redis::RedisResult<()> {
 }
 
 fn delete(item: String) -> redis::RedisResult<()> {
-    let client = redis::Client::open("redis://127.0.0.1/")?;
+    let client = redis::Client::open(REDIS_ADDRESS)?;
     let mut con = client.get_connection()?;
 
     let _: () = redis::cmd("DEL")
