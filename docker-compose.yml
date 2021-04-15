@@ -2,6 +2,8 @@ version: "3.5"
 services:
     elasticsearch:
         image: elasticsearch:7.12.0
+        container_name: elasticsearch
+        network_mode: host
         environment:
             discovery.type: single-node
             bootstrap.memory_lock: "true"
@@ -14,48 +16,39 @@ services:
             - ../elasticsearch:/elasticsearch
             - ../elasticsearch/config/elasticsearch.yml:/elasticsearch.yml
         ports:
-            - 9200:9200
-            - 9300:9300
-        networks:
-            - stack-connector
+            - 9200
+            - 9300
     redis:
+        container_name: redis
+        network_mode: host
         build:
             context: ./modules/CuckooFilter
         volumes:
             - ../redis:/redis
         ports:
             - 6379:6379
-        networks:
-            - stack-connector
         command: redis-server /usr/local/etc/redis/redis.conf
     backend:
+        container_name: backend
+        network_mode: host
         build:
             context: .
         ports:
-            - "3001:3001"
+            - 3001
         depends_on:
             - elasticsearch
         volumes:
             - ../backend:/server
-        networks:
-            - stack-connector
         command: gunicorn -w 4 -b 0.0.0.0:3001 app:app
     frontend:
+        container_name: frontend
+        network_mode: host
         build:
             context: ./frontend
         ports:
-            - "3002:8080"
+            - 3002
         depends_on:
             - backend
         volumes:
             - ../frontend:/frontend
-        networks:
-            - stack-connector
-        command: http-server dist
-    
-networks:
-    stack-connector:
-        name: stack-connector
-        driver: bridge
-        ipam:
-            driver: default
+        command: http-server dist --port 3002
