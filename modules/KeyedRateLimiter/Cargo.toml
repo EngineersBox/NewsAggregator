@@ -8,7 +8,7 @@ crate-type = ["rlib", "dylib"]
 test = true
 
 [dependencies]
-redis-module = { version = "0.13.0", features = ["test"] }
+redis-module = { version = "0.13.0", features = ["test"]}
 lazy_static = "1.4.0"
 rand = "0.8.3"
 
