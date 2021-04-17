@@ -55,34 +55,34 @@ pub fn cuckoofilter_insert(ctx: &Context, args: Vec<String>) -> RedisResult {
         Err(e) => panic!("error {:?}", e),
     };
 
-    if str_get.to_string() != "Nil" {
-        cuckoo_filter.add(&key);
-    } 
+    // if str_get.to_string() != "Nil" {
+    //     cuckoo_filter.add(&key);
+    // } 
 
-    let key_exists = cuckoo_filter.contains(&key);
-    // TODO: SET TTL
-    if key_exists {
-        let increase_existing_freq: OtherRedisResult<String> = con.zincr("query-frequency",key.clone(), "one");
-        match increase_existing_freq {
-            Ok(_) => println!("Successfully increase freq"),
-            Err(_) => println!("error increasing freq"),
-        }
-    } else{
-        let enter_new_element: OtherRedisResult<String> = con.set(key.clone(), documents);
-        let enter_new_element_frequency: OtherRedisResult<String> = con.zadd("query-frequency",key.clone(),1);
+    // let key_exists = cuckoo_filter.contains(&key);
+    // // TODO: SET TTL
+    // if key_exists {
+    //     let increase_existing_freq: OtherRedisResult<String> = con.zincr("query-frequency",key.clone(), "one");
+    //     match increase_existing_freq {
+    //         Ok(_) => println!("Successfully increase freq"),
+    //         Err(_) => println!("error increasing freq"),
+    //     }
+    // } else{
+    //     let enter_new_element: OtherRedisResult<String> = con.set(key.clone(), documents);
+    //     let enter_new_element_frequency: OtherRedisResult<String> = con.zadd("query-frequency",key.clone(),1);
 
-        match enter_new_element {
-            Ok(_) => println!("Successfully add new key into redis database"),
-            Err(_) => println!("error adding new key"),
-        }
+    //     match enter_new_element {
+    //         Ok(_) => println!("Successfully add new key into redis database"),
+    //         Err(_) => println!("error adding new key"),
+    //     }
 
-        match enter_new_element_frequency {
-            Ok(_) => println!("Successfully add new key freq"),
-            Err(_) => println!("error adding new key freq"),
-        }
+    //     match enter_new_element_frequency {
+    //         Ok(_) => println!("Successfully add new key freq"),
+    //         Err(_) => println!("error adding new key freq"),
+    //     }
 
 
-    }
+    // }
 
-    return RedisResult::Ok(RedisValue::from("Check check"))
+    return RedisResult::Ok(RedisValue::from(str_get))
 }
