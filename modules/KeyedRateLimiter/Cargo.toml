@@ -11,6 +11,8 @@ test = true
 redis-module = { version = "0.13.0", features = ["test"]}
 lazy_static = "1.4.0"
 rand = "0.8.3"
+cuckoofilter = "0.3"
+redis = "0.20.0"
 
 [build-dependencies]
 cc = "1.0.28"

@@ -6,6 +6,8 @@ pub mod macros;
 #[macro_use]
 extern crate redis_module;
 extern crate alloc;
+extern crate cuckoofilter;
+extern crate redis;
 
 #[allow(unused_imports)]
 use command::limit::ratelimit_limit;
