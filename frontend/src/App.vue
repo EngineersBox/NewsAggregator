@@ -55,7 +55,6 @@ export default {
       this.$http.get(`${API_ENDPOINT}/search`, {params: {query: this.query}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
-        console.log(response.body);
         var data = response.body;
         for (var i=0; i<data.length; i++) {
           if (data[i]._source.summary)
@@ -82,7 +81,6 @@ export default {
       this.$http.get(`${API_ENDPOINT}/search`, {params: {query: keyword}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
-        console.log(response.body);
         var data = response.body;
         for (var i=0; i<data.length; i++) {
           if (data[i]._source.summary)
@@ -107,7 +105,6 @@ export default {
       this.$http.get(`${API_ENDPOINT}/origin_search`, {params: {query: this.query}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
-        console.log(response.body);
         var data = response.body;
         for (var i=0; i<data.length; i++) {
           if (data[i]._source.summary)

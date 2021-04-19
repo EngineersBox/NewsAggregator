@@ -19,3 +19,9 @@ start_flask:
 
 deploy_flask:
 	@gunicorn -w $(GU_WORKER_COUNT) -b 127.0.0.1:$(FLASK_APP_PORT) app:app
+
+install_ansible:
+	@apt update -y
+	@apt install software-properties-common -y
+	@apt-add-repository --yes --update ppa:ansible/ansible -y
+	@apt install ansible -y
