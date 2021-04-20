@@ -12,7 +12,7 @@ from modules.RateLimiter.src.request_handler import RateLimiter
 
 INDEX_NAME = 'knn_index'
 
-ES = Elasticsearch("https://admin:admin@localhost:9200", verify_certs=False, ssl_show_warn=False)
+ES = Elasticsearch("admin:admin@localhost:9200", ca_certs=False, verify_certs=False, ssl_show_warn=False)
 
 app = Flask(__name__)
 
