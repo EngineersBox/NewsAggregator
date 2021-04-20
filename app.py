@@ -8,10 +8,6 @@ from knn_indexing.index import knn_query
 from modules.RateLimiter.src.request_handler import RateLimiter
 from urllib3.exceptions import SSLError
 
-# INDEX_NAME = 'news'
-
-# ES = Elasticsearch([{'host' : 'localhost', 'port': 9200}])
-
 logging.config.fileConfig(fname='flask_logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
@@ -57,14 +53,17 @@ class ErrorHandlerWrapper:
         return
 
 @app.route('/')
+@ErrorHandlerWrapper()
 def index_page():
     return render_template('index.html')
 
 @app.route('/css/<path:filename>')
+@ErrorHandlerWrapper()
 def send_css(filename):
     return send_from_directory('static/css', filename)
 
 @app.route('/js/<path:filename>')
+@ErrorHandlerWrapper()
 def send_js(filename):
     return send_from_directory('static/js', filename)
 
