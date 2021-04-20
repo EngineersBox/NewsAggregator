@@ -39,3 +39,5 @@ opendistro_security.restapi.roles_enabled: ["all_access", "security_rest_api_acc
 cluster.routing.allocation.disk.threshold_enabled: false
 node.max_local_storage_nodes: 3
 ######## End OpenDistro for Elasticsearch Security Demo Configuration ########
+
+knn.plugin.enabled: true
