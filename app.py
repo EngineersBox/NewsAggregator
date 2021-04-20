@@ -40,12 +40,15 @@ def search():
     if query:
         print('query is %s' % query)
         res = simple_match_search(ES, 'news', query)
+        print("here1")
         list_res = res['hits']['hits']
         for one in list_res:
             # u6250082 Xuguang Song
             sum_txt = body_summary(one['_source']['art'])
             one['_source']['summary'] = ' '.join(sum_txt)
+        print("here2")
         return jsonify(list_res)
+    print("here3")
     return jsonify([])
 
 @app.route('/search')
