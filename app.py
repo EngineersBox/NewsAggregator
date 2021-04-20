@@ -38,7 +38,7 @@ class ErrorHandlerWrapper:
                 logger.error('An issue with SSL occured', e)
                 response  = {
                     'status_code': e.status_code,
-                    'status': 'An issue with SSL occured: {}'.format(e.message)
+                    'status': 'An issue with SSL occured: {}'.format(e)
                 }
                 return jsonify(response), e.status_code
             except Exception as e:
@@ -49,6 +49,12 @@ class ErrorHandlerWrapper:
                 }
                 return jsonify(response), 500
         return wrapper
+
+    def __enter__(self, _a, _b, _c):
+        return
+
+    def __exit__(self, _a, _b, _c):
+        return
 
 @app.route('/')
 def index_page():
