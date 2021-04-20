@@ -34,7 +34,7 @@ def send_js(filename):
 
 @app.route('/origin_search')
 @cross_origin()
-@RateLimiter()
+# @RateLimiter()
 def search():
     query = request.args.get('query', None)
     if query:
@@ -53,7 +53,7 @@ def search():
 
 @app.route('/search')
 @cross_origin()
-@RateLimiter()
+# @RateLimiter()
 def knn_search():
     query = request.args.get('query', None)
     if query:
