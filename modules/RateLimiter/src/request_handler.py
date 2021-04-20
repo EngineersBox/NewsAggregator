@@ -66,10 +66,10 @@ class RateLimiter:
                     'status': 'Request not formatted correctly'
                 }
                 return jsonify(response), 400
-            except:
+            except Exception as e:
                 response = {
                     'status_code': 500,
-                    'status': 'An unknown internal error occurred'
+                    'status': 'An unknown internal error occurred: {0}'.format(e)
                 }
                 return jsonify(response), 500
         return wrapper
