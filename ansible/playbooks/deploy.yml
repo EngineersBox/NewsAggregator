@@ -18,14 +18,9 @@
 
     - name: Docker stop and remove containers
       vars:
-        container_list:
-          - elasticsearch
-          - redis
-          - backend
-          - frontend
         containers: "{{ item }}"
       include_tasks: docker_stop_remove_tasks.yml
-      loop: "{{ container_list | batch(1) | list }}"
+      loop: "{{ container_names | batch(1) | list }}"
 
     - name: Spin up new containers
       docker_compose:

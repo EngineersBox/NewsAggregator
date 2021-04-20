@@ -71,11 +71,10 @@ def send_js(filename):
 @app.route('/origin_search')
 @cross_origin()
 @ErrorHandlerWrapper()
-# @RateLimiter()
+@RateLimiter()
 def search():
     query = request.args.get('query', None)
     if query:
-        print('query is %s' % query)
         res = simple_match_search(ES, 'news', query)
         list_res = res['hits']['hits']
         for one in list_res:
@@ -88,7 +87,7 @@ def search():
 @app.route('/search')
 @cross_origin()
 @ErrorHandlerWrapper()
-# @RateLimiter()
+@RateLimiter()
 def knn_search():
     query = request.args.get('query', None)
     if query:
