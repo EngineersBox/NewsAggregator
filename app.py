@@ -33,7 +33,7 @@ def send_js(filename):
     return send_from_directory('static/js', filename)
 
 @app.route('/origin_search')
-@cross_origin()
+# @cross_origin()
 @RateLimiter()
 def search():
     query = request.args.get('query', None)
@@ -49,7 +49,7 @@ def search():
     return jsonify([])
 
 @app.route('/search')
-@cross_origin()
+# @cross_origin()
 @RateLimiter()
 def knn_search():
     query = request.args.get('query', None)
