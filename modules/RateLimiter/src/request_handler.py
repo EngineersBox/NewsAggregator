@@ -77,7 +77,7 @@ class RateLimiter:
     def __enter__(self):
         return self.incrementRate()
 
-    def __exit__(self):
+    def __exit__(self, _a, _b, _c):
         return
 
     def incrementRate(self) -> int:
