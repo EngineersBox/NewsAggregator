@@ -15,9 +15,6 @@ services:
         volumes:
             - ../elasticsearch:/elasticsearch
             - ../elasticsearch/config/elasticsearch.yml:/elasticsearch.yml
-        ports:
-            - 9200
-            - 9300
     redis:
         container_name: redis
         network_mode: host
@@ -33,8 +30,6 @@ services:
         network_mode: host
         build:
             context: .
-        ports:
-            - 3001
         depends_on:
             - elasticsearch
         volumes:
@@ -45,8 +40,6 @@ services:
         network_mode: host
         build:
             context: ./frontend
-        ports:
-            - 3002
         depends_on:
             - backend
         volumes:
