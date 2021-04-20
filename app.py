@@ -45,16 +45,10 @@ class ErrorHandlerWrapper:
                 logger.error('An unknown internal error occurred', e)
                 response = {
                     'status_code': 500,
-                    'status': 'An unknown internal error occurred: {}'.format(e.message)
+                    'status': 'An unknown internal error occurred: {}'.format(e)
                 }
                 return jsonify(response), 500
         return wrapper
-
-    def __enter__(self):
-        return
-
-    def __exit__(self):
-        return
 
 @app.route('/')
 def index_page():
