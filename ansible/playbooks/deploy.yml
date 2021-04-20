@@ -35,6 +35,11 @@
       become: true
       register: started_containers
 
+    # - name: Verify container states
+    #   assert:
+    #     that: "{{ item }}.state.running"
+    #   loop: "{{ container_names }}"
+
     - name: Wait for elasticsearch to start
       wait_for:
         host: localhost
@@ -48,7 +53,7 @@
         chdir: "{{ temp_dir }}/minitask"
 
     - name: Remove repo content
-      shell:
-        cmd: "rm -rf {{ temp_dir }}"
-        chdir: ../
+      file:
+        path: "{{ temp_dir }}"
+        state: absent
       become: true

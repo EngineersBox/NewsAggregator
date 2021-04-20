@@ -2,6 +2,7 @@
   community.docker.docker_container:
     name: "{{ async_item }}"
     state: absent
+    container_default_behavior: compatibility
   async: 45
   poll: 0
   loop: "{{ containers }}"

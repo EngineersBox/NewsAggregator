@@ -22,7 +22,7 @@ jobs:
           sudo apt install -y software-properties-common
           sudo apt-add-repository -yu ppa:ansible/ansible
           sudo apt install -y ansible
-          ansible-galaxy collection install community.general
+          sudo ansible-galaxy collection install community.general
       - name: Create key file
         run: |
           mkdir -p $KEYS_DIR
@@ -31,10 +31,10 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
       - name: Verify targets are accessible
-        run: ansible all --private-key=$KEYS_DIR/$PRIVATE_KEY_FILE -m ping
-        working-directory: ansible
+        run: sudo ansible all --private-key=$KEYS_DIR/$PRIVATE_KEY_FILE -m ping
+        working-directory: $ANSIBLE_DIR
       - name: Run playbook
-        run: ansible-playbook -v --private-key=$KEYS_DIR/$PRIVATE_KEY_FILE --extra-vars "ansible_sudo_pass=${{ secrets.SUDO_PASS }}" $PLAYBOOK
-        working-directory: ansible
+        run: sudo ansible-playbook -v --private-key=$KEYS_DIR/$PRIVATE_KEY_FILE --extra-vars "ansible_sudo_pass=${{ secrets.SUDO_PASS }}" $PLAYBOOK
+        working-directory: $ANSIBLE_DIR
       - name: Remove key file
         run: sudo rm -rf $KEYS_DIR
