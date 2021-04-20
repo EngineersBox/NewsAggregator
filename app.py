@@ -50,7 +50,7 @@ class ErrorHandlerWrapper:
                 return jsonify(response), 500
         return wrapper
 
-    def __enter__(self, _a, _b, _c):
+    def __enter__(self):
         return
 
     def __exit__(self, _a, _b, _c):
