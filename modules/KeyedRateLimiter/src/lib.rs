@@ -16,10 +16,6 @@ use command::check::ratelimit_check;
 #[allow(unused_imports)]
 use command::reset::ratelimit_reset;
 
-// Cuckoo Filter Commands
-#[allow(unused_imports)]
-use command::insert::cuckoofilter_insert;
-
 #[derive(Debug)]
 struct MyType {
     data: String,

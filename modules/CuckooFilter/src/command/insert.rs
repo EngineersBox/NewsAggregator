@@ -35,47 +35,44 @@ pub fn cuckoofilter_insert(ctx: &Context, args: Vec<String>) -> RedisResult {
         "Could not retrieve arguments"
     );
 
-    // Get The Arguements
-    let key = vec![0];
-    let documents = vec![1];
+    // Get The Arguements. args[0] is the command
+    let key = &args[1];
+    let documents = &args[2];
 
     // Instantiate the Cuckoo Filter and populate it with the query entry
     let mut cuckoo_filter = cuckoofilter::CuckooFilter::new();
-    let _get_reply: OtherRedisResult<String> = ctx.call("GET", key.clone());
+    let _get_reply = ctx.call("GET", &[&key]);
 
     let str_get = match _get_reply {
         Ok(sg) => format!("{:?}", sg),
         Err(e) => panic!("error {:?}", e),
     };
 
-    // if str_get.to_string() != "Nil" {
-    //     cuckoo_filter.add(&key);
-    // } 
+    if str_get.to_string() != "Null" {
+        cuckoo_filter.add(&[&key]);
+    } 
 
-    // let key_exists = cuckoo_filter.contains(&key);
-    // // TODO: SET TTL
-    // if key_exists {
-    //     let increase_existing_freq: OtherRedisResult<String> = con.zincr("query-frequency",key.clone(), "one");
-    //     match increase_existing_freq {
-    //         Ok(_) => println!("Successfully increase freq"),
-    //         Err(_) => println!("error increasing freq"),
-    //     }
-    // } else{
-    //     let enter_new_element: OtherRedisResult<String> = con.set(key.clone(), documents);
-    //     let enter_new_element_frequency: OtherRedisResult<String> = con.zadd("query-frequency",key.clone(),1);
+    let key_exists = cuckoo_filter.contains(&[&key]);
+    // TODO: SET TTL
+    if key_exists {
+        let increase_existing_freq = ctx.call("ZINCRby", &["query-frequency", "1" ,&key]);
+        match increase_existing_freq {
+            Ok(_) => ctx.log_verbose("Successfully increase freq"),
+            Err(_) => ctx.log_verbose("error increasing freq"),
+        }
+    } else{
+        let enter_new_element = ctx.call("SET", &[&key, &documents]);
+        let enter_new_element_frequency = ctx.call("ZADD", &["query-frequency", "1", &key]);
 
-    //     match enter_new_element {
-    //         Ok(_) => println!("Successfully add new key into redis database"),
-    //         Err(_) => println!("error adding new key"),
-    //     }
+        match enter_new_element {
+            Ok(_) => ctx.log_verbose("Successfully add new key into redis database"),
+            Err(_) => ctx.log_verbose("error adding new key"),
+        }
 
-    //     match enter_new_element_frequency {
-    //         Ok(_) => println!("Successfully add new key freq"),
-    //         Err(_) => println!("error adding new key freq"),
-    //     }
-
-
-    // }
-
-    return RedisResult::Ok(RedisValue::from(str_get))
+        match enter_new_element_frequency {
+            Ok(_) => ctx.log_verbose("Successfully add new key freq"),
+            Err(_) => ctx.log_verbose("error adding new key freq"),
+        }
+    }
+    return RedisResult::Ok(RedisValue::from(key_exists.to_string()))
 }
