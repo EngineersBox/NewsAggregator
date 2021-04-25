@@ -1,2 +1,3 @@
 pub mod error_handler;
-mod delete;
+pub mod insert;
+pub mod delete;
