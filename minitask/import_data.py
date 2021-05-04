@@ -1,26 +1,10 @@
 import pandas as pd
 import requests
 import json
-import bz2
-from lxml import etree
 
 from elasticsearch import Elasticsearch as es
 
 from elasticsearch import helpers as h
-
-from dataclasses import dataclass
-
-@dataclass
-class Abstract:
-    """Wikipedia abstract"""
-    ID: int
-    title: str
-    abstract: str
-    url: str
-
-    @property
-    def fulltext(self):
-        return ' '.join([self.title, self.abstract])
 
 """
 Need to create the index first before using this script
@@ -34,22 +18,7 @@ def start_import(test_size = 1000):
     # u6250082 Xuguang Song
     '''import all the data news from data set and use 1000 as test set'''
 
-    data_set = []
-    with bz2.open('../../wikidump/enwiki-20210420-pages-articles-multistream.xml.bz2', 'rb') as f:
-        doc_id = 1
-        # iterparse will yield the entire `doc` element once it finds the
-        # closing `</doc>` tag
-        for _, element in etree.iterparse(f, events=('end',), tag='doc'):
-            title = element.findtext('./title')
-            link = element.findtext('./url')
-            art = element.findtext('./abstract')
-            data_set.append({"link": link, "title": title, "art": art})
-
-            doc_id += 1
-            # the `element.clear()` call will explicitly free up the memory
-            # used to store the element
-            element.clear()
-
+    data_set  = json.loads(open ('./result.json').read())
     total_number = len(data_set)
     print('in total: ', total_number)
     data_set_test = data_set[:test_size]
