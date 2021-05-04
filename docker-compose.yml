@@ -1,7 +1,7 @@
 version: "3.5"
 services:
     elasticsearch:
-        image: elasticsearch:7.12.0
+        image: amazon/opendistro-for-elasticsearch:latest
         container_name: elasticsearch
         network_mode: host
         environment:
