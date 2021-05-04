@@ -41,9 +41,15 @@ logger.warning('app.py started')
 rd = redis.Redis()
 # load the module in Cuckoofilter remember
 try:
+    
     rd.execute_command("cf.init", "test2", "64k")
+
 except:
-    print("the filter is already initialized")
+
+    # print("the filter is already initialized")
+
+    # logging output
+    logger.warning('the filter is already initialized')
  
 def fingerprint(x):
     return ord(x[0])
