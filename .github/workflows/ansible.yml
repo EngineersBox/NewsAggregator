@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PRIVATE_KEY_FILE: id_rsa
-      ANSIBLE_DIR: .
+      ANSIBLE_DIR: ansible
       PLAYBOOK: playbooks/deploy.yml
     steps:
       - uses: actions/checkout@v2
@@ -30,9 +30,9 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
       - name: Verify targets are accessible
         run: ansible all --private-key=$PRIVATE_KEY_FILE -m ping
-        # working-directory: ansible
+        working-directory: $ANSIBLE_DIR
       - name: Run playbook
         run: ansible-playbook -v --private-key=$PRIVATE_KEY_FILE --extra-vars "ansible_sudo_pass=${{ secrets.SUDO_PASS }}" $PLAYBOOK
-        # working-directory: ansible
+        working-directory: $ANSIBLE_DIR
       - name: Remove key file
         run: sudo rm -rf $PRIVATE_KEY_FILE
