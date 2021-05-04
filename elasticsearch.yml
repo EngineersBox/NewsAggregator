@@ -19,14 +19,14 @@ node.ingest: true
 #    - docker-test-node-1 
 ######## Start OpenDistro for Elasticsearch Security Demo Configuration ########
 # WARNING: revise all the lines below before you go into production
-opendistro_security.ssl.transport.pemcert_filepath: esnode.pem
-opendistro_security.ssl.transport.pemkey_filepath: esnode-key.pem
-opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
+#opendistro_security.ssl.transport.pemcert_filepath: esnode.pem
+#opendistro_security.ssl.transport.pemkey_filepath: esnode-key.pem
+#opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
 opendistro_security.ssl.transport.enforce_hostname_verification: false
-opendistro_security.ssl.http.enabled: true
-opendistro_security.ssl.http.pemcert_filepath: esnode.pem
-opendistro_security.ssl.http.pemkey_filepath: esnode-key.pem
-opendistro_security.ssl.http.pemtrustedcas_filepath: root-ca.pem
+opendistro_security.ssl.http.enabled: false
+#opendistro_security.ssl.http.pemcert_filepath: esnode.pem
+#opendistro_security.ssl.http.pemkey_filepath: esnode-key.pem
+#opendistro_security.ssl.http.pemtrustedcas_filepath: root-ca.pem
 opendistro_security.allow_unsafe_democertificates: true
 opendistro_security.allow_default_init_securityindex: true
 opendistro_security.authcz.admin_dn:
