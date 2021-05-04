@@ -26,6 +26,7 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > $PRIVATE_KEY_FILE
           sudo chmod 0600 $PRIVATE_KEY_FILE
+        working-directory: $ANSIBLE_DIR
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
       - name: Verify targets are accessible
@@ -36,3 +37,4 @@ jobs:
         working-directory: $ANSIBLE_DIR
       - name: Remove key file
         run: sudo rm -rf $PRIVATE_KEY_FILE
+        working-directory: $ANSIBLE_DIR
