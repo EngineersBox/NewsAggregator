@@ -1,4 +1,4 @@
-import functools, logging, logging.config, redis
+import functools, logging, logging.config, redis, json
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS, cross_origin
 from minitask.simple_search import simple_match_search
@@ -101,8 +101,8 @@ def search():
             # print('query is probably inside cuckoofilter')
             logger.warning('query is checked by cuckoofilter')
             logger.warning('query is probably inside cuckoofilter')
-            result_value = rd.execute_command("get", query)
-            return jsonify(result_value)
+            result_value = list(map(json.loads, rd.execute_command("LRANGE", query, 0, -1)))
+            return jsonify(result=result_value)
         else:
             # print('query is checked by cuckoofilter')
             # print('query is not inside cuckoofilter')
@@ -115,8 +115,9 @@ def search():
                 sum_txt = body_summary(one['_source']['art'])
                 one['_source']['summary'] = ' '.join(sum_txt)
             rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
-            rd.execute_command("set", query, list_res)
-            return jsonify(list_res)
+            for elem in list_res:
+                rd.execute_command("LPUSH", query, json.dumps(elem))
+            return jsonify(result=list_res)
     return jsonify([])
 
 @app.route('/search')
@@ -134,8 +135,8 @@ def knn_search():
             # print('query is probably inside cuckoofilter')
             logger.warning('query is checked by cuckoofilter')
             logger.warning('query is probably inside cuckoofilter')
-            result_value = rd.execute_command("get", query)
-            return jsonify(result_value)
+            result_value = list(map(json.loads, rd.execute_command("LRANGE", query, 0, -1)))
+            return jsonify(result=result_value)
         else:
             # print('query is checked by cuckoofilter')
             # print('query is not inside cuckoofilter')
@@ -147,9 +148,11 @@ def knn_search():
                 # u6250082 Xuguang Song
                 sum_txt = body_summary(one['_source']['art'])
                 one['_source']['summary'] = ' '.join(sum_txt)
-            rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
-            rd.execute_command("set", query, list_res)
-            return jsonify(list_res)
+            rd.execute_command("cf.add", "test2", hash(
+                query), fingerprint(query))
+            for elem in list_res:
+                rd.execute_command("LPUSH", query, json.dumps(elem))
+            return jsonify(result=list_res)
     return jsonify([])
 
 if __name__ == '__main__':
