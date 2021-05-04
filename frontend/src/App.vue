@@ -34,9 +34,6 @@
 </template>
 
 <script>
-
-const API_ENDPOINT = "https://anu.jkl.io/api";
-
 export default {
   name: 'App',
   data: function() {
@@ -44,7 +41,6 @@ export default {
       query: '',
       res: [],
       keyword: '',
-
       timetotal:0,
     }
   },
@@ -52,42 +48,41 @@ export default {
     search: function() {
       var that = this;
       const s = Date.now();
-      this.$http.get(`${API_ENDPOINT}/search`, {params: {query: this.query}}).then(response => {
+      this.$http.get('http://localhost:3001/search', {params: {query: this.query}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
+        console.log(response.body);
         var data = response.body;
-        for (var i=0; i<data.length; i++) {
-          if (data[i]._source.summary)
-            data[i]._source['short'] = data[i]._source.summary.substring(0, 200)
+        for (var i=0; i<data.result.length; i++) {
+          if (data.result[i]._source.summary)
+            data.result[i]._source['short'] = data.result[i]._source.summary.substring(0, 200)
           else
-            data[i]._source['short'] = data[i]._source.art.substring(0, 200)
-          data[i]._source['ner_shorts'] = data[i]._source['ner_list'].filter(e => 
+            data.result[i]._source['short'] = data.result[i]._source.art.substring(0, 200)
+          data.result[i]._source['ner_shorts'] = data.result[i]._source['ner_list'].filter(e => 
             (e[1] !== 'CARDINAL' && e[1] !== 'ORDINAL' && e[1] !== 'TIME' && e[1] !== 'DATE')
           );
         }
         that.res = data;
-
         that.keyword = this.query;
       })
     }
-
   ,
-
   search_keyword: function(e) {
       var that = this;
       var keyword = e.target.dataset["val"];
       this.query = keyword;
       const s = Date.now();
-      this.$http.get(`${API_ENDPOINT}/search`, {params: {query: keyword}}).then(response => {
+      this.$http.get('http://localhost:3001/search', {params: {query: keyword}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
+        console.log(response.body);
         var data = response.body;
-        for (var i=0; i<data.length; i++) {
-          if (data[i]._source.summary)
-            data[i]._source['short'] = data[i]._source.summary.substring(0, 200)
+        for (var i=0; i<data.result.length; i++) {
+          if (data.result[i]._source.summary)
+            data.result[i]._source['short'] = data.result[i]._source.summary.substring(0, 200)
           else
-            data[i]._source['short'] = data[i]._source.art.substring(0, 200)
-          data[i]._source['ner_shorts'] = data[i]._source['ner_list'].filter(e => 
+            data.result[i]._source['short'] = data.result[i]._source.art.substring(0, 200)
+          data.result[i]._source['ner_shorts'] = data.result[i]._source['ner_list'].filter(e => 
             (e[1] !== 'CARDINAL' && e[1] !== 'ORDINAL' && e[1] !== 'TIME' && e[1] !== 'DATE')
           );
         }
@@ -95,32 +90,32 @@ export default {
       })
     }
   
-
   ,
-
   origin_search: function() {
       // u6250082 Xuguang Song
       var that = this;
       const s = Date.now();
-      this.$http.get(`${API_ENDPOINT}/origin_search`, {params: {query: this.query}}).then(response => {
+      this.$http.get('http://localhost:3001/origin_search', {params: {query: this.query}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
+        console.log(response.body);
         var data = response.body;
-        for (var i=0; i<data.length; i++) {
-          if (data[i]._source.summary)
-            data[i]._source['short'] = data[i]._source.summary.substring(0, 200)
-          else
-            data[i]._source['short'] = data[i]._source.art.substring(0, 200)
-            
+        console.log(data.result)
+        for (var i=0; i<data.result.length; i++) {
+          var data_source = data.result[i]._source;
+          data.result[i]._source['short'] = (data_source.summary ? data_source.summary: data_source.art).substring(0, 200);
+          // if (data.result[i]._source.summary)
+            // data.result[i]._source['short'] = data.result[i]._source.summary.substring(0, 200)
+          // else
+            // data.result[i]._source['short'] = data.result[i]._source.art.substring(0, 200)
         }
+        
         that.res = data;
-
         that.keyword = this.query;
       })
     }
           }
 }
-</script>
 
 <style>
 #app {
