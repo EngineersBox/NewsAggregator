@@ -24,7 +24,6 @@ jobs:
           ansible-galaxy collection install community.general
       - name: Create key file
         run: |
-          mkdir -p $KEYS_DIR
           echo "$SSH_PRIVATE_KEY" > $PRIVATE_KEY_FILE
           sudo chmod 0600 $PRIVATE_KEY_FILE
         env:
