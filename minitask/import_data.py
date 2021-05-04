@@ -1,7 +1,7 @@
 import pandas as pd
 import requests
 import json
-import gzip
+import bz2
 from lxml import etree
 
 from elasticsearch import Elasticsearch as es
@@ -35,7 +35,7 @@ def start_import(test_size = 1000):
     '''import all the data news from data set and use 1000 as test set'''
 
     data_set = []
-    with gzip.open('../../wikidump/enwiki-20210420-pages-articles-multistream.xml.bz2', 'rb') as f:
+    with bz2.open('../../wikidump/enwiki-20210420-pages-articles-multistream.xml.bz2', 'rb') as f:
         doc_id = 1
         # iterparse will yield the entire `doc` element once it finds the
         # closing `</doc>` tag
@@ -49,7 +49,7 @@ def start_import(test_size = 1000):
             # the `element.clear()` call will explicitly free up the memory
             # used to store the element
             element.clear()
-            
+
     total_number = len(data_set)
     print('in total: ', total_number)
     data_set_test = data_set[:test_size]
