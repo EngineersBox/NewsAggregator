@@ -10,9 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      KEYS_DIR: keys
       PRIVATE_KEY_FILE: id_rsa
-      ANSIBLE_DIR: ansible
+      ANSIBLE_DIR: .
       PLAYBOOK: playbooks/deploy.yml
     steps:
       - uses: actions/checkout@v2
@@ -22,19 +21,19 @@ jobs:
           sudo apt install -y software-properties-common
           sudo apt-add-repository -yu ppa:ansible/ansible
           sudo apt install -y ansible
-          sudo ansible-galaxy collection install community.general
+          ansible-galaxy collection install community.general
       - name: Create key file
         run: |
           mkdir -p $KEYS_DIR
-          echo "$SSH_PRIVATE_KEY" > $KEYS_DIR/$PRIVATE_KEY_FILE
-          sudo chmod 0600 $KEYS_DIR/$PRIVATE_KEY_FILE
+          echo "$SSH_PRIVATE_KEY" > $PRIVATE_KEY_FILE
+          sudo chmod 0600 $PRIVATE_KEY_FILE
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
       - name: Verify targets are accessible
-        run: sudo ansible all --private-key=$KEYS_DIR/$PRIVATE_KEY_FILE -m ping
-        working-directory: $ANSIBLE_DIR
+        run: ansible all --private-key=$PRIVATE_KEY_FILE -m ping
+        # working-directory: ansible
       - name: Run playbook
-        run: sudo ansible-playbook -v --private-key=$KEYS_DIR/$PRIVATE_KEY_FILE --extra-vars "ansible_sudo_pass=${{ secrets.SUDO_PASS }}" $PLAYBOOK
-        working-directory: $ANSIBLE_DIR
+        run: ansible-playbook -v --private-key=$PRIVATE_KEY_FILE --extra-vars "ansible_sudo_pass=${{ secrets.SUDO_PASS }}" $PLAYBOOK
+        # working-directory: ansible
       - name: Remove key file
-        run: sudo rm -rf $KEYS_DIR
+        run: sudo rm -rf $PRIVATE_KEY_FILE
