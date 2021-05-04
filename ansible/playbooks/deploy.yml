@@ -14,7 +14,7 @@
         repo: https://github.com/EngineersBox/NewsAggregator.git
         dest: "{{ temp_dir }}"
         clone: yes
-        version: REDIS-44-Create-Docker-Deployment
+        version: main
 
     - name: Docker stop and remove containers
       vars:
