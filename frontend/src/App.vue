@@ -14,10 +14,10 @@
 
     <br/>
     
-    <div v-for="item in res" :key="item._id" style="box-shadow: 0px 1px;margin: 85px;text-align:left; line-height:37.8px;">
+    <div v-for="item in res.result" :key="item._id" style="box-shadow: 0px 1px;margin: 85px;text-align:left; line-height:37.8px;">
       <a :href="item._source.link">{{item._source.title}}</a>
-      <p>{{item._source.short}}</p>
 
+      <p>{{item._source.short}}</p>
       <label v-if="res.length==0" style="color:grey;">Search result empty</label>
 
       <label 
@@ -55,12 +55,12 @@ export default {
         that.timetotal=(d-s)/1000;
         console.log(response.body);
         var data = response.body;
-        for (var i=0; i<data.length; i++) {
-          if (data[i]._source.summary)
-            data[i]._source['short'] = data[i]._source.summary.substring(0, 200)
+        for (var i=0; i<data.result.length; i++) {
+          if (data.result[i]._source.summary)
+            data.result[i]._source['short'] = data.result[i]._source.summary.substring(0, 200)
           else
-            data[i]._source['short'] = data[i]._source.art.substring(0, 200)
-          data[i]._source['ner_shorts'] = data[i]._source['ner_list'].filter(e => 
+            data.result[i]._source['short'] = data.result[i]._source.art.substring(0, 200)
+          data.result[i]._source['ner_shorts'] = data.result[i]._source['ner_list'].filter(e => 
             (e[1] !== 'CARDINAL' && e[1] !== 'ORDINAL' && e[1] !== 'TIME' && e[1] !== 'DATE')
           );
         }
@@ -82,15 +82,16 @@ export default {
         that.timetotal=(d-s)/1000;
         console.log(response.body);
         var data = response.body;
-        for (var i=0; i<data.length; i++) {
-          if (data[i]._source.summary)
-            data[i]._source['short'] = data[i]._source.summary.substring(0, 200)
+        for (var i=0; i<data.result.length; i++) {
+          if (data.result[i]._source.summary)
+            data.result[i]._source['short'] = data.result[i]._source.summary.substring(0, 200)
           else
-            data[i]._source['short'] = data[i]._source.art.substring(0, 200)
-          data[i]._source['ner_shorts'] = data[i]._source['ner_list'].filter(e => 
+            data.result[i]._source['short'] = data.result[i]._source.art.substring(0, 200)
+          data.result[i]._source['ner_shorts'] = data.result[i]._source['ner_list'].filter(e => 
             (e[1] !== 'CARDINAL' && e[1] !== 'ORDINAL' && e[1] !== 'TIME' && e[1] !== 'DATE')
           );
         }
+
         that.res = data;
       })
     }
@@ -107,13 +108,16 @@ export default {
         that.timetotal=(d-s)/1000;
         console.log(response.body);
         var data = response.body;
-        for (var i=0; i<data.length; i++) {
-          if (data[i]._source.summary)
-            data[i]._source['short'] = data[i]._source.summary.substring(0, 200)
-          else
-            data[i]._source['short'] = data[i]._source.art.substring(0, 200)
-            
+        console.log(data.result)
+        for (var i=0; i<data.result.length; i++) {
+          var data_source = data.result[i]._source;
+          data.result[i]._source['short'] = (data_source.summary ? data_source.summary: data_source.art).substring(0, 200);
+          // if (data.result[i]._source.summary)
+            // data.result[i]._source['short'] = data.result[i]._source.summary.substring(0, 200)
+          // else
+            // data.result[i]._source['short'] = data.result[i]._source.art.substring(0, 200)
         }
+        
         that.res = data;
 
         that.keyword = this.query;
