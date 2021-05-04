@@ -5,6 +5,17 @@ from elasticsearch import Elasticsearch
 from summary_1.summary import body_summary
 from knn_indexing.index import knn_query
 
+
+import logging
+
+import logging.config
+
+# from logsetup import LOGGING_CONFIG
+
+logging.config.dictConfig()
+
+logger = logging.getLogger(__name__)
+
 import redis
 
 from modules.RateLimiter.src.request_handler import RateLimiter
@@ -23,6 +34,8 @@ app = Flask(__name__)
 cors = CORS(app)
 
 app.config['CORS_HEADERS'] = 'Content-Type'
+
+logger.warning('app.py started')
 
 # reference of kristoff-it 2020 https://github.com/kristoff-it/redis-cuckoofilter
 rd = redis.Redis()
@@ -57,13 +70,17 @@ def search():
 
         in_result = rd.execute_command("cf.check", "test2", hash(query), fingerprint(query))
         if in_result:
-            print('query is checked by cuckoofilter')
-            print('query is probably inside cuckoofilter')
+            # print('query is checked by cuckoofilter')
+            # print('query is probably inside cuckoofilter')
+            logger.warning('query is checked by cuckoofilter')
+            logger.warning('query is probably inside cuckoofilter')
             result_value = rd.execute_command("get", query)
             return jsonify(result_value)
         else:
-            print('query is checked by cuckoofilter')
-            print('query is not inside cuckoofilter')
+            # print('query is checked by cuckoofilter')
+            # print('query is not inside cuckoofilter')
+            logger.warning('query is checked by cuckoofilter')
+            logger.warning('query is not inside cuckoofilter')
             res = simple_match_search(ES, 'news', query)
             list_res = res['hits']['hits']
             for one in list_res:
@@ -79,12 +96,32 @@ def search():
 @cross_origin()
 @RateLimiter()
 def knn_search():
-    
     query = request.args.get('query', None)
     if query:
-        res = knn_query(query)
-        list_res = res['hits']['hits']
-        return jsonify(list_res)
+        print('query is %s' % query)
+
+        in_result = rd.execute_command("cf.check", "test2", hash(query), fingerprint(query))
+        if in_result:
+            # print('query is checked by cuckoofilter')
+            # print('query is probably inside cuckoofilter')
+            logger.warning('query is checked by cuckoofilter')
+            logger.warning('query is probably inside cuckoofilter')
+            result_value = rd.execute_command("get", query)
+            return jsonify(result_value)
+        else:
+            # print('query is checked by cuckoofilter')
+            # print('query is not inside cuckoofilter')
+            logger.warning('query is checked by cuckoofilter')
+            logger.warning('query is not inside cuckoofilter')
+            res = knn_query(ES, 'news', query)
+            list_res = res['hits']['hits']
+            for one in list_res:
+                # u6250082 Xuguang Song
+                sum_txt = body_summary(one['_source']['art'])
+                one['_source']['summary'] = ' '.join(sum_txt)
+            rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
+            rd.execute_command("set", query, list_res)
+            return jsonify(list_res)
     return jsonify([])
 
 if __name__ == '__main__':
