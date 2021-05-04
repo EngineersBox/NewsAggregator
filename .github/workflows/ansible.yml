@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PRIVATE_KEY_FILE: id_rsa
-      ANSIBLE_DIR: ansible
+      ANSIBLE_DIR: ./ansible
       PLAYBOOK: playbooks/deploy.yml
     steps:
       - uses: actions/checkout@v2
