@@ -14,7 +14,7 @@
 
     <br/>
     
-    <div v-for="item in res" :key="item._id" style="box-shadow: 0px 1px;margin: 85px;text-align:left; line-height:37.8px;">
+    <div v-for="item in res.result" :key="item._id" style="box-shadow: 0px 1px;margin: 85px;text-align:left; line-height:37.8px;">
       <a :href="item._source.link">{{item._source.title}}</a>
       <p>{{item._source.short}}</p>
 
@@ -105,12 +105,11 @@ export default {
         var data = response.body;
         console.log(data.result)
         for (var i=0; i<data.result.length; i++) {
-          var data_source = data.result[i]._source;
-          data.result[i]._source['short'] = (data_source.summary ? data_source.summary: data_source.art).substring(0, 200);
-          // if (data.result[i]._source.summary)
-            // data.result[i]._source['short'] = data.result[i]._source.summary.substring(0, 200)
-          // else
-            // data.result[i]._source['short'] = data.result[i]._source.art.substring(0, 200)
+          
+          if (data.result[i]._source.summary)
+            data.result[i]._source['short'] = data.result[i]._source.summary.substring(0, 200)
+          else
+            data.result[i]._source['short'] = data.result[i]._source.art.substring(0, 200)
         }
         
         that.res = data;
