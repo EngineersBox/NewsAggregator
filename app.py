@@ -96,7 +96,7 @@ def search():
         print('query is %s' % query)
 
         in_result = rd.execute_command("cf.check", "test2", hash(query), fingerprint(query))
-        if in_result:
+        if int(in_result) == 1:
             # print('query is checked by cuckoofilter')
             # print('query is probably inside cuckoofilter')
             logger.warning('query is checked by cuckoofilter')
