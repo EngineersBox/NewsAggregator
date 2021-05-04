@@ -14,7 +14,7 @@ jobs:
       ANSIBLE_DIR: ./ansible
       PLAYBOOK: playbooks/deploy.yml
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@main
       - name: Install ansible
         run: |
           sudo apt update
