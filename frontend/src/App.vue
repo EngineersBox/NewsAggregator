@@ -35,6 +35,8 @@
 
 <script>
 
+const API_ENDPOINT = "https://anu.jkl.io/api";
+
 export default {
   name: 'App',
   data: function() {
@@ -50,10 +52,9 @@ export default {
     search: function() {
       var that = this;
       const s = Date.now();
-      this.$http.get('http://localhost:3001/search', {params: {query: this.query}}).then(response => {
+      this.$http.get(`${API_ENDPOINT}/search`, {params: {query: this.query}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
-        console.log(response.body);
         var data = response.body;
         for (var i=0; i<data.length; i++) {
           if (data[i]._source.summary)
@@ -77,10 +78,9 @@ export default {
       var keyword = e.target.dataset["val"];
       this.query = keyword;
       const s = Date.now();
-      this.$http.get('http://localhost:3001/search', {params: {query: keyword}}).then(response => {
+      this.$http.get(`${API_ENDPOINT}/search`, {params: {query: keyword}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
-        console.log(response.body);
         var data = response.body;
         for (var i=0; i<data.length; i++) {
           if (data[i]._source.summary)
@@ -102,10 +102,9 @@ export default {
       // u6250082 Xuguang Song
       var that = this;
       const s = Date.now();
-      this.$http.get('http://localhost:3001/origin_search', {params: {query: this.query}}).then(response => {
+      this.$http.get(`${API_ENDPOINT}/origin_search`, {params: {query: this.query}}).then(response => {
         const d = Date.now();
         that.timetotal=(d-s)/1000;
-        console.log(response.body);
         var data = response.body;
         for (var i=0; i<data.length; i++) {
           if (data[i]._source.summary)
