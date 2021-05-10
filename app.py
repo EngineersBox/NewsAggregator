@@ -7,6 +7,7 @@ from summary_1.summary import body_summary
 from knn_indexing.index import knn_query
 from modules.RateLimiter.src.request_handler import RateLimiter
 from urllib3.exceptions import SSLError
+from collections import OrderedDict
 
 logging.config.fileConfig(fname='flask_logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
@@ -101,7 +102,8 @@ def search():
             # print('query is probably inside cuckoofilter')
             logger.warning('query is checked by cuckoofilter')
             logger.warning('query is probably inside cuckoofilter')
-            result_value = list(map(json.loads, rd.execute_command("LRANGE", query, 0, -1)))
+            orderedLoad = lambda x: json.loads(x, object_pairs_hook=OrderedDict)
+            result_value = list(map(orderedLoad rd.execute_command("LRANGE", query, 0, -1)))
             return jsonify(result=result_value)
         else:
             # print('query is checked by cuckoofilter')
