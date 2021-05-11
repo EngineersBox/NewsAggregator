@@ -62,7 +62,7 @@ function queryApi(query_value, _this, origin) {
     _this.keyword = query_value;
     _this.from = data.from;
   }, error => {
-    _this.error = error.status_code === 429 ? ERR_MSGS.EXCEEDED_RATE_LIMIT : ERR_MSGS.UNKNOWN_ERR;
+    _this.error = error.status === 429 ? ERR_MSGS.EXCEEDED_RATE_LIMIT : ERR_MSGS.UNKNOWN_ERR;
   });
 }
 
