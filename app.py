@@ -98,18 +98,17 @@ def search():
 
         in_result = rd.execute_command("cf.check", "test2", hash(query), fingerprint(query))
         if int(in_result) == 1:
-            # print('query is checked by cuckoofilter')
-            # print('query is probably inside cuckoofilter')
-            logger.warning('query is checked by cuckoofilter')
-            logger.warning('query is probably inside cuckoofilter')
+            logger.info('query is checked by cuckoofilter')
+            logger.info('query is probably inside cuckoofilter')
             orderedLoad = lambda x: json.loads(x, object_pairs_hook=OrderedDict)
             result_value = list(map(orderedLoad, rd.execute_command("LRANGE", query, 0, -1)))
-            return jsonify(result=result_value)
+            return jsonify(result={
+                "result": result_value,
+                "from": "Redis"
+            })
         else:
-            # print('query is checked by cuckoofilter')
-            # print('query is not inside cuckoofilter')
-            logger.warning('query is checked by cuckoofilter')
-            logger.warning('query is not inside cuckoofilter')
+            logger.info('query is checked by cuckoofilter')
+            logger.info('query is not inside cuckoofilter')
             res = simple_match_search(ES, 'news', query)
             list_res = res['hits']['hits']
             for one in list_res:
@@ -119,7 +118,10 @@ def search():
             rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
             for elem in list_res:
                 rd.execute_command("LPUSH", query, json.dumps(elem))
-            return jsonify(result=list_res)
+            return jsonify(result={
+                "result": list_res,
+                "from": "Elasticsearch"
+            })
     return jsonify([])
 
 @app.route('/search')
@@ -132,29 +134,31 @@ def knn_search():
         print('query is %s' % query)
 
         in_result = rd.execute_command("cf.check", "test2", hash(query), fingerprint(query))
-        if in_result:
-            # print('query is checked by cuckoofilter')
-            # print('query is probably inside cuckoofilter')
-            logger.warning('query is checked by cuckoofilter')
-            logger.warning('query is probably inside cuckoofilter')
-            result_value = list(map(json.loads, rd.execute_command("LRANGE", query, 0, -1)))
-            return jsonify(result=result_value)
+        if int(in_result) == 1:
+            logger.info('query is checked by cuckoofilter')
+            logger.info('query is probably inside cuckoofilter')
+            orderedLoad = lambda x: json.loads(x, object_pairs_hook=OrderedDict)
+            result_value = list(map(orderedLoad, rd.execute_command("LRANGE", query, 0, -1)))
+            return jsonify(result={
+                "result": result_value,
+                "from": "Redis"
+            })
         else:
-            # print('query is checked by cuckoofilter')
-            # print('query is not inside cuckoofilter')
-            logger.warning('query is checked by cuckoofilter')
-            logger.warning('query is not inside cuckoofilter')
-            res = knn_query(ES, 'news', query)
+            logger.info('query is checked by cuckoofilter')
+            logger.info('query is not inside cuckoofilter')
+            res = simple_match_search(ES, 'news', query)
             list_res = res['hits']['hits']
             for one in list_res:
                 # u6250082 Xuguang Song
                 sum_txt = body_summary(one['_source']['art'])
                 one['_source']['summary'] = ' '.join(sum_txt)
-            rd.execute_command("cf.add", "test2", hash(
-                query), fingerprint(query))
+            rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
             for elem in list_res:
                 rd.execute_command("LPUSH", query, json.dumps(elem))
-            return jsonify(result=list_res)
+            return jsonify(result={
+                "result": list_res,
+                "from": "Elasticsearch"
+            })
     return jsonify([])
 
 if __name__ == '__main__':
