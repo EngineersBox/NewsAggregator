@@ -103,7 +103,7 @@ def search():
             logger.warning('query is checked by cuckoofilter')
             logger.warning('query is probably inside cuckoofilter')
             orderedLoad = lambda x: json.loads(x, object_pairs_hook=OrderedDict)
-            result_value = list(map(orderedLoad rd.execute_command("LRANGE", query, 0, -1)))
+            result_value = list(map(orderedLoad, rd.execute_command("LRANGE", query, 0, -1)))
             return jsonify(result=result_value)
         else:
             # print('query is checked by cuckoofilter')
