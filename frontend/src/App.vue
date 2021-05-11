@@ -10,13 +10,11 @@
     <br/>
     <label v-if="error" style="color:salmon;">{{error}}</label>
     <br/>
-    <label style="color:grey;">Search spent intotal </label>
-    <label style="color:grey;">{{timetotal}}</label>
-    <label style="color:grey;"> seconds.</label>
+    <label style="color:grey;">Search took {{timetotal}} seconds from {{from}}</label>
 
     <br/>
     
-    <div v-for="item in res.result" :key="item._id" style="box-shadow: 0px 1px;margin: 85px;text-align:left; line-height:37.8px;">
+    <div v-for="item in res" :key="item._id" style="box-shadow: 0px 1px;margin: 85px;text-align:left; line-height:37.8px;">
       <a :href="item._source.link" target="_blank">{{item._source.title}}</a>
       <p>{{item._source.short}}</p>
 
@@ -44,25 +42,27 @@ const ERR_MSGS = {
 };
 
 function queryApi(query_value, _this, origin) {
+  _this.error = undefined;
   const s = Date.now();
-  _this.$http.get(`${API_ENDPOINT}/search`, {params: {query: query_value}}).then(response => {
+  _this.$http.get(`${API_ENDPOINT}/${origin ? "origin_" : ""}search`, {params: {query: query_value}}).then(response => {
     const d = Date.now();
     _this.timetotal=(d-s)/1000;
-    var data = response.body;
-    for (var i=0; i<data.result.length; i++) {
+    var data = response.body.result;
+    for (var i = 0; i < data.result.length; i++) {
       var result_src = data.result[i]._source;
       data.result[i]._source['short'] = (result_src.summary ? result_src.summary : result_src.art).substring(0, 200).concat("...");
-      if (!origin) {
+      if (origin) {
         continue;
       }
       data.result[i]._source['ner_shorts'] = data.result[i]._source['ner_list'].filter(e => 
         (e[1] !== 'CARDINAL' && e[1] !== 'ORDINAL' && e[1] !== 'TIME' && e[1] !== 'DATE')
       );
     }
-    _this.res = data;
+    _this.res = data.result;
     _this.keyword = query_value;
+    _this.from = data.from;
   }, error => {
-    _this.error = error.statusCode === 429 ? ERR_MSGS.EXCEEDED_RATE_LIMIT : ERR_MSGS.UNKNOWN_ERR;
+    _this.error = error.status_code === 429 ? ERR_MSGS.EXCEEDED_RATE_LIMIT : ERR_MSGS.UNKNOWN_ERR;
   });
 }
 
@@ -75,19 +75,20 @@ export default {
       keyword: '',
       timetotal:0,
       error: undefined,
+      from: '',
     }
   },
   methods: {
     search: function() {
-      queryApi(this.query, this, true);
+      queryApi(this.query, this, false);
     },
     search_keyword: function(e) {
       var keyword = e.target.dataset["val"];
       this.query = keyword;
-      queryApi(keyword, this, true);
+      queryApi(keyword, this, false);
     },
     origin_search: function() {
-      queryApi(this.query, this, false);
+      queryApi(this.query, this, true);
     }
   }
 }
