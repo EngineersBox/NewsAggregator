@@ -30,6 +30,7 @@ services:
             context: .
         depends_on:
             - elasticsearch
+            - redis
         volumes:
             - ../backend:/server
         command: gunicorn -w 4 -b 0.0.0.0:3001 app:app

@@ -14,11 +14,11 @@ URL = 'https://localhost:9200/example3/_doc/'
 
 # the code with idea inspired by https://www.cnblogs.com/shaosks/p/7592229.html
 
-def start_import(test_size = 1000):
+def start_import(test_size = 20000):
     # u6250082 Xuguang Song
     '''import all the data news from data set and use 1000 as test set'''
 
-    data_set  = json.loads(open ('./result.json').read())
+    data_set = json.loads(open('./result.json').read())
     total_number = len(data_set)
     print('in total: ', total_number)
     data_set_test = data_set[:test_size]
