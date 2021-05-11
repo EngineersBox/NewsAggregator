@@ -8,6 +8,8 @@
     <br/>
     <br/>
     <br/>
+    <label v-if="error" style="color:salmon;">{{error}}</label>
+    <br/>
     <label style="color:grey;">Search spent intotal </label>
     <label style="color:grey;">{{timetotal}}</label>
     <label style="color:grey;"> seconds.</label>
@@ -15,7 +17,7 @@
     <br/>
     
     <div v-for="item in res.result" :key="item._id" style="box-shadow: 0px 1px;margin: 85px;text-align:left; line-height:37.8px;">
-      <a :href="item._source.link">{{item._source.title}}</a>
+      <a :href="item._source.link" target="_blank">{{item._source.title}}</a>
       <p>{{item._source.short}}</p>
 
       <label v-if="res.length==0" style="color:grey;">Search result empty</label>
@@ -36,6 +38,33 @@
 <script>
 
 const API_ENDPOINT = "https://anu.jkl.io/api";
+const ERR_MSGS = {
+  EXCEEDED_RATE_LIMIT: "Seems like you've been sending requests too fast, slow down a bit.",
+  UNKNOWN_ERR: "Oh no! Something unexpected happened. Please try your search again."
+};
+
+function queryApi(query_value, _this, origin) {
+  const s = Date.now();
+  _this.$http.get(`${API_ENDPOINT}/search`, {params: {query: query_value}}).then(response => {
+    const d = Date.now();
+    _this.timetotal=(d-s)/1000;
+    var data = response.body;
+    for (var i=0; i<data.result.length; i++) {
+      var result_src = data.result[i]._source;
+      data.result[i]._source['short'] = (result_src.summary ? result_src.summary : result_src.art).substring(0, 200).concat("...");
+      if (!origin) {
+        continue;
+      }
+      data.result[i]._source['ner_shorts'] = data.result[i]._source['ner_list'].filter(e => 
+        (e[1] !== 'CARDINAL' && e[1] !== 'ORDINAL' && e[1] !== 'TIME' && e[1] !== 'DATE')
+      );
+    }
+    _this.res = data;
+    _this.keyword = query_value;
+  }, error => {
+    _this.error = error.statusCode === 429 ? ERR_MSGS.EXCEEDED_RATE_LIMIT : ERR_MSGS.UNKNOWN_ERR;
+  });
+}
 
 export default {
   name: 'App',
@@ -45,78 +74,22 @@ export default {
       res: [],
       keyword: '',
       timetotal:0,
+      error: undefined,
     }
   },
   methods: {
     search: function() {
-      var that = this;
-      const s = Date.now();
-      this.$http.get(`${API_ENDPOINT}/search`, {params: {query: this.query}}).then(response => {
-        const d = Date.now();
-        that.timetotal=(d-s)/1000;
-        console.log(response.body);
-        var data = response.body;
-        for (var i=0; i<data.result.length; i++) {
-          if (data.result[i]._source.summary)
-            data.result[i]._source['short'] = data.result[i]._source.summary.substring(0, 200)
-          else
-            data.result[i]._source['short'] = data.result[i]._source.art.substring(0, 200)
-          data.result[i]._source['ner_shorts'] = data.result[i]._source['ner_list'].filter(e => 
-            (e[1] !== 'CARDINAL' && e[1] !== 'ORDINAL' && e[1] !== 'TIME' && e[1] !== 'DATE')
-          );
-        }
-        that.res = data;
-        that.keyword = this.query;
-      })
-    }
-  ,
-  search_keyword: function(e) {
-      var that = this;
+      queryApi(this.query, this, true);
+    },
+    search_keyword: function(e) {
       var keyword = e.target.dataset["val"];
       this.query = keyword;
-      const s = Date.now();
-      this.$http.get(`${API_ENDPOINT}/search`, {params: {query: keyword}}).then(response => {
-        const d = Date.now();
-        that.timetotal=(d-s)/1000;
-        console.log(response.body);
-        var data = response.body;
-        for (var i=0; i<data.result.length; i++) {
-          if (data.result[i]._source.summary)
-            data.result[i]._source['short'] = data.result[i]._source.summary.substring(0, 200)
-          else
-            data.result[i]._source['short'] = data.result[i]._source.art.substring(0, 200)
-          data.result[i]._source['ner_shorts'] = data.result[i]._source['ner_list'].filter(e => 
-            (e[1] !== 'CARDINAL' && e[1] !== 'ORDINAL' && e[1] !== 'TIME' && e[1] !== 'DATE')
-          );
-        }
-        that.res = data;
-      })
+      queryApi(keyword, this, true);
+    },
+    origin_search: function() {
+      queryApi(this.query, this, false);
     }
-  
-  ,
-  origin_search: function() {
-      // u6250082 Xuguang Song
-      var that = this;
-      const s = Date.now();
-      this.$http.get(`${API_ENDPOINT}/origin_search`, {params: {query: this.query}}).then(response => {
-        const d = Date.now();
-        that.timetotal=(d-s)/1000;
-        console.log(response.body);
-        var data = response.body;
-        console.log(data.result)
-        for (var i=0; i<data.result.length; i++) {
-          
-          if (data.result[i]._source.summary)
-            data.result[i]._source['short'] = data.result[i]._source.summary.substring(0, 200)
-          else
-            data.result[i]._source['short'] = data.result[i]._source.art.substring(0, 200)
-        }
-        
-        that.res = data;
-        that.keyword = this.query;
-      })
-    }
-          }
+  }
 }
 </script>
 <style>
