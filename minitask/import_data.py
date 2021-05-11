@@ -6,9 +6,6 @@ from elasticsearch import Elasticsearch as es
 
 from elasticsearch import helpers as h
 
-from dataclasses import dataclass
-
-
 """
 Need to create the index first before using this script
 curl -XPUT https://localhost:9200/example3 --insecure -u admin:admin
