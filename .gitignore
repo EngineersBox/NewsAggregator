@@ -3,3 +3,4 @@
 __pycache__
 frontend/package-lock.json
 *.pyc
+/modules/CuckooFilter/Cargo.lock
