@@ -153,7 +153,7 @@ def knn_search():
             rd.execute_command("cf.add", "test2", hash(
                 query), fingerprint(query))
             for elem in list_res:
-                rd.execute_command("RPUSH", query, json.dumps(elem))
+                rd.execute_command("LPUSH", query, json.dumps(elem))
             return jsonify(result=list_res)
     return jsonify([])
 
