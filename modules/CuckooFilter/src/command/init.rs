@@ -10,9 +10,8 @@ fn construct_arguments_schema() -> Vec<Argument> {
     let mut arg_schema: Vec<Argument> = Vec::new();
     push_all!(
         arg_schema,
-        Argument::new("cf", ArgType::STRING),
-        Argument::new("query", ArgType::STRING),
-        Argument::new("fingerprint", ArgType::STRING)
+        Argument::new("name", ArgType::STRING),
+        Argument::new("size", ArgType::STRING)
     );
     return arg_schema;
 }
@@ -31,20 +30,23 @@ pub fn cuckoofilter_insert(ctx: &Context, args: Vec<String>) -> RedisResult {
     );
     validate_schema!(resolver, ctx);
     command_entry_debug_log!(
-        "Cuckoo Filter Insert Function:",
+        "Cuckoo Filter Init Function:",
         resolver, ctx,
         "Could not retrieve arguments"
     );
 
     // Get The Arguements. args[0] is the command
-    let CUCKOO_FILTER_NAME = &args[1];
-    let QUERY = &args[2];
-    let FINGERPRINT = &args[3];
+    let NAME_OF_CUCKOO_FILTER = &args[1];
+    let SIZE_OF_CUCKOO_FILTER = &args[2];
 
-    let cf = new CuckooFilter(NAME_OF_CUCKOO_FILTER, SIZE_OF_CUCKOO_FILTER, ctx);
-    cf.add(CUCKOO_FILTER_NAME, QUERY, FINGERPRINT)
+    // Check if the name of the cuckoo filter exists
+    let key_exists: RedisResult = ctx.call("EXISTS", &[resolver.at::<String>(0).expect("invalid").as_str()]);
+    handled_templated_error!(key_exists, ctx, "Cuckoo Filter does not exist");
+    let key_type_query: RedisResult = ctx.call("TYPE", &[resolver.at::<String>(0).expect("invalid").as_str()]);
+    let key_type_value: RedisValue = handled_templated_error!(key_type_query, ctx, "Invalid key type");
 
-
+    ctx.call("HSET", &[NAME_OF_CUCKOO_FILTER, "capacity", 0, "Number of Buckets", 0]);
+    new CuckooFilter(NAME_OF_CUCKOO_FILTER, SIZE_OF_CUCKOO_FILTER, ctx);
 
     return RedisResult::Ok(RedisValue::from(key_exists.to_string()))
 }
