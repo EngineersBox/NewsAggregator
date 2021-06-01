@@ -9,11 +9,10 @@ services:
             discovery.type: single-node
             bootstrap.memory_lock: "true"
             ES_JAVA_OPTS: "-Xms512m -Xmx512m"
-            opendistro_security.disabled: "true"
+            opendistro_security.disabled: "true" # This will need to be enabled when TLS is fixed
         ulimits:
             memlock:
                 soft: -1
                 hard: -1
         ports:
             - 9200:9200
-        

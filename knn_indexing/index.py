@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 import json
-from knn_indexing.__settings__ import URL, MODEL_DIM, MODEL_URL
+from __settings__ import URL, MODEL_DIM, MODEL_URL
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np

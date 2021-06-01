@@ -1,0 +1,19 @@
+- name: Docker stop and remove containers
+  vars:
+    container_names:
+      - frontend
+    containers: "{{ item }}"
+  include_tasks: common/docker_stop_remove_tasks.yml
+  loop: "{{ container_names | batch(1) | list }}"
+  tags:
+    - backend
+
+- name: Spin up new containers
+  docker_compose:
+    project_src: "temp/compose/backend"
+    build: yes
+    debug: yes
+  become: true
+  register: started_containers
+  tags:
+    - frontend

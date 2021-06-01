@@ -1,0 +1,42 @@
+- name: Stop and remove container
+  vars:
+    container_names:
+      - elasticsearch
+    containers: "{{ item }}"
+  include_tasks: common/docker_stop_remove_tasks.yml
+  loop: "{{ container_names | batch(1) | list }}"
+  tags:
+    - elasticsearch
+
+- name: Spin up new container
+  docker_compose:
+    project_src: "temp/compose/elasticsearch"
+    build: yes
+    debug: yes
+  become: true
+  register: started_containers
+  tags:
+    - elasticsearch
+
+- name: Wait for elasticsearch to start
+  wait_for:
+    host: localhost
+    port: 9200
+    delay: 5
+    connect_timeout: 1
+  tags:
+    - elasticsearch
+
+- name: Create base indexes
+  shell:
+    cmd: "python3 import_data.py"
+    chdir: "temp/minitask"
+  tags:
+    - elasticsearch_base_indexes
+
+- name: Create KNN indexes
+  shell:
+    cmd: "python index.py"
+    chdir: "temp/knn_indexeing"
+  tags:
+    - elasticsearch_knn_indexes

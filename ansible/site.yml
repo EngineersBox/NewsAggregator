@@ -1,0 +1,44 @@
+---
+- hosts: targets
+  tasks:
+    - name: Clone repo onto box
+      git:
+        repo: https://github.com/EngineersBox/NewsAggregator.git
+        dest: "temp"
+        clone: yes
+        version: main
+
+- hosts: targets
+  roles:
+    - elasticsearch
+  tags:
+    - elasticsearch
+    - elasticsearch_base_indexes
+    - elasticsearch_knn_indexes
+
+- hosts: targets
+  roles:
+    - redis # BGSAVE, stop + remove container, start new container, stop redis, copy data to redis dir, start redis
+  tags:
+    - redis
+    - redis_backup_restore
+
+- hosts: targets
+  roles:
+    - frontend
+  tags:
+    - frontend
+
+- hosts: targets
+  roles:
+    - backend
+  tags:
+    - backend
+
+- hosts: targets
+  tasks:
+    - name: Remove repo content
+      file:
+        path: "temp"
+        state: absent
+      become: true

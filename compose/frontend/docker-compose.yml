@@ -1,0 +1,12 @@
+version: "3.5"
+services:
+    frontend:
+        container_name: frontend
+        network_mode: host
+        build:
+            context: ../frontend
+        depends_on:
+            - backend
+        volumes:
+            - ../frontend:/frontend
+        command: http-server dist --port 3002
