@@ -1,13 +1,13 @@
 from elasticsearch import Elasticsearch
 import json
-from knn_indexing.__settings__ import URL, MODEL_DIM, MODEL_URL
+from .__settings__ import URL, MODEL_DIM, MODEL_URL
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
 import re
 import datetime
-from summary.summary_func import body_summary
-from summary_1.name_entity import recognize_name_entity 
+from .summary.summary_func import body_summary
+from .summary_1.name_entity import recognize_name_entity
 
 
 ES = Elasticsearch(URL, verify_certs=False, ssl_show_warn=False)
