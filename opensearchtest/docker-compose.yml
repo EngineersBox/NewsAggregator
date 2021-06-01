@@ -1,0 +1,19 @@
+version: "3.5"
+services:
+    elasticsearch:
+        image: opensearchproject/opensearch:latest
+        container_name: elasticsearch
+        build:
+            context: .
+        environment:
+            discovery.type: single-node
+            bootstrap.memory_lock: "true"
+            ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+            opendistro_security.disabled: "true"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        ports:
+            - 9200:9200
+        
