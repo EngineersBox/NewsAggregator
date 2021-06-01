@@ -4,7 +4,7 @@ ENV PYTHONBUFFERED 1
 RUN mkdir -p /app
 WORKDIR /app
 
-COPY ../../../../ .
+COPY ../../. .
 
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install --no-cache-dir -r requirements.txt
