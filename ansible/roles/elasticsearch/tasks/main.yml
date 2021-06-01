@@ -3,7 +3,7 @@
     container_names:
       - elasticsearch
     containers: "{{ item }}"
-  include_tasks: common/docker_stop_remove_tasks.yml
+  include_tasks: roles/common/tasks/docker_stop_remove_tasks.yml
   loop: "{{ container_names | batch(1) | list }}"
   tags:
     - elasticsearch
