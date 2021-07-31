@@ -17,28 +17,25 @@ node.ingest: true
 #discovery.type: single-node
 
 ######## Start OpenSearch Security Demo Configuration ########
-# WARNING: revise all the lines below before you go into production
-opensearch_security.disabled: true
-opendistro_security.ssl.transport.pemcert_filepath: esnode.pem
-opendistro_security.ssl.transport.pemkey_filepath: esnode-key.pem
-opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
-opendistro_security.ssl.transport.enforce_hostname_verification: false
-opendistro_security.ssl.http.enabled: true
-opendistro_security.ssl.http.pemcert_filepath: esnode.pem
-opendistro_security.ssl.http.pemkey_filepath: esnode-key.pem
-opendistro_security.ssl.http.pemtrustedcas_filepath: root-ca.pem
-opendistro_security.allow_unsafe_democertificates: true
-opendistro_security.allow_default_init_securityindex: true
-opendistro_security.authcz.admin_dn:
-  - CN=kirk,OU=client,O=client,L=test, C=de
-
-opendistro_security.audit.type: internal_opensearch
-opendistro_security.enable_snapshot_restore_privilege: true
-opendistro_security.check_snapshot_restore_write_privileges: true
-opendistro_security.restapi.roles_enabled: ["all_access", "security_rest_api_access"]
-opendistro_security.system_indices.enabled: true
-opendistro_security.system_indices.indices: [".opendistro-alerting-config", ".opendistro-alerting-alert*", ".opendistro-anomaly-results*", ".opendistro-anomaly-detector*", ".opendistro-anomaly-checkpoints", ".opendistro-anomaly-detection-state", ".opendistro-reports-*", ".opendistro-notifications-*", ".opendistro-notebooks", ".opendistro-asynchronous-search-response*"]
-node.max_local_storage_nodes: 3
+plugins.security.disabled: true
+# plugins.security.ssl.transport.pemcert_filepath: node.pem
+# plugins.security.ssl.transport.pemkey_filepath: node-key.pem
+# plugins.security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
+# plugins.security.ssl.transport.enforce_hostname_verification: false
+# plugins.security.ssl.http.enabled: true
+# plugins.security.ssl.http.pemcert_filepath: node.pem
+# plugins.security.ssl.http.pemkey_filepath: node-key.pem
+# plugins.security.ssl.http.pemtrustedcas_filepath: root-ca.pem
+# plugins.security.allow_default_init_securityindex: true
+# plugins.security.authcz.admin_dn:
+#   - CN=A,OU=UNIT,O=ORG,L=TORONTO,ST=ONTARIO,C=CA
+# plugins.security.nodes_dn:
+#   - 'CN=N,OU=UNIT,O=ORG,L=TORONTO,ST=ONTARIO,C=CA'
+# plugins.security.audit.type: internal_opensearch
+# plugins.security.enable_snapshot_restore_privilege: true
+# plugins.security.check_snapshot_restore_write_privileges: true
+# plugins.security.restapi.roles_enabled: ["all_access", "security_rest_api_access"]
+# cluster.routing.allocation.disk.threshold_enabled: false
+# plugins.security.audit.config.disabled_rest_categories: NONE
+# plugins.security.audit.config.disabled_transport_categories: NONE
 ######## End OpenSearch Security Demo Configuration ########
-
-index.knn: true

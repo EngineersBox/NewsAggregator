@@ -1,14 +1,12 @@
 version: "3.5"
 services:
     elasticsearch:
-        image: opensearchproject/opensearch:latest
         container_name: elasticsearch
         build:
             context: .
         environment:
             discovery.type: single-node
             bootstrap.memory_lock: "true"
-            opendistro_security.disabled: "true" # This will need to be enabled when TLS is fixed
         ulimits:
             memlock:
                 soft: -1
