@@ -8,7 +8,7 @@ services:
         environment:
             discovery.type: single-node
             bootstrap.memory_lock: "true"
-            plugins.security.disabled: true # This will need to be enabled when TLS is fixed
+            opendistro_security.disabled: "true" # This will need to be enabled when TLS is fixed
         ulimits:
             memlock:
                 soft: -1
