@@ -1,19 +1,19 @@
 from elasticsearch import Elasticsearch
 import json
-from __settings__ import URL, MODEL_DIM, MODEL_URL
+from . import __settings__
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
 import re
 import datetime
-from summary.summary_func import body_summary
-from summary_1.name_entity import recognize_name_entity
+from summary import summary_func
+from summary_1 import name_entity
 
 
-ES = Elasticsearch(URL, verify_certs=False, ssl_show_warn=False)
+ES = Elasticsearch(__settings__.URL, verify_certs=False, ssl_show_warn=False)
 INDEX_NAME = "knn_index"
 # Used for vectorisation
-EMBED = hub.load(MODEL_URL)
+EMBED = hub.load(__settings__.MODEL_URL)
 def init_knn_es_index(index_name):
     if not ES.indices.exists(index_name):
         ES.indices.create(index_name, {
@@ -22,10 +22,10 @@ def init_knn_es_index(index_name):
                 "properties": {
                     "title_v": {
                         "type": "knn_vector",
-                        "dimension": MODEL_DIM
+                        "dimension": __settings__.MODEL_DIM
                     },
                     "title": {"type": "text"},
-                    "art_v": {"type": "knn_vector", "dimension": MODEL_DIM},
+                    "art_v": {"type": "knn_vector", "dimension": __settings__.MODEL_DIM},
                     "art": {"type": "text"},
                     "link": {"type": "text"}
                 }
@@ -41,7 +41,7 @@ def init_knn_es_index(index_name):
 def vectorise_sent(sent: str):
     sent = re.sub(r"[^\w\s]", "", sent)
     words = sent.split(" ")
-    vs = np.zeros((1*MODEL_DIM))
+    vs = np.zeros((1*__settings__.MODEL_DIM))
     for word in words:
         x = tf.constant([word])
         embeddings = EMBED(x)
@@ -61,8 +61,8 @@ def import_data_with_knn(index_name=INDEX_NAME):
         title = data["title"]
         title_v = vectorise_sent(data["title"])
         article = data["art"]
-        summary = body_summary(article) 
-        ner_list = recognize_name_entity(summary)
+        summary = summary_func.body_summary(article) 
+        ner_list = name_entity.recognize_name_entity(summary)
         art_v = vectorise_sent(data["art"])
         ES.create(index=index_name, body={"title_v": title_v, "title": title, "art_v": art_v, "art": article,
                                           "link": link, "summary": summary, "ner_list": ner_list}, id=i)
@@ -87,7 +87,7 @@ def knn_query(query: str, index_name=INDEX_NAME):
     start = datetime.datetime.now()
     if not ES:
         print('rebuilding es conn')
-        ES = Elasticsearch(URL, verify_certs=False, ssl_show_warn=False)
+        ES = Elasticsearch(__settings__.URL, verify_certs=False, ssl_show_warn=False)
     results = ES.search(index=index_name, body=search_body)
     return results
 """
