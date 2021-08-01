@@ -1,6 +1,6 @@
 from elasticsearch import Elasticsearch
 import json
-from knn_indexing.__settings__ import URL, MODEL_DIM, MODEL_URL
+from __settings__ import URL, MODEL_DIM, MODEL_URL
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
@@ -16,12 +16,21 @@ INDEX_NAME = "knn_index"
 EMBED = hub.load(MODEL_URL)
 def init_knn_es_index(index_name):
     if not ES.indices.exists(index_name):
-        ES.indices.create(index_name, {"settings": {"index.knn": True},
-                                       "mappings": {"properties": {"title_v": {"type": "knn_vector", "dimension": MODEL_DIM},
-                                                                   "title": {"type": "text"},
-                                                                   "art_v": {"type": "knn_vector", "dimension": MODEL_DIM},
-                                                                   "art": {"type": "text"},
-                                                                   "link": {"type": "text"}}}})
+        ES.indices.create(index_name, {
+            "settings": {"index.knn": True},
+            "mappings": {
+                "properties": {
+                    "title_v": {
+                        "type": "knn_vector",
+                        "dimension": MODEL_DIM
+                    },
+                    "title": {"type": "text"},
+                    "art_v": {"type": "knn_vector", "dimension": MODEL_DIM},
+                    "art": {"type": "text"},
+                    "link": {"type": "text"}
+                }
+            }
+        })
         print("Created knn index")
     else:
         print("Index already exists")

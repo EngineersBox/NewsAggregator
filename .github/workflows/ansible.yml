@@ -7,6 +7,10 @@ on:
         description: 'Comma seperated list of components to deploy from: [elasticsearch, elasticsearch_base_indexes, elasticsearch_knn_indexes, redis, redis_backup_restore, frontend, backend]'     
         required: true
         default: 'elasticsearch, elasticsearch_base_indexes, elasticsearch_knn_indexes, redis, redis_backup_restore, frontend, backend'
+      verbosity:
+        description: "Level of verbosity to run Absible at. Must be one of: [0, 1, 2, 3]"
+        required: true
+        default: '1'
 
 jobs:
   build:
@@ -17,6 +21,18 @@ jobs:
       PLAYBOOK: site.yml
     steps:
       - uses: actions/checkout@main
+      - name: Validate workflow inputs
+        run: |
+          chmod +x ./.github/listContains.sh
+          ./.github/listContains.sh "elasticsearch elasticsearch_base_indexes elasticsearch_knn_indexes redis redis_backup_restore frontend backend" "$(echo ${{ github.event.inputs.tags }} | tr -ds "," " ")"
+          echo "Using validated tags: [${{ github.event.inputs.tags }}]"
+          ./.github/listContains.sh "0 1 2 3" "${{ github.event.inputs.verbosity }}"
+          echo "Using validated verbosity: [${{ github.event.inputs.verbosity }}]"
+      - name: Create verbosity level flags
+        run: |
+          verbosity_tags="$(echo "-$(printf "%3s" | tr " " "v")")"
+          echo "verbosity_tags=\"$verbosity_tags\"" >> $GITHUB_ENV
+          echo "Generated verbosity flag: [$verbosity_tags]"
       - name: Install ansible
         run: |
           sudo apt update
@@ -24,8 +40,6 @@ jobs:
           sudo apt-add-repository -yu ppa:ansible/ansible
           sudo apt install -y ansible
           ansible-galaxy collection install community.general
-      - name: Install python requirements
-        run: python3 -m pip install -r requirements.txt
       - name: Create key file
         run: |
           echo "$SSH_PRIVATE_KEY" > $PRIVATE_KEY_FILE
@@ -37,7 +51,7 @@ jobs:
         run: ansible all --private-key=$PRIVATE_KEY_FILE -m ping
         working-directory: ${{ env.ANSIBLE_DIR }}
       - name: Run playbook
-        run: ansible-playbook -v --tags "$(echo "${{ github.event.inputs.tags }}" | tr -ds "[:space:]" "")"  --private-key=$PRIVATE_KEY_FILE --extra-vars "ansible_sudo_pass=${{ secrets.SUDO_PASS }}" $PLAYBOOK
+        run: ansible-playbook ${{ env.verbosity_tags }} --tags "$(echo "${{ github.event.inputs.tags }}" | tr -ds "[:space:]" "")"  --private-key=$PRIVATE_KEY_FILE --extra-vars "ansible_sudo_pass=${{ secrets.SUDO_PASS }}" $PLAYBOOK
         working-directory: ${{ env.ANSIBLE_DIR }}
       - name: Remove key file
         run: sudo rm -rf $PRIVATE_KEY_FILE
