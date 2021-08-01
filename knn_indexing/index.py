@@ -1,6 +1,5 @@
 from elasticsearch import Elasticsearch
 import json
-from . import __settings__
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
@@ -9,11 +8,13 @@ import datetime
 from summary import summary_func
 from summary_1 import name_entity
 
-
-ES = Elasticsearch(__settings__.URL, verify_certs=False, ssl_show_warn=False)
+MODEL_URL = "https://tfhub.dev/google/nnlm-en-dim50/2"
+MODEL_DIM = 50  # Keep this updated when changing the model
+URL = "admin:admin@localhost:9200"
+ES = Elasticsearch(URL, verify_certs=False, ssl_show_warn=False)
 INDEX_NAME = "knn_index"
 # Used for vectorisation
-EMBED = hub.load(__settings__.MODEL_URL)
+EMBED = hub.load(MODEL_URL)
 def init_knn_es_index(index_name):
     if not ES.indices.exists(index_name):
         ES.indices.create(index_name, {
@@ -22,10 +23,10 @@ def init_knn_es_index(index_name):
                 "properties": {
                     "title_v": {
                         "type": "knn_vector",
-                        "dimension": __settings__.MODEL_DIM
+                        "dimension": MODEL_DIM
                     },
                     "title": {"type": "text"},
-                    "art_v": {"type": "knn_vector", "dimension": __settings__.MODEL_DIM},
+                    "art_v": {"type": "knn_vector", "dimension": MODEL_DIM},
                     "art": {"type": "text"},
                     "link": {"type": "text"}
                 }
@@ -41,7 +42,7 @@ def init_knn_es_index(index_name):
 def vectorise_sent(sent: str):
     sent = re.sub(r"[^\w\s]", "", sent)
     words = sent.split(" ")
-    vs = np.zeros((1*__settings__.MODEL_DIM))
+    vs = np.zeros((1*MODEL_DIM))
     for word in words:
         x = tf.constant([word])
         embeddings = EMBED(x)
@@ -87,7 +88,7 @@ def knn_query(query: str, index_name=INDEX_NAME):
     start = datetime.datetime.now()
     if not ES:
         print('rebuilding es conn')
-        ES = Elasticsearch(__settings__.URL, verify_certs=False, ssl_show_warn=False)
+        ES = Elasticsearch(URL, verify_certs=False, ssl_show_warn=False)
     results = ES.search(index=index_name, body=search_body)
     return results
 """
