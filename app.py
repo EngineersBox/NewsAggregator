@@ -9,18 +9,16 @@ from modules.RateLimiter.src.request_handler import RateLimiter
 from urllib3.exceptions import SSLError
 from collections import OrderedDict
 
-logging.config.fileConfig(fname='flask_logging.conf', disable_existing_loggers=False)
+logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
-INDEX_NAME = 'knn_index'
-
+CF_KEY = "cf_store"
+INDEX_NAME = "knn_index"
 ES = Elasticsearch("admin:admin@localhost:9200", verify_certs=False, ssl_show_warn=False)
 
 app = Flask(__name__)
-
 cors = CORS(app)
-
-app.config['CORS_HEADERS'] = 'Content-Type'
+app.config["CORS_HEADERS"] = "Content-Type"
 
 class ErrorHandlerWrapper:
 
@@ -32,17 +30,17 @@ class ErrorHandlerWrapper:
                 with self:
                     return func(*args, **kwargs)
             except SSLError as e:
-                logger.error('An issue with SSL occured', e)
+                logger.error("An issue with SSL occured", e)
                 response  = {
-                    'status_code': e.status_code,
-                    'status': 'An issue with SSL occured: {}'.format(e)
+                    "status_code": e.status_code,
+                    "status": "An issue with SSL occured: {}".format(e)
                 }
                 return jsonify(response), e.status_code
             except Exception as e:
-                logger.error('An unknown internal error occurred', e)
+                logger.error("An unknown internal error occurred", e)
                 response = {
-                    'status_code': 500,
-                    'status': 'An unknown internal error occurred: {}'.format(e)
+                    "status_code": 500,
+                    "status": "An unknown internal error occurred: {}".format(e)
                 }
                 return jsonify(response), 500
         return wrapper
@@ -66,100 +64,68 @@ except:
     # print("the filter is already initialized")
 
     # logging output
-    logger.warning('the filter is already initialized')
+    logger.warning("the filter is already initialized")
 
 
 def fingerprint(x):
     return ord(x[0])
 
-@app.route('/')
+@app.route("/")
 @ErrorHandlerWrapper()
 def index_page():
-    return render_template('index.html')
+    return render_template("index.html")
 
-@app.route('/css/<path:filename>')
+@app.route("/css/<path:filename>")
 @ErrorHandlerWrapper()
 def send_css(filename):
-    return send_from_directory('static/css', filename)
+    return send_from_directory("static/css", filename)
 
-@app.route('/js/<path:filename>')
+@app.route("/js/<path:filename>")
 @ErrorHandlerWrapper()
 def send_js(filename):
-    return send_from_directory('static/js', filename)
+    return send_from_directory("static/js", filename)
 
-@app.route('/origin_search')
+
+def base_search(query: str, search_method: function):
+    if not query:
+        return jsonify([])
+
+    in_result = rd.execute_command("cf.check", CF_KEY, hash(query), fingerprint(query))
+    if int(in_result) == 1:
+        orderedLoad = lambda x: json.loads(x, object_pairs_hook=OrderedDict)
+        result_value = list(map(orderedLoad, rd.execute_command("LRANGE", query, 0, -1)))
+        return jsonify(result={
+            "result": result_value,
+            "from": "Redis"
+        })
+    res = search_method(ES, "news", query)
+    list_res = res["hits"]["hits"]
+    for one in list_res:
+        sum_txt = body_summary(one["_source"]["art"])
+        one["_source"]["summary"] = " ".join(sum_txt)
+    rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
+    for elem in list_res:
+        rd.execute_command("RPUSH", query, json.dumps(elem))
+    return jsonify(result={
+        "result": list_res,
+        "from": "Elasticsearch"
+    })
+
+@app.route("/origin_search")
 @cross_origin()
 @ErrorHandlerWrapper()
 @RateLimiter()
 def search():
-    query = request.args.get('query', None)
-    if query:
-        print('query is %s' % query)
+    query = request.args.get("query", None, type=str)
+    return base_search(query, lambda es,en,q: simple_match_search(es,en,q))
 
-        in_result = rd.execute_command("cf.check", "test2", hash(query), fingerprint(query))
-        if int(in_result) == 1:
-            logger.info('query is checked by cuckoofilter')
-            logger.info('query is probably inside cuckoofilter')
-            orderedLoad = lambda x: json.loads(x, object_pairs_hook=OrderedDict)
-            result_value = list(map(orderedLoad, rd.execute_command("LRANGE", query, 0, -1)))
-            return jsonify(result={
-                "result": result_value,
-                "from": "Redis"
-            })
-        else:
-            logger.info('query is checked by cuckoofilter')
-            logger.info('query is not inside cuckoofilter')
-            res = simple_match_search(ES, 'news', query)
-            list_res = res['hits']['hits']
-            for one in list_res:
-                # u6250082 Xuguang Song
-                sum_txt = body_summary(one['_source']['art'])
-                one['_source']['summary'] = ' '.join(sum_txt)
-            rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
-            for elem in list_res:
-                rd.execute_command("RPUSH", query, json.dumps(elem))
-            return jsonify(result={
-                "result": list_res,
-                "from": "Elasticsearch"
-            })
-    return jsonify([])
-
-@app.route('/search')
+@app.route("/search")
 @cross_origin()
 @ErrorHandlerWrapper()
 @RateLimiter()
 def knn_search():
-    query = request.args.get('query', None)
-    if query:
-        print('query is %s' % query)
+    query = request.args.get("query", None, type=str)
+    return base_search(query, lambda _es,_en,q: knn_query(q))
 
-        in_result = rd.execute_command("cf.check", "test2", hash(query), fingerprint(query))
-        if int(in_result) == 1:
-            logger.info('query is checked by cuckoofilter')
-            logger.info('query is probably inside cuckoofilter')
-            orderedLoad = lambda x: json.loads(x, object_pairs_hook=OrderedDict)
-            result_value = list(map(orderedLoad, rd.execute_command("LRANGE", query, 0, -1)))
-            return jsonify(result={
-                "result": result_value,
-                "from": "Redis"
-            })
-        else:
-            logger.info('query is checked by cuckoofilter')
-            logger.info('query is not inside cuckoofilter')
-            res = simple_match_search(ES, 'news', query)
-            list_res = res['hits']['hits']
-            for one in list_res:
-                # u6250082 Xuguang Song
-                sum_txt = body_summary(one['_source']['art'])
-                one['_source']['summary'] = ' '.join(sum_txt)
-            rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
-            for elem in list_res:
-                rd.execute_command("RPUSH", query, json.dumps(elem))
-            return jsonify(result={
-                "result": list_res,
-                "from": "Elasticsearch"
-            })
-    return jsonify([])
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)

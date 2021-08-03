@@ -3,6 +3,7 @@
     name: "{{ async_item }}"
     state: absent
     container_default_behavior: compatibility
+    debug: true
   async: 45
   poll: 0
   loop: "{{ containers }}"

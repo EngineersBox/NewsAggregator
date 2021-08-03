@@ -3,7 +3,11 @@
     container_names:
       - backend
     containers: "{{ item }}"
-  include_tasks: roles/common/tasks/docker_stop_remove_tasks.yml
+  include_tasks:
+    file: roles/common/tasks/docker_stop_remove_tasks.yml
+    apply:
+      tags:
+        - backend
   loop: "{{ container_names | batch(1) | list }}"
   tags:
     - backend

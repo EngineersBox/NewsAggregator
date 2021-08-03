@@ -3,10 +3,14 @@
     container_names:
       - frontend
     containers: "{{ item }}"
-  include_tasks: roles/common/tasks/docker_stop_remove_tasks.yml
+  include_tasks:
+    file: roles/common/tasks/docker_stop_remove_tasks.yml
+    apply:
+      tags:
+        - frontend
   loop: "{{ container_names | batch(1) | list }}"
   tags:
-    - backend
+    - frontend
 
 - name: Spin up new containers
   docker_compose:
