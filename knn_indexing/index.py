@@ -1,10 +1,8 @@
 from elasticsearch import Elasticsearch
-import json
+import json, re, datetime
 import tensorflow as tf
 import tensorflow_hub as hub
 import numpy as np
-import re
-import datetime
 from summary import summary_func
 from summary_1 import name_entity
 
@@ -15,6 +13,7 @@ ES = Elasticsearch(URL, verify_certs=False, ssl_show_warn=False)
 INDEX_NAME = "knn_index"
 # Used for vectorisation
 EMBED = hub.load(MODEL_URL)
+
 def init_knn_es_index(index_name):
     if not ES.indices.exists(index_name):
         ES.indices.create(index_name, {
@@ -36,9 +35,9 @@ def init_knn_es_index(index_name):
     else:
         print("Index already exists")
 
-
-
 # Turn a sentence into vectors
+
+
 def vectorise_sent(sent: str):
     sent = re.sub(r"[^\w\s]", "", sent)
     words = sent.split(" ")
@@ -48,13 +47,17 @@ def vectorise_sent(sent: str):
         embeddings = EMBED(x)
         x = np.asarray(embeddings)
         vs = vs + x
-    vs = (vs / len(words)).tolist()  # Faster, and more likely to have "king-man+woman = queen" relationship
+    # Faster, and more likely to have "king-man+woman = queen" relationship
+    vs = (vs / len(words)).tolist()
     return vs[0]
 
+
 def import_data_with_knn(index_name=INDEX_NAME):
+    print("Initialising KNN indexes...")
     init_knn_es_index(index_name)
+    print("Complete", "Loading data...")
     data_list = json.loads(open("../minitask/result.json").read())
-    print("Data loaded")
+    print("Complete")
 
     for i in range(len(data_list)):
         data = data_list[i]
@@ -62,7 +65,7 @@ def import_data_with_knn(index_name=INDEX_NAME):
         title = data["title"]
         title_v = vectorise_sent(data["title"])
         article = data["art"]
-        summary = summary_func.body_summary(article) 
+        summary = summary_func.body_summary(article)
         ner_list = name_entity.recognize_name_entity(summary)
         art_v = vectorise_sent(data["art"])
         ES.create(index=index_name, body={"title_v": title_v, "title": title, "art_v": art_v, "art": article,
@@ -87,10 +90,13 @@ def knn_query(query: str, index_name=INDEX_NAME):
     }
     start = datetime.datetime.now()
     if not ES:
-        print('rebuilding es conn')
+        print("Re-establishing Elasticsearch connection...")
         ES = Elasticsearch(URL, verify_certs=False, ssl_show_warn=False)
+        print("Connection established")
     results = ES.search(index=index_name, body=search_body)
     return results
+
+
 """
 Only support searching of one field. Either title_v or art_v. Could create a functionality of choosing search field
 """
@@ -115,6 +121,6 @@ print("Duration:", duration)
 for result in results["hits"]["hits"]:
     print(result)
 """
-if __name__ == '__main__':
+if __name__ == "__main__":
     import_data_with_knn()
-    #knn_query("some") 
+    knn_query("some")
