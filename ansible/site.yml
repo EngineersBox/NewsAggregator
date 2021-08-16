@@ -1,0 +1,42 @@
+---
+- hosts: targets
+  tasks:
+    - name: Remove remnant repo content
+      file:
+        path: "temp"
+        state: absent
+      become: true
+    - name: Clone repo onto box
+      git:
+        repo: https://github.com/EngineersBox/ansible-test.git
+        dest: "temp"
+        clone: yes
+        version: main
+  tags:
+    - always
+
+- hosts: targets
+  roles:
+    - elasticsearch
+
+- hosts: targets
+  roles:
+    - redis # BGSAVE, stop + remove container, start new container, stop redis, copy data to redis dir, start redis
+
+- hosts: targets
+  roles:
+    - frontend
+
+- hosts: targets
+  roles:
+    - backend
+
+- hosts: targets
+  tasks:
+    - name: Remove repo content
+      file:
+        path: "temp"
+        state: absent
+      become: true
+  tags:
+    - always
