@@ -1,0 +1,54 @@
+---
+- hosts: targets
+  gather_facts: no
+  vars:
+    container_names:
+      - elasticsearch
+      - redis
+      - frontend
+      - backend
+    temp_dir: temp
+  tasks:
+    - name: Clone repo onto box
+      git:
+        repo: https://github.com/EngineersBox/NewsAggregator.git
+        dest: "{{ temp_dir }}"
+        clone: yes
+        version: main
+
+    - name: Docker stop and remove containers
+      vars:
+        containers: "{{ item }}"
+      include_tasks: docker_stop_remove_tasks.yml
+      loop: "{{ container_names | batch(1) | list }}"
+
+    - name: Spin up new containers
+      docker_compose:
+        project_src: "{{ temp_dir }}"
+        build: yes
+        debug: yes
+      become: true
+      register: started_containers
+
+    # - name: Verify container states
+    #   assert:
+    #     that: "{{ item }}.state.running"
+    #   loop: "{{ container_names }}"
+
+    - name: Wait for elasticsearch to start
+      wait_for:
+        host: localhost
+        port: 9200
+        delay: 5
+        connect_timeout: 1
+
+    - name: Create indexes
+      shell:
+        cmd: "python3 import_data.py"
+        chdir: "{{ temp_dir }}/minitask"
+
+    - name: Remove repo content
+      file:
+        path: "{{ temp_dir }}"
+        state: absent
+      become: true

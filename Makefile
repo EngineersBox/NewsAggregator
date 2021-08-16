@@ -10,7 +10,7 @@ install_all: install install_ansible
 install:
 	@python3.8 -m pip install --upgrade pip
 	@python3.8 -m pip install --no-cache-dir -r requirements.txt
-	@python3.8 -m spacy download en_core_web_trf
+	@python3.8 -m spacy download en_core_web_sm
 	@cd frontend && npm i
 
 compose_build:
