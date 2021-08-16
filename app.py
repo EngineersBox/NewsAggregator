@@ -117,16 +117,88 @@ def base_search(query: str, search_method: Callable[[Elasticsearch, str, str], N
 @ErrorHandlerWrapper()
 @RateLimiter()
 def search():
+<<<<<<< HEAD
     query = request.args.get("query", None, type=str)
     return base_search(query, lambda es,en,q: simple_match_search(es,en,q))
 
 @app.route("/search")
+=======
+    query = request.args.get('query', None)
+    if query:
+        print('query is %s' % query)
+
+        in_result = rd.execute_command("cf.check", "test2", hash(query), fingerprint(query))
+        if int(in_result) == 1:
+            logger.info('query is checked by cuckoofilter')
+            logger.info('query is probably inside cuckoofilter')
+            orderedLoad = lambda x: json.loads(x, object_pairs_hook=OrderedDict)
+            result_value = list(map(orderedLoad, rd.execute_command("LRANGE", query, 0, -1)))
+            return jsonify(result={
+                "result": result_value,
+                "from": "Redis"
+            })
+        else:
+            logger.info('query is checked by cuckoofilter')
+            logger.info('query is not inside cuckoofilter')
+            res = simple_match_search(ES, 'news', query)
+            list_res = res['hits']['hits']
+            for one in list_res:
+                # u6250082 Xuguang Song
+                sum_txt = body_summary(one['_source']['art'])
+                one['_source']['summary'] = ' '.join(sum_txt)
+            rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
+            for elem in list_res:
+                rd.execute_command("LPUSH", query, json.dumps(elem))
+            return jsonify(result={
+                "result": list_res,
+                "from": "Elasticsearch"
+            })
+    return jsonify([])
+
+@app.route('/search')
+>>>>>>> parent of 0444a68 (:bug: Fixed results ordering, refactored LPUSH to RPUSH to reverse LRANGE result)
 @cross_origin()
 @ErrorHandlerWrapper()
 @RateLimiter()
 def knn_search():
+<<<<<<< HEAD
     query = request.args.get("query", None, type=str)
     return base_search(query, lambda _es,_en,q: knn_query(q))
 
 if __name__ == "__main__":
+=======
+    query = request.args.get('query', None)
+    if query:
+        print('query is %s' % query)
+
+        in_result = rd.execute_command("cf.check", "test2", hash(query), fingerprint(query))
+        if int(in_result) == 1:
+            logger.info('query is checked by cuckoofilter')
+            logger.info('query is probably inside cuckoofilter')
+            orderedLoad = lambda x: json.loads(x, object_pairs_hook=OrderedDict)
+            result_value = list(map(orderedLoad, rd.execute_command("LRANGE", query, 0, -1)))
+            return jsonify(result={
+                "result": result_value,
+                "from": "Redis"
+            })
+        else:
+            logger.info('query is checked by cuckoofilter')
+            logger.info('query is not inside cuckoofilter')
+            res = simple_match_search(ES, 'news', query)
+            list_res = res['hits']['hits']
+            for one in list_res:
+                # u6250082 Xuguang Song
+                sum_txt = body_summary(one['_source']['art'])
+                one['_source']['summary'] = ' '.join(sum_txt)
+            rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
+            for elem in list_res:
+                rd.execute_command("LPUSH", query, json.dumps(elem))
+            return jsonify(result={
+                "result": list_res,
+                "from": "Elasticsearch"
+            })
+    return jsonify([])
+
+if __name__ == '__main__':
+>>>>>>> parent of 0444a68 (:bug: Fixed results ordering, refactored LPUSH to RPUSH to reverse LRANGE result)
     app.run(debug=True)
