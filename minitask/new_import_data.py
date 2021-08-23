@@ -6,6 +6,8 @@ from elasticsearch import helpers as h
 
 from dataclasses import dataclass
 
+from wikipedia.exceptions import WikipediaException
+
 
 """
 Need to create the index first before using this script
@@ -19,30 +21,31 @@ def start_import(test_size = 1000):
     # u6250082 Xuguang Song
     '''import all the data news from data set and use 1000 as test set'''
 
-    data_set = []
-    with gzip.open('namespace.gz', 'rb') as f:
+
+    elastic_search = start_elastic_search()
+
+    if not elastic_search.indices.exists(index='news'):
+        # create the index
+        elastic_search.indices.create(index='news')
+    with gzip.open('namespace.gz', 'r') as f:
+        totalLines = sum(1 for _ in f)
         doc_id = 1
         wikipedia.set_lang("en")
         for line in f:
             print("Reading:", line)
             page = wikipedia.page(line)
-            data_set.append({"link": page.URL, "title": page.title, "art": wikipedia.summary(line)})
+            try:
+                data = {"link": page.url, "title": page.title, "art": wikipedia.summary(line)}
+                print('Added Index [', doc_id, '/', totalLines, ']: ', data['title'])
+                index_elastic_search(data, elastic_search, doc_id)
+            except wikipedia.exceptions.DisambiguationError:
+                print("Skipping", line)
+                continue
             doc_id += 1
             if (doc_id > test_size):
                 break
 
-    total_number = len(data_set)
-    print('in total: ', total_number)
-    data_set_test = data_set[:test_size]
-    elastic_search = start_elastic_search()
-
-    if not elastic_search.indices.exists( index = 'news'):
-        # create the index
-	    elastic_search.indices.create(index = 'news')
-
-    for x in range(test_size):
-        print('Added Index: ', data_set_test[x]['title'])
-        index_elastic_search(data_set_test[x], elastic_search, x)
+    print('In total: ', doc_id)
 
     search_index_test(elastic_search)
 
