@@ -1,8 +1,4 @@
-import pandas as pd
-import requests
-import json
-import bz2
-from lxml import etree
+import wikipedia, gzip
 
 from elasticsearch import Elasticsearch as es
 
@@ -10,17 +6,6 @@ from elasticsearch import helpers as h
 
 from dataclasses import dataclass
 
-@dataclass
-class Abstract:
-    """Wikipedia abstract"""
-    ID: int
-    title: str
-    abstract: str
-    url: str
-
-    @property
-    def fulltext(self):
-        return ' '.join([self.title, self.abstract])
 
 """
 Need to create the index first before using this script
@@ -35,20 +20,16 @@ def start_import(test_size = 1000):
     '''import all the data news from data set and use 1000 as test set'''
 
     data_set = []
-    with bz2.open('../../wikidump/enwiki-20210420-pages-articles-multistream.xml.bz2', 'rb') as f:
+    with gzip.open('namespace.gz', 'rb') as f:
         doc_id = 1
-        # iterparse will yield the entire `doc` element once it finds the
-        # closing `</doc>` tag
-        for _, element in etree.iterparse(f, events=('end',), tag='doc'):
-            title = element.findtext('./title')
-            link = element.findtext('./url')
-            art = element.findtext('./abstract')
-            data_set.append({"link": link, "title": title, "art": art})
-
+        wikipedia.set_lang("en")
+        for line in f:
+            print("Reading:", line)
+            page = wikipedia.page(line)
+            data_set.append({"link": page.URL, "title": page.title, "art": wikipedia.summary(line)})
             doc_id += 1
-            # the `element.clear()` call will explicitly free up the memory
-            # used to store the element
-            element.clear()
+            if (doc_id > test_size):
+                break
 
     total_number = len(data_set)
     print('in total: ', total_number)
@@ -60,7 +41,7 @@ def start_import(test_size = 1000):
 	    elastic_search.indices.create(index = 'news')
 
     for x in range(test_size):
-        print('adding: ', data_set_test[x]['title'])
+        print('Added Index: ', data_set_test[x]['title'])
         index_elastic_search(data_set_test[x], elastic_search, x)
 
     search_index_test(elastic_search)
