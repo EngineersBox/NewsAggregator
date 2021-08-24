@@ -1,4 +1,4 @@
-import wikipedia, gzip
+import wikipedia, gzip, requests
 
 from elasticsearch import Elasticsearch as es
 
@@ -21,32 +21,37 @@ def start_import(test_size = 1000):
     # u6250082 Xuguang Song
     '''import all the data news from data set and use 1000 as test set'''
 
+    totalLines = 0
+    with requests.urlopen("https://dumps.wikimedia.org/wikidatawiki/latest/wikidatawiki-latest-all-titles-in-ns0.gz") as r:
+        with gzip.GzipFile(fileobj=r) as f:
+            totalLines = sum(1 for _ in f)
 
     elastic_search = start_elastic_search()
-
     if not elastic_search.indices.exists(index='news'):
         # create the index
         elastic_search.indices.create(index='news')
-    with gzip.open('namespace.gz', 'r') as f:
-        totalLines = sum(1 for _ in f)
-        doc_id = 1
-        wikipedia.set_lang("en")
-        for line in f:
-            print("Reading:", line)
-            page = wikipedia.page(line)
-            try:
-                data = {"link": page.url, "title": page.title, "art": wikipedia.summary(line)}
-                print('Added Index [', doc_id, '/', totalLines, ']: ', data['title'])
-                index_elastic_search(data, elastic_search, doc_id)
-            except wikipedia.exceptions.DisambiguationError:
-                print("Skipping", line)
-                continue
-            doc_id += 1
-            if (doc_id > test_size):
-                break
+        
+    with requests.urlopen("https://dumps.wikimedia.org/wikidatawiki/latest/wikidatawiki-latest-all-titles-in-ns0.gz") as r:
+        with gzip.GzipFile(fileobj=r) as f:
+            totalLines = sum(1 for _ in f)
+            doc_id = 1
+            wikipedia.set_lang("en")
+            for line in f:
+                formattedLine = line.strip().decode("utf-8")
+                print("Reading[", doc_id, "/", totalLines, "]:", formattedLine)
+                page = wikipedia.page(formattedLine)
+                try:
+                    data = {"link": page.url, "title": page.title, "art": page.summary}
+                    print('Added Index [', doc_id, '/', totalLines, ']: ', data['title'])
+                    index_elastic_search(data, elastic_search, doc_id)
+                except (wikipedia.exceptions.PageError, wikipedia.exceptions.DisambiguationError):
+                    print("Ambiguous or not found, Skipping")
+                    continue
+                doc_id += 1
+                if (doc_id > test_size):
+                    break
 
-    print('In total: ', doc_id)
-
+    print('In total: ', totalLines)
     search_index_test(elastic_search)
 
 def index_elastic_search(data, elastic_search, index):
