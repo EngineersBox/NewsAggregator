@@ -41,7 +41,7 @@ function Search() {
             </Button>
           </Grid>
           <Grid item xs={1}>
-            <InfoButton />
+            <InfoButton text="Info1" />
           </Grid>
         </Grid>
       </Grid>
@@ -58,7 +58,7 @@ function Search() {
             </Button>
           </Grid>
           <Grid item xs={1}>
-            <InfoButton />
+            <InfoButton text="Info2" />
           </Grid>
         </Grid>
       </Grid>
