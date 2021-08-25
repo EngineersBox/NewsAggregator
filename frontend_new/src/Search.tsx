@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   })
 );
-function Search(props) {
+function Search() {
 const classes = useStyles();
   return (
 	<Grid container justifyContent="center" direction="row" spacing={1} >
