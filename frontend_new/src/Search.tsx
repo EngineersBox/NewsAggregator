@@ -29,7 +29,7 @@ function Search() {
         />
       </Grid>
       <Grid item xs={5} lg={2}>
-        <Grid container justifyContent="center" direction="row" spacing={1}>
+        <Grid container justifyContent="center" direction="row" spacing={0}>
           <Grid item xs={11}>
             <Button
               className={classes.input}
@@ -46,7 +46,7 @@ function Search() {
         </Grid>
       </Grid>
       <Grid item xs={5} lg={2}>
-        <Grid container justifyContent="center" direction="row" spacing={1}>
+        <Grid container justifyContent="center" direction="row" spacing={0}>
           <Grid item xs={11}>
             <Button
               className={classes.input}
