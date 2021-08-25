@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     input: {
       margin: theme.spacing(1),
-      height: 40 
+      height: 50 
     }
   })
 );
