@@ -1,8 +1,8 @@
 import { ThemeProvider } from "@material-ui/core/styles";
 import { theme } from "./theme";
 import "./App.css";
-import TopBar from "./TopBar";
-import Search from "./Search";
+import TopBar from "./components/TopBar";
+import Search from "./components/Search";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
@@ -10,7 +10,7 @@ import Grow from "@material-ui/core/Grow";
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <Grow in={true} timeout={1600}>
+      <Grow in={true} timeout={600}>
         <Grid
           container
           justifyContent="center"
