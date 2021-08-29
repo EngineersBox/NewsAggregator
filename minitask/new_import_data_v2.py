@@ -1,9 +1,17 @@
-  
+
 import pandas as pd
 import requests
 import json
 import gzip
 from lxml import etree
+
+import wikipedia, gzip, threading
+from urllib.request import urlopen
+from elasticsearch import Elasticsearch as es
+from wikipedia.exceptions import PageError, DisambiguationError
+import ssl
+from multiprocessing import Pool
+import multiprocessing
 
 from elasticsearch import Elasticsearch as es
 
@@ -28,6 +36,7 @@ Need to create the index first before using this script
 curl -XPUT https://localhost:9200/example3 --insecure -u admin:admin
 """
 URL = 'https://localhost:9200/example3/_doc/'
+elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
 
 # the code with idea inspired by https://www.cnblogs.com/shaosks/p/7592229.html
 
@@ -45,12 +54,12 @@ def start_import(test_size = 1000):
             link = element.findtext('./url')
             art = element.findtext('./abstract')
             data_set.append({"link": link, "title": title, "art": art})
-            
+
             print("added", title)
-            print(doc_id,"/100million") 
+            print(doc_id,"/100million")
             doc_id += 1
             if doc_id >= 200000:
-                break 
+                break
             # the `element.clear()` call will explicitly free up the memory
             # used to store the element
             element.clear()
@@ -64,19 +73,28 @@ def start_import(test_size = 1000):
         # create the index
 	    elastic_search.indices.create(index = 'wiki')
 
-    for x in range(total_number-2):
-        print('adding: ', data_set_test[x]['title'])
-        index_elastic_search(data_set_test[x], elastic_search, x)
+    pool = Pool(10)
+    result_iter = pool.imap_unordered(process, data_set_test, chunksize=50)
+        
+def process(data):
 
-    search_index_test(elastic_search)
+    global elasticsearch
 
-def index_elastic_search(data, elastic_search, index):
+    print("thread_id :", multiprocessing.current_process())
+    try:
+        print('adding: ', data['title'])
+        index_elastic_search(data, elastic_search)
+    except (Exception) as e:
+        print("Could not index document, {0}:".format(data["title"]), e) 
+        
+
+def index_elastic_search(data, elastic_search):
     # u6250082 Xuguang Song
     '''parameter: data, elastic search engine, ind'''
     
     try:
 
-        index_result = elastic_search.index(index='news', body=data, id=index)
+        index_result = elastic_search.index(index='wiki', body=data)
 
     except:
         print(data)
@@ -106,7 +124,7 @@ def search_index_test(elastic_search):
         }
     # output = elastic_search.search(index='news', doc_type='web_news', body=test1)
     print('\n', 'searching for keyword: ', q, " ", "in", " article ", position, '\n')
-    output = elastic_search.search(index='news', body=test1)
+    output = elastic_search.search(index='wiki', body=test1)
     print('searching finished with total time: ', output['took'], '\n')
     print('result: ', '\n')
     for hit in output['hits']['hits']:
