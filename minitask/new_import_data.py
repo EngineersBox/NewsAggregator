@@ -2,7 +2,9 @@ import wikipedia, gzip, threading
 from urllib.request import urlopen
 from elasticsearch import Elasticsearch as es
 from wikipedia.exceptions import PageError, DisambiguationError
+import ssl
 from multiprocessing import Pool
+import multiprocessing
 
 elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
 
@@ -17,6 +19,7 @@ URL = 'https://localhost:9200/example3/_doc/'
 def process(line):
     formattedLine = line.strip().decode("utf-8")
     print("Line:", formattedLine)
+    print("thread_id :", multiprocessing.current_process())
     try:
         page = wikipedia.page(formattedLine)
         data = {"link": page.url, "title": page.title, "art": page.summary}
@@ -71,6 +74,7 @@ def main():
     if not elastic_search.indices.exists(index='news'):
         elastic_search.indices.create(index='news')
     totalLines = 0
+    ssl._create_default_https_context = ssl._create_unverified_context
     with urlopen("https://dumps.wikimedia.org/enwiki/20210820/enwiki-20210820-all-titles-in-ns0.gz") as r:
         with gzip.GzipFile(fileobj=r) as f:
             pool = Pool(10)
