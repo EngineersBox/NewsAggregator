@@ -45,22 +45,26 @@ def start_import(test_size = 1000):
             link = element.findtext('./url')
             art = element.findtext('./abstract')
             data_set.append({"link": link, "title": title, "art": art})
-
+            
+            print("added", title)
+            print(doc_id,"/100million") 
             doc_id += 1
+            if doc_id >= 200000:
+                break 
             # the `element.clear()` call will explicitly free up the memory
             # used to store the element
             element.clear()
 
     total_number = len(data_set)
     print('in total: ', total_number)
-    data_set_test = data_set[:test_size]
+    data_set_test = data_set[:total_number-2]
     elastic_search = start_elastic_search()
 
-    if not elastic_search.indices.exists( index = 'news'):
+    if not elastic_search.indices.exists( index = 'wiki'):
         # create the index
-	    elastic_search.indices.create(index = 'news')
+	    elastic_search.indices.create(index = 'wiki')
 
-    for x in range(test_size):
+    for x in range(total_number-2):
         print('adding: ', data_set_test[x]['title'])
         index_elastic_search(data_set_test[x], elastic_search, x)
 
