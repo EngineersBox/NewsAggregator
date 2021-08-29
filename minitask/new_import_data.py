@@ -1,15 +1,10 @@
-import wikipedia, gzip, requests
-
-import multiprocessing as mp
-
+import wikipedia, gzip, threading
+from urllib.request import urlopen
 from elasticsearch import Elasticsearch as es
+from wikipedia.exceptions import PageError, DisambiguationError
+from multiprocessing import Pool
 
-from elasticsearch import helpers as h
-
-from dataclasses import dataclass
-
-from wikipedia.exceptions import WikipediaException
-
+elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
 
 """
 Need to create the index first before using this script
@@ -19,48 +14,24 @@ URL = 'https://localhost:9200/example3/_doc/'
 
 # the code with idea inspired by https://www.cnblogs.com/shaosks/p/7592229.html
 
-elastic_search = None
-test = []
-doc_id = 0
-totalLines = 0
-
 def process(line):
-    global doc_id
-    global totalLines
-    # Do indexing here
-    for line in f:
-        formattedLine = line.strip().decode("utf-8")
-        print("Reading[", doc_id, "/", totalLines, "]:", formattedLine)
-        page = wikipedia.page(formattedLine)
-        try:
-            data = {"link": page.url, "title": page.title, "art": page.summary}
-            print('Added Index [', doc_id, '/', totalLines, ']: ', data['title'])
-            index_elastic_search(data, elastic_search, doc_id)
-        except (wikipedia.exceptions.PageError, wikipedia.exceptions.DisambiguationError):
-            print("Ambiguous or not found, Skipping")
-            continue
-        doc_id += 1
-
-def index_elastic_search(data, elastic_search, index):
-    # u6250082 Xuguang Song
-    '''parameter: data, elastic search engine, ind'''
-    
+    formattedLine = line.strip().decode("utf-8")
+    print("Line:", formattedLine)
     try:
+        page = wikipedia.page(formattedLine)
+        data = {"link": page.url, "title": page.title, "art": page.summary}
+        index_elastic_search(data)
+    except (PageError, DisambiguationError):
+        print("Ambiguous or not found, Skipping")
+        
 
-        index_result = elastic_search.index(index='wiki', body=data, id=index)
-
-    except:
-        print(data)
-    print('success')
-
-def start_elastic_search():
-    # u6250082 Xuguang Song
-    '''start elastic search'''
-
-    ip_url = ["127.0.0.1"]
-    # initialize elastic search
-    new_es = es(ip_url, timeout=35, max_retries=8, retry_on_timeout=True)
-    return new_es
+def index_elastic_search(data):
+    global elasticsearch
+    try:
+        elastic_search.index(index='news', body=data)
+        print("Added document: ", data["title"])
+    except (Exception) as e:
+        print("Could not index document, {0}:".format(data["title"]), e)
 
 def search_index_test(elastic_search):
     # u6250082 Xuguang Song
@@ -84,21 +55,31 @@ def search_index_test(elastic_search):
         # print search result
         print ('match news title: ', hit['_source']['title'], '\n', 'match news link: ', hit['_source']['link'], '\n', '-------------------------------------------------------------')
 
-if __name__ == "__main__":
-    elastic_search = start_elastic_search()
-    with requests.urlopen("https://dumps.wikimedia.org/wikidatawiki/latest/wikidatawiki-latest-all-titles-in-ns0.gz") as r:
+def locked_iter(it):
+    it = iter(it)
+    lock = threading.Lock()
+    while True:
+        try:
+            with lock:
+                value = next(it)
+        except StopIteration:
+            return
+        yield value
+
+def main():
+    global doc_id, lock
+    if not elastic_search.indices.exists(index='news'):
+        elastic_search.indices.create(index='news')
+    totalLines = 0
+    with urlopen("https://dumps.wikimedia.org/enwiki/20210820/enwiki-20210820-all-titles-in-ns0.gz") as r:
         with gzip.GzipFile(fileobj=r) as f:
-            totalLines = sum(1 for _ in f)
-    if not elastic_search.indices.exists(index='wiki'):
-        # create the index
-        elastic_search.indices.create(index='wiki')
-    
-    wikipedia.set_lang("en")
-    with requests.urlopen("https://dumps.wikimedia.org/wikidatawiki/latest/wikidatawiki-latest-all-titles-in-ns0.gz") as r:
-        with gzip.GzipFile(fileobj=r) as f:
-            # totalLines = sum(1 for _ in f)
-            pool = mp.Pool(processes = 10)
-            t = pool.imap_unordered(process, f)
-    
-    print('In total: ', totalLines)
+            pool = Pool(10)
+            result_iter = pool.imap_unordered(process, f, chunksize=50)
+            for _ in result_iter:
+                totalLines += 1
+
+    print('In Total:', totalLines)
     search_index_test(elastic_search)
+
+if __name__ == '__main__':
+    main()
