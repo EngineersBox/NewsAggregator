@@ -14,6 +14,7 @@ from multiprocessing import Pool
 import multiprocessing
 
 from elasticsearch import Elasticsearch as es
+elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
 
 from elasticsearch import helpers as h
 
@@ -71,45 +72,39 @@ def start_import(test_size = 1000):
     if not elastic_search.indices.exists( index = 'wiki'):
         # create the index
 	    elastic_search.indices.create(index = 'wiki')
-
-    for x in range(total_number-2):
-
-        print('adding: ', data_set_test[x]['title'])
-        index_elastic_search(data_set_test[x], elastic_search, x)
-
-    search_index_test(elastic_search)
+    # for x in range(total_number-2):
+    #     print('adding: ', data_set_test[x]['title'])
+    #     index_elastic_search(data_set_test[x], elastic_search, x)
+    # search_index_test(elastic_search)
 
 
-    # elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
-    # .................
+    pool = Pool(10)
+    result_iter = pool.map(process, data_set_test)
 
-    # pool = Pool(10)
-    # result_iter = pool.imap_unordered(process, data_set_test, chunksize=50)
+def process(data):
 
-# def process(data):
+    global elasticsearch
 
-#     global elasticsearch
-
-#     print("thread_id :", multiprocessing.current_process())
-#     try:
-#         print('adding: ', data['title'])
-#         index_elastic_search(data, elastic_search)
-#     except (Exception) as e:
-#         print("Could not index document, {0}:".format(data["title"]), e) 
+    print("thread_id :", multiprocessing.current_process())
+    try:
+        print('adding: ', data['title'])
+        index_elastic_search(data, elasticsearch)
+    except (Exception) as e:
+        print("Could not index document, {0}:".format(data["title"]), e) 
 
 
-# def index_elastic_search(data, elastic_search):
-#     # u6250082 Xuguang Song
-#     '''parameter: data, elastic search engine, ind'''
+def index_elastic_search(data, elastic_search):
+    # u6250082 Xuguang Song
+    '''parameter: data, elastic search engine, ind'''
     
-#     try:
+    try:
 
-#         index_result = elastic_search.index(index='wiki', body=data)
+        index_result = elastic_search.index(index='wiki', body=data)
 
-#     except:
-#         print(data)
+    except:
+        print(data)
         
-#     print('success')
+    print('success')
 
 
 def index_elastic_search(data, elastic_search, index):
