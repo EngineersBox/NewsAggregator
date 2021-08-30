@@ -77,6 +77,8 @@ def start_import(test_size = 1000):
         print('adding: ', data_set_test[x]['title'])
         index_elastic_search(data_set_test[x], elastic_search, x)
 
+        print(x,"/200000") 
+
     search_index_test(elastic_search)
 
 
@@ -115,7 +117,7 @@ def start_import(test_size = 1000):
 def index_elastic_search(data, elastic_search, index):
     # u6250082 Xuguang Song
     '''parameter: data, elastic search engine, ind'''
-    
+      
     try:
 
         index_result = elastic_search.index(index='news', body=data, id=index)
