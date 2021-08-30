@@ -6,13 +6,28 @@ import InfoButton from "./SlideAlert";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    input: {
+    inputLight: {
+      margin: theme.spacing(1),
+      height: 50,
+      color: "#e5e5e5",
+    },
+    inputDark: {
+      margin: theme.spacing(1),
+      height: 50,
+      color: "#212121",
+    },
+    inputButton: {
       margin: theme.spacing(1),
       height: 50,
     },
   })
 );
-function Search() {
+
+type props = {
+  whichTheme: boolean;
+};
+
+function Search(props: props) {
   const classes = useStyles();
   return (
     <Grid
@@ -28,14 +43,18 @@ function Search() {
           variant="outlined"
           color="secondary"
           fullWidth
-          InputProps={{
-            className: classes.input,
-          }}
+          InputProps={
+            props.whichTheme
+              ? {
+                  className: classes.inputDark,
+                }
+              : { className: classes.inputLight }
+          }
         />
       </Grid>
       <Grid item xs={6} lg={2}>
         <Button
-          className={classes.input}
+          className={classes.inputButton}
           variant="contained"
           color="secondary"
           fullWidth
@@ -45,7 +64,7 @@ function Search() {
       </Grid>
       <Grid item xs={6} lg={2}>
         <Button
-          className={classes.input}
+          className={classes.inputButton}
           variant="contained"
           color="secondary"
           fullWidth

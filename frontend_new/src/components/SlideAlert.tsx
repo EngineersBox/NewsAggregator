@@ -33,7 +33,7 @@ export default function AlertDialogSlide(props: props) {
 
   return (
     <div>
-      <IconButton color="inherit" onClick={handleClickOpen}>
+      <IconButton color="secondary" onClick={handleClickOpen}>
         <InfoOutlinedIcon />
       </IconButton>
       <Dialog
