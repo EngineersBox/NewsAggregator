@@ -17,8 +17,7 @@ from elasticsearch import Elasticsearch as es
 elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
 
 from elasticsearch import helpers as h
-
-from dataclasses import dataclass
+from dataclasses import dataclass 
 
 @dataclass
 class Abstract:
@@ -77,8 +76,7 @@ def start_import(test_size = 1000):
     #     index_elastic_search(data_set_test[x], elastic_search, x)
     # search_index_test(elastic_search)
 
-
-    pool = Pool(10)
+    pool = Pool(10) 
     result_iter = pool.map(process, data_set_test)
 
 def process(data):
