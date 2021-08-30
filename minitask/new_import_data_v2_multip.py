@@ -83,12 +83,12 @@ def start_import(test_size = 1000):
 
 def process(data):
 
-    global elasticsearch
+    global elastic_search
 
     print("thread_id :", multiprocessing.current_process())
     try:
         print('adding: ', data['title'])
-        index_elastic_search(data, elasticsearch)
+        index_elastic_search(data, elastic_search)
     except (Exception) as e:
         print("Could not index document, {0}:".format(data["title"]), e) 
 
