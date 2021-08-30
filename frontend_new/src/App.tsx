@@ -8,6 +8,7 @@ import Search from "./components/Search";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Helmet } from "react-helmet";
+import FrontPageInfo from "./components/FrontPageInfo";
 
 import Grow from "@material-ui/core/Grow";
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <style>{"body { background-color: #212121; }"}</style>
         )}
       </Helmet>
+      <TopBar themeSwitch={() => themeSwitch()} />
       <Grow in={true} timeout={600}>
         <Grid
           container
@@ -39,34 +41,15 @@ function App() {
           alignItems="stretch"
           direction="row"
           spacing={3}
+          style={{
+            width: "100%",
+          }}
         >
-          <Grid item xs={12}>
-            <TopBar themeSwitch={() => themeSwitch()} />
-          </Grid>
           <Grid item xs={12}></Grid>
           <Grid item xs={12}>
-            <Typography
-              color="secondary"
-              align="center"
-              variant="h4"
-              component="h2"
-              gutterBottom
-            >
-              Using Open Source Technologies to Create a Search Engine
-            </Typography>
+            <FrontPageInfo />
           </Grid>
-          <Grid item xs={12}>
-            <Typography
-              color="secondary"
-              align="center"
-              variant="h5"
-              component="h2"
-              gutterBottom
-            >
-              NewsAggregator used Elastic Search, Redis and Rust in the backend,
-              and React and Material UI for the frontend.
-            </Typography>
-          </Grid>
+
           <Grid item xs={12}>
             <Search whichTheme={themeChoice.bool} />
           </Grid>

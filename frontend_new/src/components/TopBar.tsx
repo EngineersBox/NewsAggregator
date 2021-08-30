@@ -46,7 +46,7 @@ export default function TopBar(props: props) {
             <BookmarksOutlinedIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}></Typography>
-          <Typography variant="h6">NewsAggregator</Typography>
+          <Typography variant="h6"></Typography>
           <Switch
             defaultChecked
             color="default"
