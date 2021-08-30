@@ -106,19 +106,6 @@ def index_elastic_search(data, elastic_search):
         
     print('success')
 
-
-def index_elastic_search(data, elastic_search, index):
-    # u6250082 Xuguang Song
-    '''parameter: data, elastic search engine, ind'''
-    
-    try:
-
-        index_result = elastic_search.index(index='news', body=data, id=index)
-
-    except:
-        print(data)
-    print('success')
-
 def start_elastic_search():
     # u6250082 Xuguang Song
     '''start elastic search'''
@@ -151,4 +138,5 @@ def search_index_test(elastic_search):
         print ('match news title: ', hit['_source']['title'], '\n', 'match news link: ', hit['_source']['link'], '\n', '-------------------------------------------------------------')
 
 if __name__ == '__main__':
-    start_import()
+    start_import() 
+    
