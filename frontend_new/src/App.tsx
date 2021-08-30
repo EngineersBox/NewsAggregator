@@ -45,7 +45,6 @@ function App() {
             width: "100%",
           }}
         >
-          <Grid item xs={12}></Grid>
           <Grid item xs={12}>
             <FrontPageInfo />
           </Grid>

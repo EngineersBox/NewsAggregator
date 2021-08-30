@@ -44,10 +44,12 @@ export default function AlertDialogSlide(props: props) {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">
-          {"Search Information"}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">{"Information"}</DialogTitle>
         <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            NewsAggregator used Elastic Search, Redis and Rust in the backend,
+            and React and Material UI for the frontend.
+          </DialogContentText>
           <DialogContentText id="alert-dialog-slide-description">
             Accurate Search: Search via a basic query matching keyword
           </DialogContentText>

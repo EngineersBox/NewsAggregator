@@ -23,25 +23,8 @@ export default function FrontPageInfo() {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography
-          color="secondary"
-          align="center"
-          variant="h5"
-          component="h2"
-        >
+        <Typography color="secondary" align="center" variant="body1">
           Using Open Source Technologies to Create a Search Engine
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography
-          color="secondary"
-          align="center"
-          variant="h6"
-          component="h2"
-          gutterBottom
-        >
-          NewsAggregator used Elastic Search, Redis and Rust in the backend, and
-          React and Material UI for the frontend.
         </Typography>
       </Grid>
     </Grid>
