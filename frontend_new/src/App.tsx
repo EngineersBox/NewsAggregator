@@ -19,6 +19,7 @@ function App() {
     theme: dark,
     bool: true,
   });
+React.useEffect(() => { document.body.style.backgroundColor =(themeChoice.bool ? darkTheme.background.default : lightTheme.background.default) }, [themeChoice])
   const themeSwitch = () => {
     if (themeChoice.bool) {
       setThemeChoice({ theme: light, bool: false });
@@ -28,13 +29,6 @@ function App() {
   };
   return (
     <ThemeProvider theme={{ ...themeChoice.theme }}>
-      <Helmet>
-        {themeChoice.bool ? (
-          <style>{"body { background-color: #212121; }"}</style>
-        ) : (
-          <style>{"body { background-color: #efefef; }"}</style>
-        )}
-      </Helmet>
       <TopBar themeSwitch={() => themeSwitch()} />
       <Grow in={true} timeout={600}>
         <Grid
