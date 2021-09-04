@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
-import { theme1 } from "./themes/theme1";
-import { theme2 } from "./themes/theme2";
+import { light } from "./themes/light";
+import { dark } from "./themes/dark";
 import "./App.css";
 import TopBar from "./components/TopBar";
 import Search from "./components/Search";
@@ -13,17 +13,16 @@ import FrontPageInfo from "./components/FrontPageInfo";
 import Grow from "@material-ui/core/Grow";
 function App() {
   const [themeChoice, setThemeChoice] = React.useState({
-    theme: theme2,
+    theme: dark,
     bool: true,
   });
   const themeSwitch = () => {
     if (themeChoice.bool) {
-      setThemeChoice({ theme: theme1, bool: false });
+      setThemeChoice({ theme: light, bool: false });
     } else {
-      setThemeChoice({ theme: theme2, bool: true });
+      setThemeChoice({ theme: dark, bool: true });
     }
   };
-  console.log(themeChoice.theme);
   return (
     <ThemeProvider theme={{ ...themeChoice.theme }}>
       <Helmet>

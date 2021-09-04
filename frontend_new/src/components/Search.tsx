@@ -3,22 +3,34 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InfoButton from "./SlideAlert";
+import { light } from "../themes/light";
+import { dark } from "../themes/dark";
 
+//using colors from theme - bit hacky but works
+const darkPrimary = dark.palette.primary.main;
+const darkSecondary = dark.palette.secondary.main;
+const lightPrimary = dark.palette.primary.main;
+const lightSecondary = dark.palette.secondary.main;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     inputLight: {
       margin: theme.spacing(1),
       height: 50,
-      color: "#e5e5e5",
+      color: lightPrimary,
     },
     inputDark: {
       margin: theme.spacing(1),
       height: 50,
-      color: "#212121",
+      color: darkSecondary,
     },
     inputButton: {
       margin: theme.spacing(1),
       height: 50,
+    },
+    root: {
+      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+        borderColor: darkPrimary,
+      },
     },
   })
 );
@@ -42,6 +54,7 @@ function Search(props: props) {
           id="search-input"
           variant="outlined"
           color="secondary"
+          className={props.whichTheme ? "" : classes.root}
           fullWidth
           InputProps={
             props.whichTheme
