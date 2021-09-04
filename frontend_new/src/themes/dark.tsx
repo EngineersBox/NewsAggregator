@@ -3,13 +3,13 @@ import { createMuiTheme } from "@material-ui/core/styles";
 export const dark = createMuiTheme({
   palette: {
     primary: {
-      main: "#414141",
+      main: "#008000",
     },
     secondary: {
-      main: "#a9a9a9",
+      main: "#a9f9a9",
     },
     background: {
-      default: "#212121",
+      default: "#010101",
     },
   },
 });
