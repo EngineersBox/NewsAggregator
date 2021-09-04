@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     root: {
       "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-        borderColor: darkPrimary,
+        borderColor: darkSecondary,
       },
     },
   })
@@ -54,7 +54,7 @@ function Search(props: props) {
           id="search-input"
           variant="outlined"
           color="secondary"
-          className={props.whichTheme ? "" : classes.root}
+          className={props.whichTheme ? classes.root : ""}
           fullWidth
           InputProps={
             props.whichTheme

@@ -11,6 +11,9 @@ import { Helmet } from "react-helmet";
 import FrontPageInfo from "./components/FrontPageInfo";
 
 import Grow from "@material-ui/core/Grow";
+//using colors from theme - bit hacky but works
+const darkTheme = dark.palette;
+const lightTheme = light.palette;
 function App() {
   const [themeChoice, setThemeChoice] = React.useState({
     theme: dark,
@@ -27,9 +30,9 @@ function App() {
     <ThemeProvider theme={{ ...themeChoice.theme }}>
       <Helmet>
         {themeChoice.bool ? (
-          <style>{"body { background-color: #e5e5e5; }"}</style>
-        ) : (
           <style>{"body { background-color: #212121; }"}</style>
+        ) : (
+          <style>{"body { background-color: #efefef; }"}</style>
         )}
       </Helmet>
       <TopBar themeSwitch={() => themeSwitch()} />
