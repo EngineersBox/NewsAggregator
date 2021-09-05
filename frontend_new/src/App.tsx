@@ -7,7 +7,6 @@ import TopBar from "./components/TopBar";
 import Search from "./components/Search";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { Helmet } from "react-helmet";
 import FrontPageInfo from "./components/FrontPageInfo";
 
 import Grow from "@material-ui/core/Grow";
@@ -19,7 +18,11 @@ function App() {
     theme: dark,
     bool: true,
   });
-React.useEffect(() => { document.body.style.backgroundColor =(themeChoice.bool ? darkTheme.background.default : lightTheme.background.default) }, [themeChoice])
+  React.useEffect(() => {
+    document.body.style.backgroundColor = themeChoice.bool
+      ? darkTheme.background.default
+      : lightTheme.background.default;
+  }, [themeChoice]);
   const themeSwitch = () => {
     if (themeChoice.bool) {
       setThemeChoice({ theme: light, bool: false });

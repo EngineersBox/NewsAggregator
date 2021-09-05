@@ -1,10 +1,13 @@
 import Grid from "@material-ui/core/Grid";
+import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InfoButton from "./SlideAlert";
 import { light } from "../themes/light";
 import { dark } from "../themes/dark";
+import { useFetch } from "./Get";
+import Res from "./Res.js";
 
 //using colors from theme - bit hacky but works
 const darkPrimary = dark.palette.primary.main;
@@ -34,12 +37,23 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
 type props = {
   whichTheme: boolean;
 };
 
 function Search(props: props) {
+  //input in search field
+  const [searchInput, setSearchInput] = React.useState("");
+  //the query from searchInput when search button pressed
+  const [query, setQuery] = React.useState("");
+  //two types of searches
+  const [searchType, setSearchType] = React.useState("");
+
+  function getRes(sinput: string, stype: boolean) {
+    setQuery(searchInput);
+    setSearchType(stype ? "search" : "origin_search");
+  }
+
   const classes = useStyles();
   return (
     <Grid
@@ -56,6 +70,9 @@ function Search(props: props) {
           color="secondary"
           className={props.whichTheme ? classes.root : ""}
           fullWidth
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setSearchInput(e.currentTarget.value)
+          }
           InputProps={
             props.whichTheme
               ? {
@@ -71,6 +88,7 @@ function Search(props: props) {
           variant="contained"
           color="secondary"
           fullWidth
+          onClick={() => getRes(searchInput, false)}
         >
           Accurate Search
         </Button>
@@ -81,11 +99,15 @@ function Search(props: props) {
           variant="contained"
           color="secondary"
           fullWidth
+          onClick={() => getRes(searchInput, true)}
         >
           Associate Search
         </Button>
       </Grid>
       <InfoButton text="This is a description" />
+      <Grid item xs={12}>
+        {query && <Res search={searchType} query={query} />}
+      </Grid>
     </Grid>
   );
 }
