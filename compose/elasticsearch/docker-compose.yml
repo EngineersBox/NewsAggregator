@@ -13,7 +13,7 @@ services:
             - cluster.initial_master_nodes=opensearch-master
             - plugins.security.disabled=true # NOTE: This will need to be removed when SSL if configured
             - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
-            - "OPENSEARCH_JAVA_OPTS=-Xms2G -Xmx2G" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+            - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
         ulimits:
             memlock:
                 soft: -1
@@ -41,7 +41,7 @@ services:
             - cluster.initial_master_nodes=opensearch-master
             - plugins.security.disabled=true # NOTE: This will need to be removed when SSL if configured
             - bootstrap.memory_lock=true
-            - "OPENSEARCH_JAVA_OPTS=-Xms2G -Xmx2G" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+            - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
         ulimits:
             memlock:
                 soft: -1
@@ -69,7 +69,7 @@ services:
             - cluster.initial_master_nodes=opensearch-master
             - plugins.security.disabled=true # NOTE: This will need to be removed when SSL if configured
             - bootstrap.memory_lock=true
-            - "OPENSEARCH_JAVA_OPTS=-Xms2G -Xmx2G" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+            - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
         ulimits:
             memlock:
                 soft: -1
@@ -80,6 +80,34 @@ services:
         ports:
             - 9202:9202
             - 9602:9602 # required for Performance Analyzer
+        volumes:
+            - opensearch-data-ingest2:/usr/share/opensearch/data
+        networks:
+            - opensearch-net
+    opensearch-data-ingest3:
+        image: opensearchproject/opensearch:latest
+        container_name: opensearch-data-ingest3
+        environment:
+            - cluster.name=opensearch-cluster
+            - node.name=opensearch-data-ingest3
+            - node.master=false
+            - node.data=true
+            - node.ingest=true
+            - discovery.seed_hosts=opensearch-master,opensearch-data-ingest-1,opensearch-data-ingest-2,opensearch-coordinator
+            - cluster.initial_master_nodes=opensearch-master
+            - plugins.security.disabled=true # NOTE: This will need to be removed when SSL if configured
+            - bootstrap.memory_lock=true
+            - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        ports:
+            - 9202:9203
+            - 9602:9603 # required for Performance Analyzer
         volumes:
             - opensearch-data-ingest2:/usr/share/opensearch/data
         networks:
@@ -96,7 +124,7 @@ services:
             - discovery.seed_hosts=opensearch-master,opensearch-data-ingest-1,opensearch-data-ingest-2,opensearch-coordinator
             - cluster.initial_master_nodes=opensearch-master
             - bootstrap.memory_lock=true
-            - "OPENSEARCH_JAVA_OPTS=-Xms2G -Xmx2G" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+            - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
         ulimits:
             memlock:
                 soft: -1
@@ -119,7 +147,7 @@ services:
         expose:
             - "5601"
         environment:
-            OPENSEARCH_HOSTS: '["http://opensearch-master:9200"]'
+            OPENSEARCH_HOSTS: '["http://opensearch-master:9200","http://opensearch-master:9201","http://opensearch-master:9202","http://opensearch-master:9203"]'
         networks:
             - opensearch-net
 
