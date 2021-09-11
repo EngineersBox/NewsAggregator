@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
@@ -16,6 +17,7 @@ const useStyles = makeStyles({
     margin: '0 2px',
     transform: 'scale(0.8)',
   },
+  
   title: {
     fontSize: 14,
   },
@@ -35,7 +37,7 @@ export default function SimpleCard(prop: props) {
 
   return (
     <Card className={classes.root}>
-      <CardContent>
+      <CardContent style={{backgroundColor: "#F3F3F1"}}>
         <Typography variant="h5" component="h2">
          {prop.primary} 
         </Typography>       
@@ -47,3 +49,4 @@ export default function SimpleCard(prop: props) {
     </Card>
   );
 }
+

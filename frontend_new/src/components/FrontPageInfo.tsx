@@ -14,17 +14,18 @@ export default function FrontPageInfo() {
       <Grid item xs={12}></Grid>
       <Grid item xs={12}>
         <Typography
-          color="secondary"
+          //color="secondary"
           align="center"
           variant="h4"
           component="h2"
+          
         >
-          NewsAggregator
+          {/* NewsAggregator */}
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography color="secondary" align="center" variant="body1">
-          Using Open Source Technologies to Create a Search Engine
+        <Typography align="center" variant="body1">
+          {/* Using Open Source Technologies to Create a Search Engine */}
         </Typography>
       </Grid>
     </Grid>
