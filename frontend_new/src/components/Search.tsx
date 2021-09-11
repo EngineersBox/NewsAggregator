@@ -9,7 +9,15 @@ import { dark } from "../themes/dark";
 import { useFetch } from "./Get";
 import Res from "./Res.js";
 
-import useSearchParams from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
+import queryString from "query-string";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useLocation,
+} from "react-router-dom";
 
 //using colors from theme - bit hacky but works
 const darkPrimary = dark.palette.primary.main;
@@ -43,6 +51,10 @@ type props = {
   whichTheme: boolean;
 };
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 function Search(props: props) {
   //input in search field
   const [searchInput, setSearchInput] = React.useState("");
@@ -51,14 +63,19 @@ function Search(props: props) {
   //two types of searches
   const [searchType, setSearchType] = React.useState("");
   // Get the whole searchParams
-  const [searchParams, setSearchParams] = useSearchParams();
+  // const { search } = new URLSearchParams(useLocation().search);
+  // const [searchParams, setSearchParams] = useSearchParams();
+  let location = useLocation();
+  console.log(location);
 
-  useEffect(() => {
-    if (searchParams) {
-      setQuery(searchParams.get("query")); //get the query
-      setSearchType(searchParams.get("search")); //get the searchType
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (search) {
+  //     // const values = queryString.parse(search);
+  //     console.log(values);
+  //     // setQuery(searchParams.get("query") || ""); //get the query
+  //     // setSearchType(searchParams.get("search") || ""); //get the searchType
+  //   }
+  // }, []);
 
   function getRes(sinput: string, stype: boolean) {
     setQuery(searchInput);
@@ -93,7 +110,9 @@ function Search(props: props) {
           }
         />
       </Grid>
+      {/* <Router> */}
       <Grid item xs={6} lg={2}>
+        {/* <Link to={`/query/${searchInput}`}> */}
         <Button
           className={classes.inputButton}
           variant="contained"
@@ -103,8 +122,10 @@ function Search(props: props) {
         >
           Accurate Search
         </Button>
+        {/* </Link> */}
       </Grid>
       <Grid item xs={6} lg={2}>
+        {/* <Link to={`/query/${searchInput}`}> */}
         <Button
           className={classes.inputButton}
           variant="contained"
@@ -114,9 +135,16 @@ function Search(props: props) {
         >
           Associate Search
         </Button>
+        {/* </Link> */}
       </Grid>
+      {/* </Router> */}
       <InfoButton text="This is a description" />
       <Grid item xs={12}>
+        {/* <Router>
+          <Switch>
+            <Route path="/query/:query"> <Res search={searchType} query={query} /> </Route>
+          </Switch>
+        </Router> */}
         {query && <Res search={searchType} query={query} />}
       </Grid>
     </Grid>
