@@ -8,8 +8,8 @@ import Search from "./components/Search";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import FrontPageInfo from "./components/FrontPageInfo";
-
 import Grow from "@material-ui/core/Grow";
+
 //using colors from theme - bit hacky but works
 const darkTheme = dark.palette;
 const lightTheme = light.palette;
@@ -47,6 +47,7 @@ function App() {
           <Grid item xs={12}>
             <FrontPageInfo />
           </Grid>
+
 
           <Grid item xs={12}>
             <Search whichTheme={themeChoice.bool} />

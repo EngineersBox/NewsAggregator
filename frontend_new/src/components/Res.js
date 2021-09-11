@@ -4,6 +4,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 import { useFetch } from "./Get";
+import SimpleCard from "./Cards.tsx";
+import Grow from '@material-ui/core/Grow';
 
 function Res(props) {
   const [res, resStatus] = useFetch(
@@ -19,19 +21,25 @@ function Res(props) {
     color: "#9f9f9f",
   };
 
+  const [time_delay, setDelay]= useState(1);
+
   return (
     <List>
       {!resStatus &&
         res.result.result.map(({ _id, _score, _source }) => (
           <React.Fragment key={_id}>
-            <ListItem button>
-              <ListItemText
-                secondaryTypographyProps={{ style: textColor2 }}
-                primaryTypographyProps={{ style: textColor }}
-                primary={_source.title}
-                secondary={_source.summary}
+            <Grow in={true} timeout={time_delay}>
+
+            
+            <ListItem button onClick={() => console.log(_source.link)}>
+            {() => setDelay(time_delay+200)}
+              < SimpleCard 
+               primary={_source.title}
+               secondary={_source.summary}
               />
+
             </ListItem>
+            </Grow>
           </React.Fragment>
         ))}
     </List>
