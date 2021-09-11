@@ -1,5 +1,5 @@
 import Grid from "@material-ui/core/Grid";
-import React from "react";
+import React, { useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -8,6 +8,8 @@ import { light } from "../themes/light";
 import { dark } from "../themes/dark";
 import { useFetch } from "./Get";
 import Res from "./Res.js";
+
+import useSearchParams from "react-router-dom";
 
 //using colors from theme - bit hacky but works
 const darkPrimary = dark.palette.primary.main;
@@ -48,6 +50,15 @@ function Search(props: props) {
   const [query, setQuery] = React.useState("");
   //two types of searches
   const [searchType, setSearchType] = React.useState("");
+  // Get the whole searchParams
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams) {
+      setQuery(searchParams.get("query")); //get the query
+      setSearchType(searchParams.get("search")); //get the searchType
+    }
+  }, []);
 
   function getRes(sinput: string, stype: boolean) {
     setQuery(searchInput);
