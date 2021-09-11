@@ -106,8 +106,8 @@ services:
                 soft: 65536
                 hard: 65536
         ports:
-            - 9202:9203
-            - 9602:9603 # required for Performance Analyzer
+            - 9203:9203
+            - 9603:9603 # required for Performance Analyzer
         volumes:
             - opensearch-data-ingest2:/usr/share/opensearch/data
         networks:
@@ -133,8 +133,8 @@ services:
                 soft: 65536
                 hard: 65536
         ports:
-            - 9203:9203
-            - 9603:9603 # required for Performance Analyzer
+            - 9204:9204
+            - 9604:9604 # required for Performance Analyzer
         volumes:
             - opensearch-coordinator:/usr/share/opensearch/data
         networks:
@@ -147,7 +147,7 @@ services:
         expose:
             - "5601"
         environment:
-            OPENSEARCH_HOSTS: '["http://opensearch-master:9200","http://opensearch-master:9201","http://opensearch-master:9202","http://opensearch-master:9203"]'
+            OPENSEARCH_HOSTS: '["http://opensearch-master:9200","http://opensearch-master:9201","http://opensearch-master:9202","http://opensearch-master:9203","http://opensearch-master:9204"]'
         networks:
             - opensearch-net
 
