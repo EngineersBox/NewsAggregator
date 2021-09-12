@@ -8,6 +8,7 @@ import Search from "./components/Search";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import FrontPageInfo from "./components/FrontPageInfo";
+import Drawers from "./components/Drawers";
 
 import Grow from "@material-ui/core/Grow";
 //using colors from theme - bit hacky but works
@@ -32,7 +33,7 @@ function App() {
   };
   return (
     <ThemeProvider theme={{ ...themeChoice.theme }}>
-      <TopBar themeSwitch={() => themeSwitch()} />
+      <Drawers themeSwitch={() => themeSwitch()} />
       <Grow in={true} timeout={600}>
         <Grid
           container
