@@ -46,8 +46,8 @@ function App() {
           }}
         >
           <Grid item xs={12}>
-            <MediaCard />
-            {/* <FrontPageInfo /> */}
+            {/* <MediaCard /> */}
+            <FrontPageInfo />
           </Grid>
 
 

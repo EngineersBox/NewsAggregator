@@ -20,12 +20,12 @@ export default function FrontPageInfo() {
           component="h2"
           
         >
-          {/* NewsAggregator */}
+          NewsAggregator
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography align="center" variant="body1">
-          {/* Using Open Source Technologies to Create a Search Engine */}
+          Using Open Source Technologies to Create a Search Engine
         </Typography>
       </Grid>
     </Grid>
