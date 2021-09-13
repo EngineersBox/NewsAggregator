@@ -53,6 +53,15 @@ function Search(props: props) {
     setQuery(searchInput);
     setSearchType(stype ? "search" : "origin_search");
   }
+  function enterPress(event: React.KeyboardEvent) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      console.log("here");
+      if (!(searchInput === "")) {
+        getRes(searchInput, false);
+      }
+    }
+  }
 
   const classes = useStyles();
   return (
@@ -80,6 +89,7 @@ function Search(props: props) {
                 }
               : { className: classes.inputLight }
           }
+          onKeyPress={(e) => enterPress(e)}
         />
       </Grid>
       <Grid item xs={6} lg={2}>
@@ -101,7 +111,7 @@ function Search(props: props) {
           fullWidth
           onClick={() => getRes(searchInput, true)}
         >
-          Associate Search
+          Associative Search
         </Button>
       </Grid>
       <InfoButton text="This is a description" />
