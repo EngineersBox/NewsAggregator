@@ -33,7 +33,7 @@ function App() {
   };
   return (
     <ThemeProvider theme={{ ...themeChoice.theme }}>
-      <Drawers themeSwitch={() => themeSwitch()} />
+      <TopBar themeSwitch={() => themeSwitch()} />
       <Grow in={true} timeout={600}>
         <Grid
           container
