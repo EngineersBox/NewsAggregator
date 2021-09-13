@@ -6,9 +6,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InfoButton from "./SlideAlert";
 import { light } from "../themes/light";
 import { dark } from "../themes/dark";
-import { useFetch } from "./Get";
 import Res from "./Res.js";
-import ResNew from "./ResNew.js";
 
 import {
   BrowserRouter as Router,
@@ -125,7 +123,7 @@ function SearchInfo(props: props) {
         </Grid>
         <InfoButton text="This is a description" />
         <Grid item xs={12}>
-          <Route exact path="/search" component={ResNew} />
+          <Route exact path="/search" component={Res} />
         </Grid>
       </Router>
     </Grid>

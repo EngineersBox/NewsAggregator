@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import ListItemText from "@material-ui/core/ListItemText";
 
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 import { useFetch } from "./Get";
 
-function Res(props) {
+import { useLocation } from "react-router-dom";
+
+function Res() {
+  // Not sure if we want to import useQuery function from Search.tsx for this
+  const searchParams = new URLSearchParams(useLocation().search);
   const [res, resStatus] = useFetch(
     "https://anu.jkl.io/api/"
-      .concat(props.search)
+      .concat(searchParams.get("searchType"))
       .concat("?query=")
-      .concat(props.query)
+      .concat(searchParams.get("query"))
   );
   const textColor = {
     color: "white",
