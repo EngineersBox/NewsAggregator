@@ -50,19 +50,11 @@ function Search(props: props) {
   const [query, setQuery] = React.useState("");
   //two types of searches
   const [searchType, setSearchType] = React.useState("");
-  const [dfpr, setDFPR] = React.useState(true);
 
   function GetRes(sinput: string, stype: boolean) {
     setQuery(searchInput);
     setSearchType(stype ? "search" : "origin_search");
   }
-  React.useEffect(() => {
-    setInterval(() => {
-      if (query != "") {
-        setDFPR(false);
-      }
-    }, 150);
-  }, [query]);
 
   const classes = useStyles();
   return (
@@ -75,7 +67,7 @@ function Search(props: props) {
     >
       <Grow in={query ? false : true}>
         <Grid item xs={12}>
-          {dfpr && <FrontPageInfo />}
+          {!query && <FrontPageInfo />}
         </Grid>
       </Grow>
       <Grid item xs={11} lg={6}>
