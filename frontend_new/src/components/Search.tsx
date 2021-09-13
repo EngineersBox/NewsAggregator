@@ -1,5 +1,5 @@
 import Grid from "@material-ui/core/Grid";
-import React, { useEffect } from "react";
+import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -9,13 +9,9 @@ import { dark } from "../themes/dark";
 import { useFetch } from "./Get";
 import Res from "./Res.js";
 import ResNew from "./ResNew.js";
-import ReactDOM from "react-dom";
 
-// import { useSearchParams } from "react-router-dom";
-import queryString from "query-string";
 import {
   BrowserRouter as Router,
-  Switch,
   useLocation,
   Link,
   Route,
@@ -57,64 +53,14 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-// Note queryString and URLSearchParams are working similarly
-function ResWithParams() {
-  // console.log(prop.location);
-  console.log(useLocation());
-  let location = useLocation();
-  const search = location.search;
-  const values = queryString.parse(search.toString());
-  console.log(values);
-  let testQuery = useQuery();
-  console.log(testQuery.get("query"));
-  return (
-    // Uncomment to view the output on the web rather than console
-    // <>
-    //   <p>
-    //     <strong>Match Props: </strong>
-    //     <code>{JSON.stringify(prop.match, null, 2)}</code>
-    //   </p>
-    //   <p>
-    //     <strong>Location Props: </strong>
-    //     <code>{JSON.stringify(prop.location, null, 2)}</code>
-    //   </p>
-    // </>
-    <Grid
-      container
-      justifyContent="center"
-      alignContent="center"
-      direction="row"
-      spacing={1}
-    >
-      <Grid item xs={12}>
-        <Res search={values.searchType} query={values.query} />
-      </Grid>
-    </Grid>
-  );
-}
-
-function Search(props: props) {
-  // const location = new URLSearchParams(useLocation().search);
-  // console.log(location);
-
+function SearchInfo(props: props) {
+  const urlQuery = useQuery().get("query");
   //input in search field
-  const [searchInput, setSearchInput] = React.useState("");
+  const [searchInput, setSearchInput] = React.useState(urlQuery || "");
   //the query from searchInput when search button pressed
-  const [query, setQuery] = React.useState("");
+  const [query, setQuery] = React.useState(urlQuery || "");
   //two types of searches
   const [searchType, setSearchType] = React.useState("");
-  // Get the whole searchParams
-  // const { search } = new URLSearchParams(useLocation().search);
-  // const [searchParams, setSearchParams] = useSearchParams();
-
-  // useEffect(() => {
-  //   // Update the document title using the browser API
-  //   if (searchParams === null) {
-  //   } else {
-  //     const foundQuery = searchParams.get("query");
-  //     console.log("found", foundQuery);
-  //   }
-  // });
 
   function getRes(sinput: string, stype: boolean) {
     setQuery(searchInput);
@@ -138,6 +84,7 @@ function Search(props: props) {
             color="secondary"
             className={props.whichTheme ? classes.root : ""}
             fullWidth
+            defaultValue={searchInput}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setSearchInput(e.currentTarget.value)
             }
@@ -178,14 +125,17 @@ function Search(props: props) {
         </Grid>
         <InfoButton text="This is a description" />
         <Grid item xs={12}>
-          {/* const searchParams = useQuery();
-          console.log(searchParams.get("query")); */}
-          <Route exact path="/search" component={ResWithParams} />
-          {query && <Res search={searchType} query={query} />}
+          <Route exact path="/search" component={ResNew} />
         </Grid>
       </Router>
     </Grid>
   );
 }
 
-export default Search;
+export default function Search(prop: props) {
+  return (
+    <Router>
+      <SearchInfo whichTheme={prop.whichTheme} />
+    </Router>
+  );
+}
