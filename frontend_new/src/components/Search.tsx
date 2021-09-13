@@ -8,7 +8,9 @@ import { light } from "../themes/light";
 import { dark } from "../themes/dark";
 import { useFetch } from "./Get";
 import Res from "./Res.js";
+import FrontPageInfo from "./FrontPageInfo";
 
+import Grow from "@material-ui/core/Grow";
 //using colors from theme - bit hacky but works
 const darkPrimary = dark.palette.primary.main;
 const darkSecondary = dark.palette.secondary.main;
@@ -48,11 +50,19 @@ function Search(props: props) {
   const [query, setQuery] = React.useState("");
   //two types of searches
   const [searchType, setSearchType] = React.useState("");
+  const [dfpr, setDFPR] = React.useState(true);
 
-  function getRes(sinput: string, stype: boolean) {
+  function GetRes(sinput: string, stype: boolean) {
     setQuery(searchInput);
     setSearchType(stype ? "search" : "origin_search");
   }
+  React.useEffect(() => {
+    setInterval(() => {
+      if (query != "") {
+        setDFPR(false);
+      }
+    }, 150);
+  }, [query]);
 
   const classes = useStyles();
   return (
@@ -63,6 +73,11 @@ function Search(props: props) {
       direction="row"
       spacing={1}
     >
+      <Grow in={query ? false : true}>
+        <Grid item xs={12}>
+          {dfpr && <FrontPageInfo />}
+        </Grid>
+      </Grow>
       <Grid item xs={11} lg={6}>
         <TextField
           id="search-input"
@@ -88,7 +103,7 @@ function Search(props: props) {
           variant="contained"
           color="secondary"
           fullWidth
-          onClick={() => getRes(searchInput, false)}
+          onClick={() => GetRes(searchInput, false)}
         >
           Accurate Search
         </Button>
@@ -99,7 +114,7 @@ function Search(props: props) {
           variant="contained"
           color="secondary"
           fullWidth
-          onClick={() => getRes(searchInput, true)}
+          onClick={() => GetRes(searchInput, true)}
         >
           Associate Search
         </Button>
