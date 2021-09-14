@@ -15,6 +15,11 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 
+import { light } from "../themes/light";
+import { dark } from "../themes/dark";
+import { ThemeProvider } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -26,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   list: {
-    width: 250,
+    width: 200,
   },
   fullList: {
     width: 'auto',
@@ -68,28 +73,19 @@ export default function Drawers(props: props) {
         onKeyDown={toggleDrawer(anchor, false)}
         >
       <List>
-        {['Item1', 'Item2', 'Item3'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['Item4', 'Item5', 'Item6'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
       </List>
     </div>
     );
 
+    const [themeChoice, setThemeChoice] = React.useState({
+      theme: dark,
+      bool: true,
+    });
+
+
   return (
-    <div className={classes.root}>
-      <AppBar position="static" color="primary">
-        <Toolbar>
-             {['setting'].map((anchor) => (
+    <Grid>
+         {['setting'].map((anchor) => (
                 <React.Fragment key={anchor}>
                     <IconButton
              edge="end"
@@ -121,16 +117,10 @@ export default function Drawers(props: props) {
               {list('bookmark')}
             </Drawer>
           </React.Fragment>
-      ))} 
-          <Typography variant="h6" className={classes.title}></Typography>
-          <Typography variant="h6"></Typography>
-          <Switch
-            defaultChecked
-            color="default"
-            onChange={() => props.themeSwitch()}
-          />
-        </Toolbar>
-      </AppBar>
-    </div>
+      ))}
+      <Typography variant="h6" className={classes.title}></Typography>
+      <Typography variant="h6"></Typography>
+          
+      </Grid>
   );
 }
