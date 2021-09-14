@@ -47,12 +47,14 @@ type props = {
   whichTheme: boolean;
 };
 
-function useQuery() {
+// Thinking of moving this to a folder/file that stores common functionality
+export function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
 function SearchInfo(props: props) {
   const urlQuery = useQuery().get("query");
+
   //input in search field
   const [searchInput, setSearchInput] = React.useState(urlQuery || "");
   //the query from searchInput when search button pressed

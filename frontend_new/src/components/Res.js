@@ -5,14 +5,18 @@ import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 import { useFetch } from "./Get";
 
-import { useLocation } from "react-router-dom";
+import { useQuery } from "./Search";
 
 function Res() {
-  // Not sure if we want to import useQuery function from Search.tsx for this
-  const searchParams = new URLSearchParams(useLocation().search);
+  const searchParams = useQuery();
+  //Validate the search
+  let searchType = searchParams.searchType;
+  if (searchType !== "search" || searchType !== "origin_search") {
+    searchType = "search";
+  }
   const [res, resStatus] = useFetch(
     "https://anu.jkl.io/api/"
-      .concat(searchParams.get("searchType"))
+      .concat(searchType)
       .concat("?query=")
       .concat(searchParams.get("query"))
   );
