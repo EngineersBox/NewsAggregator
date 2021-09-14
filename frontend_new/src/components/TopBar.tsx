@@ -33,14 +33,14 @@ export default function TopBar(props: props) {
     <div className={classes.root}>
       <AppBar position="static" color="primary">
         <Toolbar >
-        <Drawers themeSwitch={() => themeSwitch()} />
-            <Switch
+         <Drawers themeSwitch={() => themeSwitch()} />
+         <Typography variant="h6" className={classes.title}></Typography>
+         <Typography variant="h6"></Typography>
+         <Switch
               defaultChecked
               color="default"
               onChange={() => props.themeSwitch()}
             />
-
-            
         </Toolbar>
       </AppBar>
     </div>

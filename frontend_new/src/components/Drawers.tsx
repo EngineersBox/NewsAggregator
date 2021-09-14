@@ -84,7 +84,7 @@ export default function Drawers(props: props) {
 
 
   return (
-    <Grid>
+    <div>
          {['setting'].map((anchor) => (
                 <React.Fragment key={anchor}>
                     <IconButton
@@ -117,10 +117,7 @@ export default function Drawers(props: props) {
               {list('bookmark')}
             </Drawer>
           </React.Fragment>
-      ))}
-      <Typography variant="h6" className={classes.title}></Typography>
-      <Typography variant="h6"></Typography>
-          
-      </Grid>
+      ))}    
+      </div>
   );
 }
