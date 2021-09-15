@@ -16,11 +16,14 @@ const Transition = React.forwardRef(function Transition(
 ) {
   return <Slide direction="left" ref={ref} {...props} />;
 });
+
 type props = {
   text: string;
 };
 
+
 export default function AlertDialogSlide(props: props) {
+
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -40,20 +43,27 @@ export default function AlertDialogSlide(props: props) {
         open={open}
         TransitionComponent={Transition}
         keepMounted
+        color="secondary"
         onClose={handleClose}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
+        PaperProps={{
+          style: {
+              backgroundColor:"theme.palette.background.default",
+          },
+       }}
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Information"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
+        <DialogTitle id="alert-dialog-slide-title" >{"Information" }</DialogTitle>
+        <DialogContent >
+          <DialogContentText id="alert-dialog-slide-description" color="secondary">
             NewsAggregator used Elastic Search, Redis and Rust in the backend,
             and React and Material UI for the frontend.
           </DialogContentText>
-          <DialogContentText id="alert-dialog-slide-description">
+          <DialogContentText id="alert-dialog-slide-description" color="secondary">
             Accurate Search: Search via a basic query matching keyword
           </DialogContentText>
-          <DialogContentText id="alert-dialog-slide-description">
+          <DialogContentText id="alert-dialog-slide-description"
+            color="secondary">
             Associative Search: Search using a classification model, KNN
           </DialogContentText>
         </DialogContent>

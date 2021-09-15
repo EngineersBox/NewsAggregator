@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import FrontPageInfo from "./components/FrontPageInfo";
 import Drawers from "./components/Drawers";
+import SlideAlert from "./components/SlideAlert";
 
 import Grow from "@material-ui/core/Grow";
 //using colors from theme - bit hacky but works
