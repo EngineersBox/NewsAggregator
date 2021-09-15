@@ -56,7 +56,6 @@ function Search(props: props) {
   function enterPress(event: React.KeyboardEvent) {
     if (event.key === "Enter") {
       event.preventDefault();
-      console.log("here");
       if (!(searchInput === "")) {
         getRes(searchInput, false);
       }
