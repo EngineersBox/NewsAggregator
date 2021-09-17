@@ -6,6 +6,8 @@ import ssl
 from multiprocessing import Pool
 import multiprocessing
 
+MAP_POOLS_GENERATEPULLS_CHUNKSIZES = 50 
+
 elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
 
 """
@@ -77,7 +79,8 @@ def main():
     with urlopen("https://dumps.wikimedia.org/enwiki/20210820/enwiki-20210820-all-titles-in-ns0.gz") as r:
         with gzip.GzipFile(fileobj=r) as f:
             pool = Pool(10)
-            result_iter = pool.imap_unordered(process, f, chunksize=50)
+            result_iter = pool.imap_unordered(process, f, chunksize=MAP_POOLS_GENERATEPULLS_CHUNKSIZES) 
+
             for _ in result_iter:
                 totalLines += 1
 
