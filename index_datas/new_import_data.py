@@ -18,8 +18,7 @@ URL = 'https://localhost:9200/example3/_doc/'
 
 def process(line):
     formattedLine = line.strip().decode("utf-8")
-    print("Line:", formattedLine)
-    print("thread_id :", multiprocessing.current_process())
+    print("[Thread {0}] Line: {1}".format(multiprocessing.current_process(), formattedLine)) 
     try:
         page = wikipedia.page(formattedLine)
         data = {"link": page.url, "title": page.title, "art": page.summary}
