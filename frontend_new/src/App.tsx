@@ -45,10 +45,6 @@ function App() {
           }}
         >
           <Grid item xs={12}>
-            <FrontPageInfo />
-          </Grid>
-
-          <Grid item xs={12}>
             <Search whichTheme={themeChoice.bool} />
           </Grid>
         </Grid>
