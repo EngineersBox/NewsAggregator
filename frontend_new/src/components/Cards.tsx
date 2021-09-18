@@ -11,18 +11,10 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
     
   root: {
-    // minWidth: 275,
     width: '80%',
     marginleft: '5%',
     
   },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-    width: '80%',
-  },
-  
   title: {
     fontSize: 14,
   },
@@ -40,8 +32,6 @@ type props = {
   
 export default function SimpleCard(prop: props) {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
-
   return (
     <Card className={classes.root}>
       <CardContent style={{backgroundColor: "#F3F3F1"}}>

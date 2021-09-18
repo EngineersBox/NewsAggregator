@@ -9,7 +9,6 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import FrontPageInfo from "./components/FrontPageInfo";
 import Grow from "@material-ui/core/Grow";
-import MediaCard from "./components/Logo";
 
 //using colors from theme - bit hacky but works
 const darkTheme = dark.palette;
@@ -46,10 +45,8 @@ function App() {
           }}
         >
           <Grid item xs={12}>
-            {/* <MediaCard /> */}
             <FrontPageInfo />
           </Grid>
-
 
           <Grid item xs={12}>
             <Search whichTheme={themeChoice.bool} />

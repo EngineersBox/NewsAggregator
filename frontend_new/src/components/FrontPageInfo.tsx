@@ -14,7 +14,7 @@ export default function FrontPageInfo() {
       <Grid item xs={12}></Grid>
       <Grid item xs={12}>
         <Typography
-          //color="secondary"
+          color="secondary"
           align="center"
           variant="h4"
           component="h2"
@@ -24,7 +24,7 @@ export default function FrontPageInfo() {
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        <Typography align="center" variant="body1">
+        <Typography color="secondary" align="center" variant="body1">
           Using Open Source Technologies to Create a Search Engine
         </Typography>
       </Grid>

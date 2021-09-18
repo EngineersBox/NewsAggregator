@@ -20,6 +20,7 @@ function Res(props) {
   const textColor2 = {
     color: "#9f9f9f",
   };
+  const delay_per_result = 200;
 
   const [time_delay, setDelay]= useState(1);
 
@@ -30,15 +31,13 @@ function Res(props) {
           <React.Fragment key={_id}>
             <Grow in={true} timeout={time_delay}>
 
-            
             <ListItem button onClick={() => console.log(_source.link)}>
-            {() => setDelay(time_delay+200)}
+            {() => setDelay(time_delay + delay_per_result)}
               < SimpleCard 
                web_link={_source.link}
                primary={_source.title}
                secondary={_source.summary}
               />
-
             </ListItem>
             </Grow>
           </React.Fragment>
