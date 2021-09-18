@@ -34,6 +34,7 @@ function Res(props) {
             <ListItem button onClick={() => console.log(_source.link)}>
             {() => setDelay(time_delay+200)}
               < SimpleCard 
+               web_link={_source.link}
                primary={_source.title}
                secondary={_source.summary}
               />

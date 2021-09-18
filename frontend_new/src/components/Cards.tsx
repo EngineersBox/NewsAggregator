@@ -9,13 +9,18 @@ import Typography from '@material-ui/core/Typography';
 
 
 const useStyles = makeStyles({
+    
   root: {
-    minWidth: 275,
+    // minWidth: 275,
+    width: '80%',
+    marginleft: '5%',
+    
   },
   bullet: {
     display: 'inline-block',
     margin: '0 2px',
     transform: 'scale(0.8)',
+    width: '80%',
   },
   
   title: {
@@ -23,10 +28,12 @@ const useStyles = makeStyles({
   },
   pos: {
     marginBottom: 12,
+    marginleft: 12,
   },
 });
 
 type props = {
+    web_link: string,
     primary : string;
     secondary: string;
   };
@@ -38,6 +45,9 @@ export default function SimpleCard(prop: props) {
   return (
     <Card className={classes.root}>
       <CardContent style={{backgroundColor: "#F3F3F1"}}>
+      <Typography variant="body2" component="h1">
+         {prop.web_link} 
+        </Typography>  
         <Typography variant="h5" component="h2">
          {prop.primary} 
         </Typography>       
