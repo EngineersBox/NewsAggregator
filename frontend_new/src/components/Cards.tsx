@@ -35,9 +35,9 @@ export default function SimpleCard(prop: props) {
   return (
     <Card className={classes.root}>
       <CardContent style={{backgroundColor: "#F3F3F1"}}>
-      <Typography variant="body2" component="h1">
+        <Typography variant="body2" component="h1">
          {prop.web_link} 
-        </Typography>  
+        </Typography>    
         <Typography variant="h5" component="h2">
          {prop.primary} 
         </Typography>       
