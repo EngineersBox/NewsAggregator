@@ -8,6 +8,7 @@ import { light } from "../themes/light";
 import { dark } from "../themes/dark";
 import { useFetch } from "./Get";
 import Res from "./Res.js";
+import FrontPageInfo from "./FrontPageInfo";
 
 //using colors from theme - bit hacky but works
 const darkPrimary = dark.palette.primary.main;
@@ -53,6 +54,14 @@ function Search(props: props) {
     setQuery(searchInput);
     setSearchType(stype ? "search" : "origin_search");
   }
+  function enterPress(event: React.KeyboardEvent) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (!(searchInput === "")) {
+        getRes(searchInput, false);
+      }
+    }
+  }
 
   const classes = useStyles();
   return (
@@ -63,6 +72,9 @@ function Search(props: props) {
       direction="row"
       spacing={1}
     >
+      <Grid item xs={12}>
+        {!query && <FrontPageInfo />}
+      </Grid>
       <Grid item xs={11} lg={6}>
         <TextField
           id="search-input"
@@ -80,6 +92,7 @@ function Search(props: props) {
                 }
               : { className: classes.inputLight }
           }
+          onKeyPress={(e) => enterPress(e)}
         />
       </Grid>
       <Grid item xs={6} lg={2}>
@@ -101,7 +114,7 @@ function Search(props: props) {
           fullWidth
           onClick={() => getRes(searchInput, true)}
         >
-          Associate Search
+          Associative Search
         </Button>
       </Grid>
       <InfoButton text="This is a description" />
