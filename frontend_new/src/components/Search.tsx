@@ -8,6 +8,7 @@ import { light } from "../themes/light";
 import { dark } from "../themes/dark";
 import { useFetch } from "./Get";
 import Res from "./Res.js";
+import FrontPageInfo from "./FrontPageInfo";
 
 //using colors from theme - bit hacky but works
 const darkPrimary = dark.palette.primary.main;
@@ -71,6 +72,9 @@ function Search(props: props) {
       direction="row"
       spacing={1}
     >
+      <Grid item xs={12}>
+        {!query && <FrontPageInfo />}
+      </Grid>
       <Grid item xs={11} lg={6}>
         <TextField
           id="search-input"
