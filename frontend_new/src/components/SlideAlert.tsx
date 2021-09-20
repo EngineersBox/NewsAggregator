@@ -49,7 +49,8 @@ export default function AlertDialogSlide(props: props) {
         aria-describedby="alert-dialog-slide-description"
         PaperProps={{
           style: {
-              backgroundColor:"theme.palette.background.default",
+              color:"#fff",
+              backgroundColor:""
           },
        }}
       >

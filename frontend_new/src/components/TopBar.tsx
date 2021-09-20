@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 type props = {
   themeSwitch: () => void;
+  whichTheme: boolean;
 };
 
 export default function TopBar(props: props) {
@@ -33,7 +34,7 @@ export default function TopBar(props: props) {
     <div className={classes.root}>
       <AppBar position="static" color="primary">
         <Toolbar >
-         <Drawers themeSwitch={() => themeSwitch()} />
+         <Drawers whichTheme={props.whichTheme} />
          <Typography variant="h6" className={classes.title}></Typography>
          <Typography variant="h6"></Typography>
          <Switch
@@ -47,6 +48,3 @@ export default function TopBar(props: props) {
   );
 }
 
-function themeSwitch(): void {
-  throw new Error("Function not implemented.");
-}

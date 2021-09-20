@@ -2,27 +2,26 @@ import React from "react";
 import clsx from 'clsx';
 import Drawer from '@material-ui/core/Drawer';
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import BookmarksOutlinedIcon from "@material-ui/icons/BookmarksOutlined";
-import Switch from "@material-ui/core/Switch";
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 
 import { light } from "../themes/light";
 import { dark } from "../themes/dark";
-import { ThemeProvider } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
+
+const darkPrimary = dark.palette.primary.main;
+const lightPrimary = light.palette.primary.main;
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+  },
+  paperlight: {
+    backgroundColor: lightPrimary,
+  },
+  paperdark: {
+    backgroundColor: darkPrimary,
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -37,13 +36,13 @@ const useStyles = makeStyles((theme) => ({
     width: 'auto',
   },
 }));
-type props = {
-  themeSwitch: () => void;
-};
 
 type Anchor = 'setting' | 'bookmark';
+type props = {
+  whichTheme: boolean;
+};
 
-export default function Drawers(props: props) {
+export default function Drawers(props : props) {
   const classes = useStyles();
   const [state, setState] = React.useState({
     setting: false,
@@ -96,7 +95,18 @@ export default function Drawers(props: props) {
           >
              <SettingsOutlinedIcon />
             </IconButton>
-          <Drawer anchor={'left'} open={state['setting']} onClose={toggleDrawer('setting', false)}>
+          <Drawer 
+                  anchor={'left'} 
+                  open={state['setting']} 
+                  onClose={toggleDrawer('setting', false)}
+                  classes={
+                    props.whichTheme
+                      ? {
+                          paper: classes.paperdark,
+                        }
+                      : { paper: classes.paperlight }
+                  }
+                  >
                             {list('setting')}
                     </Drawer>
                         </React.Fragment>
@@ -113,7 +123,18 @@ export default function Drawers(props: props) {
           >
             <BookmarksOutlinedIcon />
           </IconButton>
-          <Drawer anchor={'left'} open={state['bookmark']} onClose={toggleDrawer('bookmark', false)}>
+          <Drawer 
+          anchor={'left'} 
+          open={state['bookmark']} 
+          onClose={toggleDrawer('bookmark', false)}
+          classes={
+            props.whichTheme
+              ? {
+                  paper: classes.paperdark,
+                }
+              : { paper: classes.paperlight }
+          }
+           >
               {list('bookmark')}
             </Drawer>
           </React.Fragment>
