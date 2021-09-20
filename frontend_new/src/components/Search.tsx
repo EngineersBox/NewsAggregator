@@ -13,8 +13,8 @@ import FrontPageInfo from "./FrontPageInfo";
 //using colors from theme - bit hacky but works
 const darkPrimary = dark.palette.primary.main;
 const darkSecondary = dark.palette.secondary.main;
-const lightPrimary = light.palette.primary.main;
-const lightSecondary = light.palette.secondary.main;
+const lightPrimary = dark.palette.primary.main;
+const lightSecondary = dark.palette.secondary.main;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     inputLight: {
@@ -117,7 +117,7 @@ function Search(props: props) {
           Associative Search
         </Button>
       </Grid>
-        <InfoButton text="This is a description" />
+      <InfoButton text="This is a description" />
       <Grid item xs={12}>
         {query && <Res search={searchType} query={query} />}
       </Grid>
