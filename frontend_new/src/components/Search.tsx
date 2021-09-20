@@ -117,7 +117,7 @@ function Search(props: props) {
           Associative Search
         </Button>
       </Grid>
-      <InfoButton text="This is a description" />
+      <InfoButton text="This is a description" whichTheme={props.whichTheme}/>
       <Grid item xs={12}>
         {query && <Res search={searchType} query={query} />}
       </Grid>
