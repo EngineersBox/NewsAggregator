@@ -9,8 +9,6 @@ import Slide from "@material-ui/core/Slide";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import { TransitionProps } from "@material-ui/core/transitions";
-import { light } from "../themes/light";
-import { dark } from "../themes/dark";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -21,7 +19,6 @@ const Transition = React.forwardRef(function Transition(
 
 type props = {
   text: string;
-  whichTheme:boolean;
 };
 
 
@@ -50,24 +47,6 @@ export default function AlertDialogSlide(props: props) {
         onClose={handleClose}
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
-        PaperProps={
-          props.whichTheme
-            ? {
-                style: {
-                    color:"#fff",
-                    backgroundColor:dark.palette.background.default
-                },
-              }
-            : {
-              style: {
-                  color:"#fff",
-                  backgroundColor:light.palette.background.default
-              },
-            }
-      
-      
-      
-      }
       >
         <DialogTitle id="alert-dialog-slide-title" >{"Information" }</DialogTitle>
         <DialogContent >

@@ -104,7 +104,7 @@ function Search(props: props) {
           Associate Search
         </Button>
       </Grid>
-        <InfoButton text="This is a description" whichTheme={props.whichTheme}/>
+        <InfoButton text="This is a description" />
       <Grid item xs={12}>
         {query && <Res search={searchType} query={query} />}
       </Grid>
