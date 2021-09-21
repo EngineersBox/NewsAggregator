@@ -8,7 +8,6 @@ export const light = createMuiTheme({
     },
     secondary: {
       main: "#212121",
-      dark: "#c9c9c9",
     },
     background: {
       default: "#dfdfdf",
@@ -34,11 +33,6 @@ export const dark = createMuiTheme({
     },
     input: {
       color: "#c9c9c9",
-    },
-    root: {
-      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-        borderColor: "#c9c9c9",
-      },
     },
   },
 });

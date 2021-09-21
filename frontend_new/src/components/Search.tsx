@@ -19,11 +19,6 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: theme.spacing(1),
       height: 50,
     },
-    root: {
-      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-        borderColor: theme.palette.secondary.dark,
-      },
-    },
   })
 );
 type props = {
