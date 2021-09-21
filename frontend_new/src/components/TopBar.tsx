@@ -28,7 +28,6 @@ type props = {
 export default function TopBar(props: props) {
   const classes = useStyles();
   return (
-    <ThemeProvider theme={{ ...props.themeChoice }}>
       <div className={classes.root}>
         <AppBar position="static" color="primary">
           <Toolbar>
@@ -58,6 +57,5 @@ export default function TopBar(props: props) {
           </Toolbar>
         </AppBar>
       </div>
-    </ThemeProvider>
   );
 }
