@@ -4,28 +4,16 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InfoButton from "./SlideAlert";
-import { light } from "../themes/light";
-import { dark } from "../themes/dark";
 import { useFetch } from "./Get";
 import Res from "./Res.js";
 import FrontPageInfo from "./FrontPageInfo";
 
 //using colors from theme - bit hacky but works
-const darkPrimary = dark.palette.primary.main;
-const darkSecondary = dark.palette.secondary.main;
-const lightPrimary = dark.palette.primary.main;
-const lightSecondary = dark.palette.secondary.main;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    inputLight: {
+    input: {
       margin: theme.spacing(1),
       height: 50,
-      color: lightPrimary,
-    },
-    inputDark: {
-      margin: theme.spacing(1),
-      height: 50,
-      color: darkSecondary,
     },
     inputButton: {
       margin: theme.spacing(1),
@@ -33,13 +21,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     root: {
       "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-        borderColor: darkSecondary,
+        borderColor: theme.palette.secondary.dark,
       },
     },
   })
 );
 type props = {
-  whichTheme: boolean;
+  CustomTheme: Theme;
 };
 
 function Search(props: props) {
@@ -80,18 +68,13 @@ function Search(props: props) {
           id="search-input"
           variant="outlined"
           color="secondary"
-          className={props.whichTheme ? classes.root : ""}
           fullWidth
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSearchInput(e.currentTarget.value)
           }
-          InputProps={
-            props.whichTheme
-              ? {
-                  className: classes.inputDark,
-                }
-              : { className: classes.inputLight }
-          }
+          InputProps={{
+            className: classes.input,
+          }}
           onKeyPress={(e) => enterPress(e)}
         />
       </Grid>
