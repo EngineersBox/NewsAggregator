@@ -34,14 +34,11 @@ function Res(props) {
         res.result.result.map(({ _id, _score, _source }) => (
           <React.Fragment key={_id}>
             <Grow in={true} timeout={200}>
-              <ListItem button onClick={() => gotoLink(_source.link)}>
-                <SimpleCard
-                  web_link={_source.link}
-                  primary={_source.title}
-                  secondary={_source.summary}
-                  whichTheme={props.whichTheme}
-                />
-              </ListItem>
+              <SimpleCard
+                web_link={_source.link}
+                primary={_source.title}
+                secondary={_source.summary}
+              />
             </Grow>
           </React.Fragment>
         ))}
