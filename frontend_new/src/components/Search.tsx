@@ -119,7 +119,13 @@ function Search(props: props) {
       </Grid>
       <InfoButton text="This is a description" />
       <Grid item xs={12}>
-        {query && <Res search={searchType} query={query} />}
+        {query && (
+          <Res
+            search={searchType}
+            query={query}
+            whichTheme={props.whichTheme}
+          />
+        )}
       </Grid>
     </Grid>
   );
