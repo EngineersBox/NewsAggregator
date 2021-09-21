@@ -7,6 +7,8 @@ import InfoButton from "./SlideAlert";
 import { light } from "../themes/light";
 import { dark } from "../themes/dark";
 import Res from "./Res.js";
+import FrontPageInfo from "./FrontPageInfo";
+import { useHistory } from "react-router-dom";
 
 import {
   BrowserRouter as Router,
@@ -54,17 +56,29 @@ export function useQuery() {
 
 function SearchInfo(props: props) {
   const urlQuery = useQuery().get("query");
+  const urlSearchType = useQuery().get("searchType");
+  const history = useHistory();
 
   //input in search field
   const [searchInput, setSearchInput] = React.useState(urlQuery || "");
   //the query from searchInput when search button pressed
   const [query, setQuery] = React.useState(urlQuery || "");
   //two types of searches
-  const [searchType, setSearchType] = React.useState("");
+  const [searchType, setSearchType] = React.useState(urlSearchType || "");
 
   function getRes(sinput: string, stype: boolean) {
-    setQuery(searchInput);
-    setSearchType(stype ? "search" : "origin_search");
+    setQuery(sinput);
+    let inputSearchType = stype ? "search" : "origin_search";
+    setSearchType(inputSearchType);
+    history.push(`/search?query=${searchInput}&searchType=${inputSearchType}`);
+  }
+  function enterPress(event: React.KeyboardEvent) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (!(searchInput === "")) {
+        getRes(searchInput, false);
+      }
+    }
   }
 
   const classes = useStyles();
@@ -76,58 +90,53 @@ function SearchInfo(props: props) {
       direction="row"
       spacing={1}
     >
-      <Router>
-        <Grid item xs={11} lg={6}>
-          <TextField
-            id="search-input"
-            variant="outlined"
-            color="secondary"
-            className={props.whichTheme ? classes.root : ""}
-            fullWidth
-            defaultValue={searchInput}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setSearchInput(e.currentTarget.value)
-            }
-            InputProps={
-              props.whichTheme
-                ? {
-                    className: classes.inputDark,
-                  }
-                : { className: classes.inputLight }
-            }
-          />
-        </Grid>
-        <Grid item xs={6} lg={2}>
-          <Link to={`/search?query=${searchInput}&searchType=search`}>
-            <Button
-              className={classes.inputButton}
-              variant="contained"
-              color="secondary"
-              fullWidth
-              onClick={() => getRes(searchInput, false)}
-            >
-              Accurate Search
-            </Button>
-          </Link>
-        </Grid>
-        <Grid item xs={6} lg={2}>
-          <Link to={`/search?query=${searchInput}&searchType=origin_search`}>
-            <Button
-              className={classes.inputButton}
-              variant="contained"
-              color="secondary"
-              fullWidth
-              onClick={() => getRes(searchInput, true)}
-            >
-              Associate Search
-            </Button>
-          </Link>
-        </Grid>
-        <InfoButton text="This is a description" />
-        <Grid item xs={12}>
-          <Route exact path="/search" component={Res} />
-        </Grid>
-      </Router>
+      <Grid item xs={11} lg={6}>
+        <TextField
+          id="search-input"
+          variant="outlined"
+          color="secondary"
+          className={props.whichTheme ? classes.root : ""}
+          fullWidth
+          defaultValue={searchInput}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setSearchInput(e.currentTarget.value)
+          }
+          InputProps={
+            props.whichTheme
+              ? {
+                  className: classes.inputDark,
+                }
+              : { className: classes.inputLight }
+          }
+          onKeyPress={(e) => enterPress(e)}
+        />
+      </Grid>
+      <Grid item xs={6} lg={2}>
+        <Button
+          className={classes.inputButton}
+          variant="contained"
+          color="secondary"
+          fullWidth
+          onClick={() => getRes(searchInput, false)}
+        >
+          Accurate Search
+        </Button>
+      </Grid>
+      <Grid item xs={6} lg={2}>
+        <Button
+          className={classes.inputButton}
+          variant="contained"
+          color="secondary"
+          fullWidth
+          onClick={() => getRes(searchInput, true)}
+        >
+          Associative Search
+        </Button>
+      </Grid>
+      <InfoButton text="This is a description" />
+      <Grid item xs={12}>
+        <Route path="/search" component={Res} />
+      </Grid>
     </Grid>
   );
 }
