@@ -10,7 +10,6 @@ import FrontPageInfo from "./components/FrontPageInfo";
 import Grow from "@material-ui/core/Grow";
 
 //using colors from theme - bit hacky but works
-console.log(dark);
 function App() {
   const [themeChoice, setThemeChoice] = React.useState(dark);
   React.useEffect(() => {
