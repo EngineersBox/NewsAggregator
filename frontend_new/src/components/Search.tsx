@@ -32,6 +32,7 @@ function Search(props: props) {
   const [query, setQuery] = React.useState("");
   //two types of searches
   const [searchType, setSearchType] = React.useState("");
+  const [bookmarks, setBookmarks] = React.useState([]);
 
   function getRes(sinput: string, stype: boolean) {
     setQuery(searchInput);

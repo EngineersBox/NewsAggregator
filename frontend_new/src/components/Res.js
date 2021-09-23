@@ -34,11 +34,15 @@ function Res(props) {
         res.result.result.map(({ _id, _score, _source }) => (
           <React.Fragment key={_id}>
             <Grow in={true} timeout={200}>
-              <SimpleCard
-                web_link={_source.link}
-                primary={_source.title}
-                secondary={_source.summary}
-              />
+              <Grid container direction="rows" spacing={3}>
+                <Grid item xs={12}>
+                  <SimpleCard
+                    web_link={_source.link}
+                    primary={_source.title}
+                    secondary={_source.summary}
+                  />
+                </Grid>
+              </Grid>
             </Grow>
           </React.Fragment>
         ))}
