@@ -29,7 +29,7 @@ export const dark = createMuiTheme({
     },
     background: {
       default: "#111111",
-      paper: "#313131",
+      paper: "#212121",
     },
     input: {
       color: "#c9c9c9",
