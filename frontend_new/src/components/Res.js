@@ -28,6 +28,10 @@ function Res(props) {
     window.location.href = url;
   }
 
+  function saveToLocalStorage(link: string, title: string) {
+    localStorage.setItem(link, title);
+  }
+
   return (
     <List>
       {!resStatus &&
@@ -38,6 +42,7 @@ function Res(props) {
                 web_link={_source.link}
                 primary={_source.title}
                 secondary={_source.summary}
+                onClick={saveToLocalStorage(_source.link, _source.title)}
               />
             </Grow>
           </React.Fragment>
