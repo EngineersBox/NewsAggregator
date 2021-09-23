@@ -45,8 +45,11 @@ export default function SimpleCard(props: props) {
               </Typography>
             </CardContent>
             <ListItemSecondaryAction>
-              <IconButton onClicked={handleBookmark(props.bookmarks)}>
-                <BookmarkOutlinedIcon />
+              <IconButton
+                color="secondary"
+                onClicked={handleBookmark(props.bookmarks)}
+              >
+                <BookmarkBorderOutlinedIcon />
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
