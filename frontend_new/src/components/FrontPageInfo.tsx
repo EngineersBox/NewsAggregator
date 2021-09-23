@@ -18,6 +18,7 @@ export default function FrontPageInfo() {
           align="center"
           variant="h4"
           component="h2"
+          
         >
           NewsAggregator
         </Typography>
