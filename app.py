@@ -104,7 +104,6 @@ def base_search(query: str, search_method: Callable[[Elasticsearch, str, str], N
         orderedLoad = lambda x: json.loads(x, object_pairs_hook=OrderedDict)
         result_value = list(map(orderedLoad, rd.execute_command("LRANGE", query, 0, -1)))
         return jsonify(result={
-            "id"
             "result": result_value,
             "from": "Redis"
         })
