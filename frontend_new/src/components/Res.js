@@ -23,10 +23,15 @@ function Res(props) {
   };
   const delay_per_result = 200;
 
+
   const [time_delay, setDelay] = useState(1);
   function gotoLink(url: string) {
     window.location.href = url;
   }
+  
+
+
+
 
   return (
     <List>
@@ -39,7 +44,10 @@ function Res(props) {
                   <SimpleCard
                     web_link={_source.link}
                     primary={_source.title}
+	            id ={_id}
                     secondary={_source.summary}
+		    bookmarks= {props.bookmarks}
+		    handlebookmark={props.handlebookmark}
                   />
                 </Grid>
               </Grid>

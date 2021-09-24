@@ -18,16 +18,32 @@ type props = {
   web_link: string;
   primary: string;
   secondary: string;
+  id : integer;
+  handlebookmark: () => void;
   bookmarks: array;
 };
 function gotoLink(url: string) {
   window.location.href = url;
 }
 
-function handleBookmark(bookmarks: array) {
-  console.log("");
-}
 export default function SimpleCard(props: props) {
+const [bookmarked,setBookmarked] = React.useState(true);
+function handlebookmark(){
+props.handlebookmark(props.web_link,props.primary,props.seconday,props.id)
+	  if (props.id in props.bookmarks){setBookmarked(true)}
+	else {setBookmarked(false)}
+
+
+
+}
+
+
+  React.useEffect(()=>{
+	console.log("in use effect");
+	  if (props.id in props.bookmarks){setBookmarked(true)}
+	else {setBookmarked(false)}
+},[props.bookmarks]);
+
   return (
     <Grid container justifyContent="center">
       <Grid xs={12} md={12} lg={11}>
@@ -47,9 +63,8 @@ export default function SimpleCard(props: props) {
             <ListItemSecondaryAction>
               <IconButton
                 color="secondary"
-                onClicked={handleBookmark(props.bookmarks)}
-              >
-                <BookmarkBorderOutlinedIcon />
+                onClick={() =>handlebookmark()}              >
+               {bookmarked ? <BookmarkOutlinedIcon />: <BookmarkBorderOutlinedIcon />}
               </IconButton>
             </ListItemSecondaryAction>
           </ListItem>
