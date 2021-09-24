@@ -22,6 +22,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 type props = {
   CustomTheme: Theme;
+  handlebookmark: () => void;
+  bookmarks: array;
 };
 
 function Search(props: props) {
@@ -31,28 +33,6 @@ function Search(props: props) {
   const [query, setQuery] = React.useState("");
   //two types of searches
   const [searchType, setSearchType] = React.useState("");
-  const [bookmarks,setBookmarks] = React.useState({}); 
-
-  function handlebookmark(web_link : string, primary: string, secondary: string, id : integer){
-  console.log("hi");
-  console.log(id)
-  if (id in bookmarks){
-  var temp_bookmarks = bookmarks;
-  delete temp_bookmarks[id];
-  setBookmarks(temp_bookmarks);
-	  console.log("deleting to bookmarks");
-  }else{
-  var temp_bookmarks = bookmarks;
-  temp_bookmarks[id] = {"web_link":web_link,"primary":primary,"secondary":secondary};
-	  console.log("adding to bookmarks");
-   
-
-  }
-
-
-
-
-}
 
   function getRes(sinput: string, stype: boolean) {
     setQuery(searchInput);
@@ -123,8 +103,8 @@ function Search(props: props) {
             search={searchType}
             query={query}
             whichTheme={props.whichTheme}
-            handlebookmark = {handlebookmark}	    
-	    bookmarks = {bookmarks}
+            handlebookmark={props.handlebookmark}
+            bookmarks={props.bookmarks}
           />
         )}
       </Grid>

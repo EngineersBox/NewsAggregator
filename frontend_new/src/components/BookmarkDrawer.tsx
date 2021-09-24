@@ -6,6 +6,9 @@ import IconButton from "@material-ui/core/IconButton";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import BookmarksOutlinedIcon from "@material-ui/icons/BookmarksOutlined";
 import List from "@material-ui/core/List";
+import Grow from "@material-ui/core/Grow";
+import Grid from "@material-ui/core/Grid";
+import SimpleCard from "./Cards.tsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   list: {
-    width: 300,
+    width: "33vw",
   },
   fullList: {
     width: "auto",
@@ -27,7 +30,8 @@ const useStyles = makeStyles((theme) => ({
 
 type Anchor = "bookmark";
 type props = {
-  whichTheme: boolean;
+  bookmarks: array;
+  handlebookmark: () => void;
 };
 
 export default function BookmarkDrawer(props: props) {
@@ -56,7 +60,29 @@ export default function BookmarkDrawer(props: props) {
       onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List></List>
+      <List>
+        {props.bookmarks &&
+          Object.values(props.bookmarks).map(
+            ({ id, primary, secondary, web_link }) => (
+              <React.Fragment key={id}>
+                <Grow in={true} timeout={200}>
+                  <Grid container wrap="wrap" direction="rows" spacing={3}>
+                    <Grid item xs={12}>
+                      <SimpleCard
+                        web_link={web_link}
+                        primary={primary}
+                        id={id}
+                        secondary={secondary}
+                        bookmarks={props.bookmarks}
+                        handlebookmark={props.handlebookmark}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grow>
+              </React.Fragment>
+            )
+          )}
+      </List>
     </div>
   );
 

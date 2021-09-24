@@ -18,7 +18,7 @@ type props = {
   web_link: string;
   primary: string;
   secondary: string;
-  id : integer;
+  id: integer;
   handlebookmark: () => void;
   bookmarks: array;
 };
@@ -27,49 +27,54 @@ function gotoLink(url: string) {
 }
 
 export default function SimpleCard(props: props) {
-const [bookmarked,setBookmarked] = React.useState(true);
-function handlebookmark(){
-props.handlebookmark(props.web_link,props.primary,props.seconday,props.id)
-	  if (props.id in props.bookmarks){setBookmarked(true)}
-	else {setBookmarked(false)}
+  const [bookmarked, setBookmarked] = React.useState(true);
+  function handlebookmark() {
+    props.handlebookmark(
+      props.web_link,
+      props.primary,
+      props.secondary,
+      props.id
+    );
+    if (props.id in props.bookmarks) {
+      setBookmarked(true);
+    } else {
+      setBookmarked(false);
+    }
+  }
 
-
-
-}
-
-
-  React.useEffect(()=>{
-	console.log("in use effect");
-	  if (props.id in props.bookmarks){setBookmarked(true)}
-	else {setBookmarked(false)}
-},[props.bookmarks]);
+  React.useEffect(() => {
+    console.log("in use effect");
+    if (props.id in props.bookmarks) {
+      setBookmarked(true);
+    } else {
+      setBookmarked(false);
+    }
+  }, [props.bookmarks]);
 
   return (
-    <Grid container justifyContent="center">
-      <Grid xs={12} md={12} lg={11}>
-        <Card>
-          <ListItem button onClick={() => gotoLink(props.web_link)}>
-            <CardContent>
-              <Typography variant="body2" component="h1" color="secondary">
-                {props.web_link}
-              </Typography>
-              <Typography variant="h5" component="h2" color="secondary">
-                {props.primary}
-              </Typography>
-              <Typography variant="body2" component="p" color="secondary">
-                {props.secondary}
-              </Typography>
-            </CardContent>
-            <ListItemSecondaryAction>
-              <IconButton
-                color="secondary"
-                onClick={() =>handlebookmark()}              >
-               {bookmarked ? <BookmarkOutlinedIcon />: <BookmarkBorderOutlinedIcon />}
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-        </Card>
-      </Grid>
-    </Grid>
+    <Card>
+      <ListItem button onClick={() => gotoLink(props.web_link)}>
+        <CardContent>
+          <Typography variant="body2" component="h1" color="secondary">
+            {props.web_link}
+          </Typography>
+          <Typography variant="h5" component="h2" color="secondary">
+            {props.primary}
+          </Typography>
+          <Typography variant="body2" component="p" color="secondary">
+            {props.secondary}
+          </Typography>
+        </CardContent>
+        <ListItemSecondaryAction>
+          <IconButton color="secondary" onClick={() => handlebookmark()}>
+            {bookmarked ? (
+              <BookmarkOutlinedIcon />
+            ) : (
+              <BookmarkBorderOutlinedIcon />
+            )}
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+    </Card>
   );
 }

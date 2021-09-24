@@ -24,6 +24,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 type props = {
   themeSwitch: () => void;
   themeChoice: Theme;
+  bookmarks: array;
+  handlebookmark: () => void;
 };
 
 export default function TopBar(props: props) {
@@ -40,7 +42,10 @@ export default function TopBar(props: props) {
           >
             <SettingsOutlinedIcon />
           </IconButton>
-          <BookmarkDrawer />
+          <BookmarkDrawer
+            bookmarks={props.bookmarks}
+            handlebookmark={props.handlebookmark}
+          />
           <Typography variant="h6" className={classes.title}></Typography>
           <Typography variant="h6"></Typography>
           <Switch

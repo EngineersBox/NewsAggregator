@@ -23,9 +23,43 @@ function App() {
       setThemeChoice(dark);
     }
   };
+  const [bookmarks, setBookmarks] = React.useState({});
+  function handlebookmark(
+    web_link: string,
+    primary: string,
+    secondary: string,
+    id: integer
+  ) {
+    console.log("hi");
+    console.log(id);
+    console.log(bookmarks);
+    console.log(Object.values(bookmarks));
+    if (id in bookmarks) {
+      var temp_bookmarks = bookmarks;
+      delete temp_bookmarks[id];
+      setBookmarks(temp_bookmarks);
+      console.log("deleting to bookmarks");
+    } else {
+      var temp_bookmarks = bookmarks;
+      console.log(secondary);
+      temp_bookmarks[id] = {
+        web_link: web_link,
+        primary: primary,
+        secondary: secondary,
+        id: id,
+      };
+      console.log("adding to bookmarks");
+    }
+  }
   return (
     <ThemeProvider theme={{ ...themeChoice }}>
-      <TopBar themeSwitch={() => themeSwitch()} themeChoice={themeChoice} />
+      <TopBar
+        themeSwitch={() => themeSwitch()}
+        themeChoice={themeChoice}
+        bookmarks={bookmarks}
+        handlebookmark={handlebookmark}
+      />
+      {console.log(bookmarks)}
       <Grow in={true} timeout={600}>
         <Grid
           container
@@ -38,7 +72,11 @@ function App() {
           }}
         >
           <Grid item xs={12}>
-            <Search whichTheme={themeChoice} />
+            <Search
+              whichTheme={themeChoice}
+              bookmarks={bookmarks}
+              handlebookmark={handlebookmark}
+            />
           </Grid>
         </Grid>
       </Grow>
