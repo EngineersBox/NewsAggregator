@@ -30,25 +30,18 @@ function App() {
     secondary: string,
     id: integer
   ) {
-    console.log("hi");
-    console.log(id);
-    console.log(bookmarks);
-    console.log(Object.values(bookmarks));
     if (id in bookmarks) {
       var temp_bookmarks = bookmarks;
       delete temp_bookmarks[id];
       setBookmarks(temp_bookmarks);
-      console.log("deleting to bookmarks");
     } else {
       var temp_bookmarks = bookmarks;
-      console.log(secondary);
       temp_bookmarks[id] = {
         web_link: web_link,
         primary: primary,
         secondary: secondary,
         id: id,
       };
-      console.log("adding to bookmarks");
     }
   }
   return (
@@ -59,7 +52,6 @@ function App() {
         bookmarks={bookmarks}
         handlebookmark={handlebookmark}
       />
-      {console.log(bookmarks)}
       <Grow in={true} timeout={600}>
         <Grid
           container
