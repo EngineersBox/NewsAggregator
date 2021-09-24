@@ -3,8 +3,9 @@ import pandas as pd
 import requests
 import json
 import gzip
+import re
+#################################
 from lxml import etree
-
 import wikipedia, gzip, threading
 from urllib.request import urlopen
 from elasticsearch import Elasticsearch as es
@@ -44,24 +45,35 @@ def start_import(test_size = 1000):
     '''import all the data news from data set and use 1000 as test set'''
 
     data_set = []
+    dupli = set()
     with gzip.open('../../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
         doc_id = 1
         # iterparse will yield the entire `doc` element once it finds the
         # closing `</doc>` tag
         for _, element in etree.iterparse(f, events=('end',), tag='doc'):
             title = element.findtext('./title')
-            link = element.findtext('./url')
-            art = element.findtext('./abstract')
-            data_set.append({"link": link, "title": title, "art": art})
+            # refer https://stackoverflow.com/questions/8199398/extracting-only-characters-from-a-string-in-python
+            xt = re.findall(r"(?i)\b[a-z]+\b", title)
+            if xt in dupli:
+                # don't putt into documents
+                print(xt)
+                
+                element.clear()
+                continue
+            else:
+                dupli.add(xt)
+                link = element.findtext('./url')
+                art = element.findtext('./abstract')
+                data_set.append({"link": link, "title": title, "art": art})
 
-            print("added", title)
-            print(doc_id,"/100million")
-            doc_id += 1
-            if doc_id >= 200000:
-                break
-            # the `element.clear()` call will explicitly free up the memory
-            # used to store the element
-            element.clear()
+                print("added", title)
+                print(doc_id,"/100million")
+                doc_id += 1
+                if doc_id >= 200000:
+                    break
+                # the `element.clear()` call will explicitly free up the memory
+                # used to store the element
+                element.clear()
 
     total_number = len(data_set)
     print('in total: ', total_number)
