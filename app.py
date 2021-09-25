@@ -1,4 +1,5 @@
-import functools, logging, logging.config, redis, gzip, etree, json
+import functools, logging, logging.config, redis, gzip, json
+from lxml import etree
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS, cross_origin
 from minitask.simple_search import simple_match_search
@@ -15,19 +16,31 @@ from fast_autocomplete import AutoComplete
 #Setting up Autocomplete dodgily
 
 words = {}
-
-with gzip.open('../../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
+with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
+        doc_id = 1
         for _, element in etree.iterparse(f, events=('end',), tag='doc'):
             title = element.findtext('./title')
+                          
+            index = 10 + 1
+            title = title[index:]
         # doc_id = 1
+            doc_id+=1
+
+        # doc_id+=1
+            
         # iterparse will yield the entire `doc` element once it finds the closing `</doc>` tag
+
             words[title]={}
+            if doc_id>200000:
+
+                break
 autocomplete = AutoComplete(words=words)
 
 # tests it
 
-suggu = autocomplete.search(word="tests", max_cost=4, size=4)
-print(suggu)
+suggu = autocomplete.search(word="ab", max_cost=4, size=4)
+print(suggu) 
+
 # print
 
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
