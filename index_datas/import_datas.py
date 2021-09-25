@@ -45,19 +45,29 @@ def start_import(test_size = 1000):
     '''import all the data news from data set and use 1000 as test set'''
 
     data_set = []
+
     dupli = set()
+    dp=[]
     with gzip.open('../../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
         doc_id = 1
         # iterparse will yield the entire `doc` element once it finds the
         # closing `</doc>` tag
         for _, element in etree.iterparse(f, events=('end',), tag='doc'):
             title = element.findtext('./title')
+            index = 10 + 1
+            # print(title)
+
+            title = title[index:]
+            print(title)
+
+            # print(12)
             # refer https://stackoverflow.com/questions/8199398/extracting-only-characters-from-a-string-in-python
-            xt = re.findall(r"(?i)\b[a-z]+\b", title)
+            xt = " ".join(re.sub('[^A-Za-z0-9]+',"",title))
+            print(xt)
             if xt in dupli:
                 # don't putt into documents
-                print(xt)
-                
+                print("duplicate", xt)
+                dp.append(title)
                 element.clear()
                 continue
             else:
@@ -69,12 +79,17 @@ def start_import(test_size = 1000):
                 print("added", title)
                 print(doc_id,"/100million")
                 doc_id += 1
-                if doc_id >= 200000:
-                    break
+                #################### if doc_id >= 200000:
+                   ######################### break
                 # the `element.clear()` call will explicitly free up the memory
                 # used to store the element
                 element.clear()
-
+                if (doc_id % 1000002 == 0):
+                    # reset the set to make sure the speed
+                    dupli = set()
+                    # break
+    # ttttttttttttttttt
+    print(dp) # tests
     total_number = len(data_set)
     print('in total: ', total_number)
     data_set_test = data_set[:total_number-2]
@@ -88,8 +103,8 @@ def start_import(test_size = 1000):
     #     index_elastic_search(data_set_test[x], elastic_search, x)
     # search_index_test(elastic_search)
 
-    pool = Pool(10) 
-    result_iter = pool.map(process, data_set_test)
+    # pool = Pool(10) 
+    # result_iter = pool.map(process, data_set_test)
 
 def process(data):
 
