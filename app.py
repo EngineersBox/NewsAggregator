@@ -23,7 +23,7 @@ with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
                          
             index = 10 + 1
             title = title[index:]
-        # doc_id = 1
+        # doc_id = 
             doc_id += 1
         # doc_id += 1
         # iterparse will yield the entire `doc` element once it finds the closing `</doc>` tag
