@@ -11,17 +11,24 @@ import Grow from "@material-ui/core/Grow";
 
 //using colors from theme - bit hacky but works
 function App() {
-  const [themeChoice, setThemeChoice] = React.useState(dark);
+  let themeColourSaved =
+    localStorage.getItem("themeChoice") === "dark" ? dark : light;
+  const [themeChoice, setThemeChoice] = React.useState(
+    themeColourSaved || dark
+  );
   React.useEffect(() => {
     document.body.style.backgroundColor =
       themeChoice.palette.background.default;
   }, [themeChoice]);
   const themeSwitch = () => {
-    if (themeChoice.palette.type === "dark") {
-      setThemeChoice(light);
-    } else {
-      setThemeChoice(dark);
-    }
+    // if (themeChoice.palette.type === "dark") {
+    //   setThemeChoice(light);
+    // } else {
+    //   setThemeChoice(dark);
+    // }
+    let themeColourSwitch = themeChoice.palette.type === "dark" ? light : dark;
+    setThemeChoice(themeColourSwitch);
+    localStorage.setItem("themeChoice", themeColourSwitch.palette.type);
   };
   return (
     <ThemeProvider theme={{ ...themeChoice }}>
