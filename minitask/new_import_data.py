@@ -1,4 +1,5 @@
-import wikipedia, gzip, threading
+import wikipedia, gzip, requests
+
 from urllib.request import urlopen
 from elasticsearch import Elasticsearch as es
 from wikipedia.exceptions import PageError, DisambiguationError
