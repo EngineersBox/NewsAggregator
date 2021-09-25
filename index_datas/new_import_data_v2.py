@@ -11,6 +11,7 @@ from elasticsearch import Elasticsearch as es
 from wikipedia.exceptions import PageError, DisambiguationError
 import ssl
 from multiprocessing import Pool
+
 import multiprocessing
 
 from elasticsearch import Elasticsearch as es
@@ -30,18 +31,17 @@ class Abstract:
     @property
     def fulltext(self):
         return ' '.join([self.title, self.abstract])
-
 """
 Need to create the index first before using this script
-curl -XPUT https://localhost:9200/example3 --insecure -u admin:admin
+curl -XPUT https://localhost:9200/example3 --insecure -u admin:admin 
 """
-URL = 'https://localhost:9200/example3/_doc/'
 
-# the code with idea inspired by https://www.cnblogs.com/shaosks/p/7592229.html
+URL = 'https://localhost:9200/example3/_doc/' 
 
-def start_import(test_size = 1000):
-    # u6250082 Xuguang Song
-    '''import all the data news from data set and use 1000 as test set'''
+# the code with idea inspired by https://www.cnblogs.com/shaosks/p/7592229.html 
+def start_import(test_size = 1000): 
+    # u6250082 Xuguang Song 
+    '''import all the data news from data set and use 1000 as test set''' 
 
     data_set = []
     with gzip.open('../../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
