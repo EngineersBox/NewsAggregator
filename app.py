@@ -13,6 +13,7 @@ from fast_autocomplete import AutoComplete
 
 #codes reference -> JKL project owner TOM ..
 #Setting up Autocomplete dodgily
+
 words = {}
 
 with gzip.open('../../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
@@ -27,6 +28,7 @@ autocomplete = AutoComplete(words=words)
 
 suggu = autocomplete.search(word="tests", max_cost=4, size=4)
 print(suggu)
+# print
 
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
