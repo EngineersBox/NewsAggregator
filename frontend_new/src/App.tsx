@@ -21,11 +21,6 @@ function App() {
       themeChoice.palette.background.default;
   }, [themeChoice]);
   const themeSwitch = () => {
-    // if (themeChoice.palette.type === "dark") {
-    //   setThemeChoice(light);
-    // } else {
-    //   setThemeChoice(dark);
-    // }
     let themeColourSwitch = themeChoice.palette.type === "dark" ? light : dark;
     setThemeChoice(themeColourSwitch);
     localStorage.setItem("themeChoice", themeColourSwitch.palette.type);

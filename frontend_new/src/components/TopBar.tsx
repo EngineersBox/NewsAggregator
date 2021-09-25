@@ -28,6 +28,16 @@ type props = {
 
 export default function TopBar(props: props) {
   const classes = useStyles();
+
+  let isSavedColourDark =
+    localStorage.getItem("themeChoice") === "dark" ? true : false;
+  const [checked, setChecked] = React.useState(isSavedColourDark || "");
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+    props.themeSwitch();
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static" color="primary">
@@ -43,11 +53,7 @@ export default function TopBar(props: props) {
           <BookmarkDrawer />
           <Typography variant="h6" className={classes.title}></Typography>
           <Typography variant="h6"></Typography>
-          <Switch
-            defaultChecked
-            color="default"
-            onChange={() => props.themeSwitch()}
-          />
+          <Switch checked={checked} color="default" onChange={handleChange} />
         </Toolbar>
       </AppBar>
     </div>
