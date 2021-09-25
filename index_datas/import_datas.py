@@ -7,14 +7,13 @@ from lxml import etree
 
 import wikipedia, gzip, threading
 from urllib.request import urlopen
+
 from elasticsearch import Elasticsearch as es
 from wikipedia.exceptions import PageError, DisambiguationError
 import ssl
 from multiprocessing import Pool
 import multiprocessing
-
 from elasticsearch import Elasticsearch as es
-elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
 
 from elasticsearch import helpers as h
 from dataclasses import dataclass 
@@ -57,17 +56,17 @@ def start_import(test_size = 1000):
             print("added", title)
             print(doc_id,"/100million")
             doc_id += 1
-            if doc_id >= 200000:
-                break
+            # if doc_id >= 200000:
+            #     break
             # the `element.clear()` call will explicitly free up the memory
             # used to store the element
             element.clear()
 
     total_number = len(data_set)
     print('in total: ', total_number)
-    data_set_test = data_set[:total_number-2]
-    elastic_search = start_elastic_search()
 
+    data_set_test = data_set[:total_number-2]
+    elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
     if not elastic_search.indices.exists( index = 'wiki'):
         # create the index
 	    elastic_search.indices.create(index = 'wiki')
