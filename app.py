@@ -32,7 +32,7 @@ with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
                 break
 autocomplete = AutoComplete(words=words)
 # tests it
-suggu = autocomplete.search(word="ab", max_cost=2, size=2)
+suggu = autocomplete.search(word="ab", max_cost=4, size=4)
 print(suggu) 
 # print
 
