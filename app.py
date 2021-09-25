@@ -1,4 +1,4 @@
-import functools, logging, logging.config, redis, json
+import functools, logging, logging.config, redis, gzip, etree, json
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS, cross_origin
 from minitask.simple_search import simple_match_search
@@ -9,6 +9,24 @@ from modules.RateLimiter.src.request_handler import RateLimiter
 from urllib3.exceptions import SSLError
 from collections import OrderedDict
 from typing import Callable
+from fast_autocomplete import AutoComplete
+
+#codes reference -> JKL project owner TOM ..
+#Setting up Autocomplete dodgily
+words = {}
+
+with gzip.open('../../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
+        for _, element in etree.iterparse(f, events=('end',), tag='doc'):
+            title = element.findtext('./title')
+        # doc_id = 1
+        # iterparse will yield the entire `doc` element once it finds the closing `</doc>` tag
+            words[title]={}
+autocomplete = AutoComplete(words=words)
+
+# tests it
+
+suggu = autocomplete.search(word="tests", max_cost=4, size=4)
+print(suggu)
 
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
@@ -20,6 +38,18 @@ ES = Elasticsearch("admin:admin@localhost:9200", verify_certs=False, ssl_show_wa
 app = Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
+
+# #Suggestion Route which takes POSTs and returns HTML to the HTMX on keypress in the template
+# @app.route('/suggest', method='POST')
+# def suggest():
+#         postdata = request.forms.get('q')
+#         suggest = autocomplete.search(word=postdata, max_cost=3, size=5)
+
+#         #refactor to a template later - but also needs safe/dangerous handling
+#         suggesthtml = ""
+#         for x in suggest:
+#                 suggesthtml = suggesthtml + "<p> "+str(x[0])+" </p>"
+#         return suggesthtml
 
 class ErrorHandlerWrapper:
 
