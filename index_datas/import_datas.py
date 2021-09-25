@@ -78,6 +78,7 @@ def start_import(test_size = 1000):
 
                 print("added", title)
                 print(doc_id,"/100million")
+                
                 doc_id += 1
                 #################### if doc_id >= 200000:
                    ######################### break
@@ -88,6 +89,7 @@ def start_import(test_size = 1000):
                     # reset the set to make sure the speed
                     dupli = set()
                     # break
+                     
     # ttttttttttttttttt
     print(dp) # tests
     total_number = len(data_set)
