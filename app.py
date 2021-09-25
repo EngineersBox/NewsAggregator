@@ -25,22 +25,15 @@ with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
             title = title[index:]
         # doc_id = 1
             doc_id += 1
-
         # doc_id += 1
-            
         # iterparse will yield the entire `doc` element once it finds the closing `</doc>` tag
-
             words[title]={}
             if doc_id>200000:
-
                 break
 autocomplete = AutoComplete(words=words)
-
 # tests it
-
 suggu = autocomplete.search(word="ab", max_cost=4, size=4)
 print(suggu) 
-
 # print
 
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
