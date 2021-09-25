@@ -80,8 +80,8 @@ def start_import(test_size = 1000):
                 print(doc_id,"/100million")
                 
                 doc_id += 1
-                #################### if doc_id >= 200000:
-                   ######################### break
+                ############## if doc_id >= 200000:
+                   ################### break
                 # the `element.clear()` call will explicitly free up the memory
                 # used to store the element
                 element.clear()
