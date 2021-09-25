@@ -20,7 +20,7 @@ with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
         doc_id = 1
         for _, element in etree.iterparse(f, events=('end',), tag='doc'):
             title = element.findtext('./title')
-                          
+                         
             index = 10 + 1
             title = title[index:]
         # doc_id = 1
