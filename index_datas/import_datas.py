@@ -60,7 +60,7 @@ def start_import(test_size = 1000):
             title = title[index:]
             print(title)
 
-            # print(12)
+            # print (12)
             # refer https://stackoverflow.com/questions/8199398/extracting-only-characters-from-a-string-in-python
             xt = " ".join(re.sub('[^A-Za-z0-9]+',"",title))
             print(xt)
@@ -80,8 +80,8 @@ def start_import(test_size = 1000):
                 print(doc_id,"/100million")
                 
                 doc_id += 1
-                ############## if doc_id >= 200000:
-                   ################### break
+                ##################### if doc_id >= 200000:
+                   ###################### break
                 # the `element.clear()` call will explicitly free up the memory
                 # used to store the element
                 element.clear()
@@ -90,7 +90,7 @@ def start_import(test_size = 1000):
                     dupli = set()
                     # break
                      
-    # ttttttttttttttttt
+    # tttttttttttttttttttttttt
     print(dp) # tests
     total_number = len(data_set)
     print('in total: ', total_number)
