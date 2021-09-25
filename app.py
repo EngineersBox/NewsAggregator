@@ -12,9 +12,7 @@ from collections import OrderedDict
 from typing import Callable
 from fast_autocomplete import AutoComplete
 
-#codes reference -> JKL project owner TOM ..
-#Setting up Autocomplete dodgily
-
+#codes inspired -> JKL project owner TOM ..
 words = {}
 with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
         doc_id = 1
@@ -23,17 +21,19 @@ with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
                          
             index = 10 + 1
             title = title[index:]
+        # readin title
         # doc_id = 1
             doc_id += 1
         # doc_id += 1
         # iterparse will yield the entire `doc` element once it finds the closing `</doc>` tag
             words[title]={}
+
             if doc_id>200000:
                 break
 autocomplete = AutoComplete(words=words)
 # tests it
-suggu = autocomplete.search(word="ab", max_cost=4,size=4)
-print(suggu)
+suggu = autocomplete.search(word="ab", max_cost=4, size=4)
+print(suggu) 
 # print
 
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
