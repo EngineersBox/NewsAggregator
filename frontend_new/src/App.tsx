@@ -31,11 +31,11 @@ function App() {
     id: integer
   ) {
     if (id in bookmarks) {
-      var temp_bookmarks = bookmarks;
+      let temp_bookmarks = bookmarks;
       delete temp_bookmarks[id];
       setBookmarks(temp_bookmarks);
     } else {
-      var temp_bookmarks = bookmarks;
+      let temp_bookmarks = bookmarks;
       temp_bookmarks[id] = {
         web_link: web_link,
         primary: primary,
