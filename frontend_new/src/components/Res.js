@@ -48,6 +48,7 @@ function Res(props) {
                     secondary={_source.summary}
                     bookmarks={props.bookmarks}
                     handlebookmark={props.handlebookmark}
+                    isVisible={props.isVisible}
                   />
                 </Grid>
               </Grid>

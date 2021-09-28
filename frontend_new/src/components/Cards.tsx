@@ -21,6 +21,7 @@ type props = {
   id: integer;
   handlebookmark: () => void;
   bookmarks: array;
+  isVisible: boolean;
 };
 function gotoLink(url: string) {
   window.location.href = url;
@@ -49,7 +50,7 @@ export default function SimpleCard(props: props) {
     } else {
       setBookmarked(false);
     }
-  }, [props.bookmarks]);
+  }, [props.bookmarks, props.isVisible]);
 
   return (
     <Card>

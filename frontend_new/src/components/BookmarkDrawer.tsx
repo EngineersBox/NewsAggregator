@@ -1,22 +1,27 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import React from "react";
+import clsx from "clsx";
+import {
+  makeStyles,
+  useTheme,
+  Theme,
+  createStyles,
+} from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import List from "@material-ui/core/List";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import MailIcon from "@material-ui/icons/Mail";
 import BookmarksOutlinedIcon from "@material-ui/icons/BookmarksOutlined";
 import Switch from "@material-ui/core/Switch";
 import Search from "./Search";
@@ -29,10 +34,10 @@ const drawerWidth = "100%";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: 'flex',
+      display: "flex",
     },
     appBar: {
-      transition: theme.transitions.create(['margin', 'width'], {
+      transition: theme.transitions.create(["margin", "width"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
@@ -40,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
     appBarShift: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
-      transition: theme.transitions.create(['margin', 'width'], {
+      transition: theme.transitions.create(["margin", "width"], {
         easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen,
       }),
@@ -49,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(2),
     },
     hide: {
-      display: 'none',
+      display: "none",
     },
     drawer: {
       flexShrink: 0,
@@ -57,34 +62,34 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       width: drawerWidth,
       backgroundColor: theme.palette.background.default,
-    overflowX: 'hidden',
-    overflowY: 'hidden',
+      height: "100%",
+      overflowX: "hidden",
     },
     drawerHeader: {
-      display: 'flex',
-      alignItems: 'center',
+      display: "flex",
+      alignItems: "center",
       padding: theme.spacing(0, 1),
       // necessary for content to be below app bar
       ...theme.mixins.toolbar,
-      justifyContent: 'flex-end',
+      justifyContent: "flex-end",
     },
     content: {
       flexGrow: 1,
       padding: theme.spacing(3),
-      transition: theme.transitions.create('margin', {
+      transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
       marginLeft: -drawerWidth,
     },
     contentShift: {
-      transition: theme.transitions.create('margin', {
+      transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.easeOut,
         duration: theme.transitions.duration.enteringScreen,
       }),
       marginLeft: 0,
     },
-  }),
+  })
 );
 type props = {
   bookmarks: array;
@@ -92,7 +97,7 @@ type props = {
   whichTheme: Theme;
 };
 
-export default function PersistentDrawerLeft(props:props) {
+export default function PersistentDrawerLeft(props: props) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -106,7 +111,7 @@ export default function PersistentDrawerLeft(props:props) {
   };
 
   return (
-    <div >
+    <div>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -142,56 +147,58 @@ export default function PersistentDrawerLeft(props:props) {
           paper: classes.drawerPaper,
         }}
       >
-           <div className={classes.drawerHeader}>
+        <div className={classes.drawerHeader}>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
           </IconButton>
         </div>
-	<div>
-      <List>
-        {props.bookmarks &&
-          Object.values(props.bookmarks).map(
-            ({ id, primary, secondary, web_link }) => (
-              <React.Fragment key={id}>
-                <Grow in={true} timeout={200}>
-                  <Grid container wrap="wrap" direction="rows" spacing={3}>
-                    <Grid item xs={12}>
-                      <SimpleCard
-                        web_link={web_link}
-                        primary={primary}
-                        id={id}
-                        secondary={secondary}
-                        bookmarks={props.bookmarks}
-                        handlebookmark={props.handlebookmark}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grow>
-              </React.Fragment>
-            )
-          )}
-      </List>
-      </div>
-
-
-
+        <div>
+          <List>
+            {props.bookmarks &&
+              Object.values(props.bookmarks).map(
+                ({ id, primary, secondary, web_link }) => (
+                  <React.Fragment key={id}>
+                    <Grow in={true} timeout={200}>
+                      <Grid container wrap="wrap" direction="rows" spacing={3}>
+                        <Grid item xs={12}>
+                          <SimpleCard
+                            web_link={web_link}
+                            primary={primary}
+                            id={id}
+                            secondary={secondary}
+                            bookmarks={props.bookmarks}
+                            handlebookmark={props.handlebookmark}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grow>
+                  </React.Fragment>
+                )
+              )}
+          </List>
+        </div>
       </Drawer>
- <main
+      <main
         className={clsx(classes.content, {
           [classes.contentShift]: open,
         })}
       >
         <div className={classes.drawerHeader} />
-	<Grid container>
-	<Grid item xs={12}>
+        <Grid container>
+          <Grid item xs={12}>
             <Search
               whichTheme={props.themeChoice}
               bookmarks={props.bookmarks}
               handlebookmark={props.handlebookmark}
+              isVisible={open}
             />
-	    </Grid>
-	    </Grid>
+          </Grid>
+        </Grid>
       </main>
     </div>
   );
-} 
+}

@@ -24,6 +24,7 @@ type props = {
   CustomTheme: Theme;
   handlebookmark: () => void;
   bookmarks: array;
+  isVisible: boolean;
 };
 
 function Search(props: props) {
@@ -97,7 +98,7 @@ function Search(props: props) {
         </Button>
       </Grid>
       <InfoButton text="This is a description" />
-      <Grid item xs={12}>
+      <Grid item xs={12} style={{ display: props.isVisible && "none" }}>
         {query && (
           <Res
             search={searchType}
@@ -105,6 +106,7 @@ function Search(props: props) {
             whichTheme={props.whichTheme}
             handlebookmark={props.handlebookmark}
             bookmarks={props.bookmarks}
+            isVisible={props.isVisible}
           />
         )}
       </Grid>
