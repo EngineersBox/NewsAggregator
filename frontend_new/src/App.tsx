@@ -8,10 +8,13 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import FrontPageInfo from "./components/FrontPageInfo";
 import Grow from "@material-ui/core/Grow";
+import getDefaultTheme from "./components/ThemeSetting";
 
 //using colors from theme - bit hacky but works
 function App() {
-  const [themeChoice, setThemeChoice] = React.useState(dark);
+  const [themeChoice, setThemeChoice] = React.useState(
+    getDefaultTheme() ? dark : light
+  );
   React.useEffect(() => {
     document.body.style.backgroundColor =
       themeChoice.palette.background.default;
