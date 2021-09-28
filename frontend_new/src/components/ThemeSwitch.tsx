@@ -20,12 +20,12 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
       },
       "& + .MuiSwitch-track": {
         opacity: 1,
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.background.default,
       },
     },
   },
   "& .MuiSwitch-thumb": {
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.secondary.main,
     width: 32,
     height: 32,
     "&:before": {
@@ -44,7 +44,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
   "& .MuiSwitch-track": {
     opacity: 1,
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.background.paper,
     borderRadius: 20 / 2,
   },
 }));
