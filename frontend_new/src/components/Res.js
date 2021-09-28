@@ -8,12 +8,20 @@ import { useFetch } from "./Get";
 import SimpleCard from "./Cards.tsx";
 import Grow from "@material-ui/core/Grow";
 
-function Res(props) {
+import { useQuery } from "./Search";
+
+function Res() {
+  const searchParams = useQuery();
+  //Validate the search
+  let searchType = searchParams.searchType;
+  if (searchType !== "search" || searchType !== "origin_search") {
+    searchType = "search";
+  }
   const [res, resStatus] = useFetch(
     "https://anu.jkl.io/api/"
-      .concat(props.search)
+      .concat(searchType)
       .concat("?query=")
-      .concat(props.query)
+      .concat(searchParams.get("query"))
   );
   const textColor = {
     color: "white",

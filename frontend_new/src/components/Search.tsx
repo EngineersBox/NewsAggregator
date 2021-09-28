@@ -4,9 +4,16 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InfoButton from "./SlideAlert";
-import { useFetch } from "./Get";
 import Res from "./Res.js";
 import FrontPageInfo from "./FrontPageInfo";
+import { useHistory } from "react-router-dom";
+
+import {
+  BrowserRouter as Router,
+  useLocation,
+  Link,
+  Route,
+} from "react-router-dom";
 
 //using colors from theme - bit hacky but works
 const useStyles = makeStyles((theme: Theme) =>
@@ -25,17 +32,28 @@ type props = {
   CustomTheme: Theme;
 };
 
-function Search(props: props) {
+// Thinking of moving this to a folder/file that stores common functionality
+export function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
+function SearchInfo(props: props) {
+  const urlQuery = useQuery().get("query");
+  const urlSearchType = useQuery().get("searchType");
+  const history = useHistory();
+
   //input in search field
-  const [searchInput, setSearchInput] = React.useState("");
+  const [searchInput, setSearchInput] = React.useState(urlQuery || "");
   //the query from searchInput when search button pressed
-  const [query, setQuery] = React.useState("");
+  const [query, setQuery] = React.useState(urlQuery || "");
   //two types of searches
-  const [searchType, setSearchType] = React.useState("");
+  const [searchType, setSearchType] = React.useState(urlSearchType || "");
 
   function getRes(sinput: string, stype: boolean) {
-    setQuery(searchInput);
-    setSearchType(stype ? "search" : "origin_search");
+    setQuery(sinput);
+    let inputSearchType = stype ? "search" : "origin_search";
+    setSearchType(inputSearchType);
+    history.push(`/search?query=${searchInput}&searchType=${inputSearchType}`);
   }
   function enterPress(event: React.KeyboardEvent) {
     if (event.key === "Enter") {
@@ -64,6 +82,7 @@ function Search(props: props) {
           variant="outlined"
           color="secondary"
           fullWidth
+          defaultValue={searchInput}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSearchInput(e.currentTarget.value)
           }
@@ -97,16 +116,16 @@ function Search(props: props) {
       </Grid>
       <InfoButton text="This is a description" />
       <Grid item xs={12}>
-        {query && (
-          <Res
-            search={searchType}
-            query={query}
-            whichTheme={props.whichTheme}
-          />
-        )}
+        <Route path="/search" component={Res} />
       </Grid>
     </Grid>
   );
 }
 
-export default Search;
+export default function Search(prop: props) {
+  return (
+    <Router>
+      <SearchInfo whichTheme={prop.whichTheme} />
+    </Router>
+  );
+}
