@@ -40,7 +40,7 @@ function Res(props) {
                 direction="rows"
                 spacing={3}
               >
-                <Grid item xs={11}>
+                <Grid item xs={12} lg={11}>
                   <SimpleCard
                     web_link={_source.link}
                     primary={_source.title}

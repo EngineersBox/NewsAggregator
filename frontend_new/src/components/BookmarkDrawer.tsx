@@ -1,65 +1,153 @@
-import React from "react";
-import clsx from "clsx";
-import Drawer from "@material-ui/core/Drawer";
-import { makeStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
-import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
+import React from 'react';
+import clsx from 'clsx';
+import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
 import BookmarksOutlinedIcon from "@material-ui/icons/BookmarksOutlined";
-import List from "@material-ui/core/List";
+import Switch from "@material-ui/core/Switch";
+import Search from "./Search";
 import Grow from "@material-ui/core/Grow";
 import Grid from "@material-ui/core/Grid";
 import SimpleCard from "./Cards.tsx";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  list: {
-    width: "33vw",
-  },
-  fullList: {
-    width: "auto",
-  },
-}));
+const drawerWidth = "100%";
 
-type Anchor = "bookmark";
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+    },
+    appBar: {
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+    },
+    appBarShift: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    hide: {
+      display: 'none',
+    },
+    drawer: {
+      flexShrink: 0,
+    },
+    drawerPaper: {
+      width: drawerWidth,
+      backgroundColor: theme.palette.background.default,
+    overflowX: 'hidden',
+    overflowY: 'hidden',
+    },
+    drawerHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: theme.spacing(0, 1),
+      // necessary for content to be below app bar
+      ...theme.mixins.toolbar,
+      justifyContent: 'flex-end',
+    },
+    content: {
+      flexGrow: 1,
+      padding: theme.spacing(3),
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+      marginLeft: -drawerWidth,
+    },
+    contentShift: {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: 0,
+    },
+  }),
+);
 type props = {
   bookmarks: array;
   handlebookmark: () => void;
+  whichTheme: Theme;
 };
 
-export default function BookmarkDrawer(props: props) {
+export default function PersistentDrawerLeft(props:props) {
   const classes = useStyles();
-  const [state, setState] = React.useState({
-    bookmark: false,
-  });
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
 
-  const toggleDrawer =
-    (anchor: Anchor, open: boolean) =>
-    (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
 
-      setState({ ...state, [anchor]: open });
-    };
-  const list = (anchor: Anchor) => (
-    <div
-      className={clsx(classes.list, false)}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <div >
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, open && classes.hide)}
+          >
+            <BookmarksOutlinedIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title}></Typography>
+          <Typography variant="h6"></Typography>
+          <Switch
+            defaultChecked
+            color="default"
+            onChange={() => props.themeSwitch()}
+          />
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={open}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+           <div className={classes.drawerHeader}>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </div>
+	<div>
       <List>
         {props.bookmarks &&
           Object.values(props.bookmarks).map(
@@ -83,31 +171,27 @@ export default function BookmarkDrawer(props: props) {
             )
           )}
       </List>
-    </div>
-  );
+      </div>
 
-  return (
-    <div>
-      {["bookmark"].map((anchor) => (
-        <React.Fragment key={anchor}>
-          <IconButton
-            edge="end"
-            className={classes.menuButton}
-            color="secondary"
-            aria-label="menu"
-            onClick={toggleDrawer("bookmark", true)}
-          >
-            <BookmarksOutlinedIcon />
-          </IconButton>
-          <Drawer
-            anchor={"left"}
-            open={state["bookmark"]}
-            onClose={toggleDrawer("bookmark", false)}
-          >
-            {list("bookmark")}
-          </Drawer>
-        </React.Fragment>
-      ))}
+
+
+      </Drawer>
+ <main
+        className={clsx(classes.content, {
+          [classes.contentShift]: open,
+        })}
+      >
+        <div className={classes.drawerHeader} />
+	<Grid container>
+	<Grid item xs={12}>
+            <Search
+              whichTheme={props.themeChoice}
+              bookmarks={props.bookmarks}
+              handlebookmark={props.handlebookmark}
+            />
+	    </Grid>
+	    </Grid>
+      </main>
     </div>
   );
-}
+} 
