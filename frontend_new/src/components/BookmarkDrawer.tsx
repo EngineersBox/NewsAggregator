@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
+      zIndex: theme.zIndex.drawer + 1,
     },
     appBarShift: {
       width: `calc(100% - ${drawerWidth}px)`,
@@ -123,11 +124,11 @@ export default function PersistentDrawerLeft(props: props) {
           <IconButton
             color="inherit"
             aria-label="open drawer"
-            onClick={handleDrawerOpen}
+            onClick={open ? handleDrawerClose : handleDrawerOpen}
             edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
+            className={clsx(classes.menuButton)}
           >
-            <BookmarksOutlinedIcon />
+            {open ? <ChevronLeftIcon /> : <BookmarksOutlinedIcon />}
           </IconButton>
           <Typography variant="h6" className={classes.title}></Typography>
           <Typography variant="h6"></Typography>
@@ -147,15 +148,7 @@ export default function PersistentDrawerLeft(props: props) {
           paper: classes.drawerPaper,
         }}
       >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </div>
+        <div className={classes.drawerHeader}></div>
         <div>
           <List>
             {props.bookmarks &&
