@@ -9,6 +9,3 @@ services:
       - "443:443"
     volumes:
       - ../../caddy/Caddyfile:/etc/caddy/Caddyfile
-      # These start out empty and fill with cache data
-      # - caddy/data:/data
-      # - caddy/config:/config
