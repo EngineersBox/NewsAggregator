@@ -20,7 +20,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      PRIVATE_KEY_FILE: ~/.ssh/prod_is_rsa
+      PRIVATE_KEY_FILE: id_rsa
       ANSIBLE_DIR: ./ansible
       PLAYBOOK: site.yml
     steps:
