@@ -1,13 +1,13 @@
 import wikipedia, gzip, requests
 
-from urllib.request import urlopen
 from elasticsearch import Elasticsearch as es
-from wikipedia.exceptions import PageError, DisambiguationError
-import ssl
-from multiprocessing import Pool
-import multiprocessing
 
-elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
+from elasticsearch import helpers as h
+
+from dataclasses import dataclass
+
+from wikipedia.exceptions import WikipediaException
+
 
 """
 Need to create the index first before using this script
@@ -17,25 +17,63 @@ URL = 'https://localhost:9200/example3/_doc/'
 
 # the code with idea inspired by https://www.cnblogs.com/shaosks/p/7592229.html
 
-def process(line):
-    formattedLine = line.strip().decode("utf-8")
-    print("Line:", formattedLine)
-    print("thread_id :", multiprocessing.current_process())
-    try:
-        page = wikipedia.page(formattedLine)
-        data = {"link": page.url, "title": page.title, "art": page.summary}
-        index_elastic_search(data)
-    except (PageError, DisambiguationError):
-        print("Ambiguous or not found, Skipping")
-        
+def start_import(test_size = 1000):
+    # u6250082 Xuguang Song
+    '''import all the data news from data set and use 1000 as test set'''
 
-def index_elastic_search(data):
-    global elasticsearch
+    totalLines = 0
+    with requests.urlopen("https://dumps.wikimedia.org/wikidatawiki/latest/wikidatawiki-latest-all-titles-in-ns0.gz") as r:
+        with gzip.GzipFile(fileobj=r) as f:
+            totalLines = sum(1 for _ in f)
+
+    elastic_search = start_elastic_search()
+    if not elastic_search.indices.exists(index='news'):
+        # create the index
+        elastic_search.indices.create(index='news')
+
+    with requests.urlopen("https://dumps.wikimedia.org/wikidatawiki/latest/wikidatawiki-latest-all-titles-in-ns0.gz") as r:
+        with gzip.GzipFile(fileobj=r) as f:
+            totalLines = sum(1 for _ in f)
+            doc_id = 1
+            wikipedia.set_lang("en")
+            for line in f:
+                formattedLine = line.strip().decode("utf-8")
+                print("Reading[", doc_id, "/", totalLines, "]:", formattedLine)
+                page = wikipedia.page(formattedLine)
+                try:
+                    data = {"link": page.url, "title": page.title, "art": page.summary}
+                    print('Added Index [', doc_id, '/', totalLines, ']: ', data['title'])
+                    index_elastic_search(data, elastic_search, doc_id)
+                except (wikipedia.exceptions.PageError, wikipedia.exceptions.DisambiguationError):
+                    print("Ambiguous or not found, Skipping")
+                    continue
+                doc_id += 1
+                if (doc_id > test_size):
+                    break
+
+    print('In total: ', totalLines)
+    search_index_test(elastic_search)
+
+def index_elastic_search(data, elastic_search, index):
+    # u6250082 Xuguang Song
+    '''parameter: data, elastic search engine, ind'''
+
     try:
-        elastic_search.index(index='news', body=data)
-        print("Added document: ", data["title"])
-    except (Exception) as e:
-        print("Could not index document, {0}:".format(data["title"]), e)
+
+        index_result = elastic_search.index(index='news', body=data, id=index)
+
+    except:
+        print(data)
+    print('success')
+
+def start_elastic_search():
+    # u6250082 Xuguang Song
+    '''start elastic search'''
+
+    ip_url = ["127.0.0.1"]
+    # initialize elastic search
+    new_es = es(ip_url, timeout=35, max_retries=8, retry_on_timeout=True)
+    return new_es
 
 def search_index_test(elastic_search):
     # u6250082 Xuguang Song
@@ -52,39 +90,12 @@ def search_index_test(elastic_search):
         }
     # output = elastic_search.search(index='news', doc_type='web_news', body=test1)
     print('\n', 'searching for keyword: ', q, " ", "in", " article ", position, '\n')
-    output = elastic_search.search(index='wiki', body=test1)
+    output = elastic_search.search(index='news', body=test1)
     print('searching finished with total time: ', output['took'], '\n')
     print('result: ', '\n')
     for hit in output['hits']['hits']:
         # print search result
         print ('match news title: ', hit['_source']['title'], '\n', 'match news link: ', hit['_source']['link'], '\n', '-------------------------------------------------------------')
 
-def locked_iter(it):
-    it = iter(it)
-    lock = threading.Lock()
-    while True:
-        try:
-            with lock:
-                value = next(it)
-        except StopIteration:
-            return
-        yield value
-
-def main():
-    global doc_id, lock
-    if not elastic_search.indices.exists(index='news'):
-        elastic_search.indices.create(index='news')
-    totalLines = 0
-    ssl._create_default_https_context = ssl._create_unverified_context
-    with urlopen("https://dumps.wikimedia.org/enwiki/20210820/enwiki-20210820-all-titles-in-ns0.gz") as r:
-        with gzip.GzipFile(fileobj=r) as f:
-            pool = Pool(10)
-            result_iter = pool.imap_unordered(process, f, chunksize=50)
-            for _ in result_iter:
-                totalLines += 1
-
-    print('In Total:', totalLines)
-    search_index_test(elastic_search)
-
 if __name__ == '__main__':
-    main()
+    start_import()
