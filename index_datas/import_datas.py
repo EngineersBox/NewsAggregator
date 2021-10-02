@@ -14,7 +14,7 @@ import ssl
 from multiprocessing import Pool
 import multiprocessing
 from elasticsearch import Elasticsearch as es
-
+elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
 from elasticsearch import helpers as h
 from dataclasses import dataclass 
 
@@ -66,7 +66,7 @@ def start_import(test_size = 1000):
     print('in total: ', total_number)
 
     data_set_test = data_set[:total_number-2]
-    elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
+    global elastic_search
     if not elastic_search.indices.exists( index = 'wiki'):
         # create the index
 	    elastic_search.indices.create(index = 'wiki')
@@ -103,15 +103,6 @@ def index_elastic_search(data, elastic_search):
         
     print('success')
 
-def start_elastic_search():
-    # u6250082 Xuguang Song
-    '''start elastic search'''
-
-    ip_url = ["127.0.0.1"]
-    # initialize elastic search
-    new_es = es(ip_url, timeout=35, max_retries=8, retry_on_timeout=True)
-    return new_es
-
 def search_index_test(elastic_search):
     # u6250082 Xuguang Song
     '''test with query to match ACT'''
@@ -125,7 +116,7 @@ def search_index_test(elastic_search):
                 }
             }
         }
-    # output = elastic_search.search(index='news', doc_type='web_news', body=test1)
+    # output = elastic_search.search(index='news', doc_type='web_news', body=test1) 
     print('\n', 'searching for keyword: ', q, " ", "in", " article ", position, '\n')
     output = elastic_search.search(index='news', body=test1)
     print('searching finished with total time: ', output['took'], '\n')
