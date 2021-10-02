@@ -103,6 +103,7 @@ def index_elastic_search(data, elastic_search):
         
     print('success')
 
+
 def search_index_test(elastic_search):
     # u6250082 Xuguang Song
     '''test with query to match ACT'''
