@@ -100,7 +100,7 @@ def index_elastic_search(data, elastic_search):
 
     except:
         print(data)
-        
+    
     print('success')
 
 
