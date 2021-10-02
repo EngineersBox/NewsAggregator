@@ -134,7 +134,7 @@ def search_index_test(elastic_search):
         # print search result
         print ('match news title: ', hit['_source']['title'], '\n', 'match news link: ', hit['_source']['link'], '\n', '-------------------------------------------------------------')
 
-if __name__ == '__main__':
+if __name__ == '__main__': 
     start_import() 
     
 
