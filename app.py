@@ -47,17 +47,17 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 
-# #Suggestion Route which takes POSTs and returns HTML to the HTMX on keypress in the template
-# @app.route('/suggest', method='POST')
-# def suggest():
-#         postdata = request.forms.get('q')
-#         suggest = autocomplete.search(word=postdata, max_cost=3, size=5)
+#Suggestion Route which takes POSTs and returns HTML to the HTMX on keypress in the template
+@app.route('/suggest', method='POST')
+def suggest():
+        postdata = request.forms.get('q')
+        suggest = autocomplete.search(word=postdata, max_cost=3, size=5)
 
-#         #refactor to a template later - but also needs safe/dangerous handling
-#         suggesthtml = ""
-#         for x in suggest:
-#                 suggesthtml = suggesthtml + "<p> "+str(x[0])+" </p>"
-#         return suggesthtml
+        #refactor to a template later - but also needs safe/dangerous handling
+        result = {}
+        for x in (0, len(suggest)):
+            result['suggest'+x] = suggest[x]
+        return jsonify(result)
 
 class ErrorHandlerWrapper:
 
