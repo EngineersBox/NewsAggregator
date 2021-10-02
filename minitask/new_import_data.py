@@ -30,7 +30,7 @@ def start_import(test_size = 1000):
     if not elastic_search.indices.exists(index='news'):
         # create the index
         elastic_search.indices.create(index='news')
-
+        
     with requests.urlopen("https://dumps.wikimedia.org/wikidatawiki/latest/wikidatawiki-latest-all-titles-in-ns0.gz") as r:
         with gzip.GzipFile(fileobj=r) as f:
             totalLines = sum(1 for _ in f)
@@ -57,7 +57,7 @@ def start_import(test_size = 1000):
 def index_elastic_search(data, elastic_search, index):
     # u6250082 Xuguang Song
     '''parameter: data, elastic search engine, ind'''
-
+    
     try:
 
         index_result = elastic_search.index(index='news', body=data, id=index)
