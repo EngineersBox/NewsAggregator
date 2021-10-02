@@ -1,7 +1,7 @@
 version: "3.5"
 services:
     elasticsearch:
-        container_name: elasticsearch
+        container_name: opensearch
         build:
             context: .
         environment:
@@ -15,4 +15,5 @@ services:
                 hard: -1
         ports:
             - 9200:9200
-            - 9300:9300
+            - 9300:9300 
+            
