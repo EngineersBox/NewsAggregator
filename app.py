@@ -15,7 +15,6 @@ AUTOCOMPLETE_MAX_COST = 3
 AUTOCOMPLETE_SIZE = 5
 #codes inspired -> JKL project owner TOM ..
 words = {}
-
 def getAutocompleteEntries() -> dict :
     words = {}
     with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
@@ -25,7 +24,6 @@ def getAutocompleteEntries() -> dict :
              words[title[11:]]={}
              doc_id += 1
     return words
-
 autocomplete = AutoComplete(words=words)
 
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
