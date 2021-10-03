@@ -1,7 +1,6 @@
 import { ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
-import { light } from "./themes/light";
-import { dark } from "./themes/dark";
+import { dark, light } from "./themes/customTheme";
 import "./App.css";
 import TopBar from "./components/TopBar";
 import Search from "./components/Search";
@@ -9,30 +8,27 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import FrontPageInfo from "./components/FrontPageInfo";
 import Grow from "@material-ui/core/Grow";
+import getDefaultTheme from "./components/ThemeSetting";
 
 //using colors from theme - bit hacky but works
-const darkTheme = dark.palette;
-const lightTheme = light.palette;
 function App() {
-  const [themeChoice, setThemeChoice] = React.useState({
-    theme: dark,
-    bool: true,
-  });
+  const [themeChoice, setThemeChoice] = React.useState(
+    getDefaultTheme() ? dark : light
+  );
   React.useEffect(() => {
-    document.body.style.backgroundColor = themeChoice.bool
-      ? darkTheme.background.default
-      : lightTheme.background.default;
+    document.body.style.backgroundColor =
+      themeChoice.palette.background.default;
   }, [themeChoice]);
   const themeSwitch = () => {
-    if (themeChoice.bool) {
-      setThemeChoice({ theme: light, bool: false });
+    if (themeChoice.palette.type === "dark") {
+      setThemeChoice(light);
     } else {
-      setThemeChoice({ theme: dark, bool: true });
+      setThemeChoice(dark);
     }
   };
   return (
-    <ThemeProvider theme={{ ...themeChoice.theme }}>
-      <TopBar themeSwitch={() => themeSwitch()} />
+    <ThemeProvider theme={{ ...themeChoice }}>
+      <TopBar themeSwitch={() => themeSwitch()} themeChoice={themeChoice} />
       <Grow in={true} timeout={600}>
         <Grid
           container
@@ -45,7 +41,7 @@ function App() {
           }}
         >
           <Grid item xs={12}>
-            <Search whichTheme={themeChoice.bool} />
+            <Search whichTheme={themeChoice} />
           </Grid>
         </Grid>
       </Grow>

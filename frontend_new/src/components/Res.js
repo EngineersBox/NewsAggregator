@@ -8,12 +8,20 @@ import { useFetch } from "./Get";
 import SimpleCard from "./Cards.tsx";
 import Grow from "@material-ui/core/Grow";
 
-function Res(props) {
+import { useQuery } from "./Search";
+
+function Res() {
+  const searchParams = useQuery();
+  //Validate the search
+  let searchType = searchParams.searchType;
+  if (searchType !== "search" || searchType !== "origin_search") {
+    searchType = "search";
+  }
   const [res, resStatus] = useFetch(
     "https://anu.jkl.io/api/"
-      .concat(props.search)
+      .concat(searchType)
       .concat("?query=")
-      .concat(props.query)
+      .concat(searchParams.get("query"))
   );
   const textColor = {
     color: "white",
@@ -34,14 +42,11 @@ function Res(props) {
         res.result.result.map(({ _id, _score, _source }) => (
           <React.Fragment key={_id}>
             <Grow in={true} timeout={200}>
-              <ListItem button onClick={() => gotoLink(_source.link)}>
-                <SimpleCard
-                  web_link={_source.link}
-                  primary={_source.title}
-                  secondary={_source.summary}
-                  whichTheme={props.whichTheme}
-                />
-              </ListItem>
+              <SimpleCard
+                web_link={_source.link}
+                primary={_source.title}
+                secondary={_source.summary}
+              />
             </Grow>
           </React.Fragment>
         ))}

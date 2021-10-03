@@ -4,55 +4,56 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InfoButton from "./SlideAlert";
-import { light } from "../themes/light";
-import { dark } from "../themes/dark";
-import { useFetch } from "./Get";
 import Res from "./Res.js";
 import FrontPageInfo from "./FrontPageInfo";
+import { useHistory } from "react-router-dom";
+
+import {
+  BrowserRouter as Router,
+  useLocation,
+  Link,
+  Route,
+} from "react-router-dom";
 
 //using colors from theme - bit hacky but works
-const darkPrimary = dark.palette.primary.main;
-const darkSecondary = dark.palette.secondary.main;
-const lightPrimary = dark.palette.primary.main;
-const lightSecondary = dark.palette.secondary.main;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    inputLight: {
+    input: {
       margin: theme.spacing(1),
       height: 50,
-      color: lightPrimary,
-    },
-    inputDark: {
-      margin: theme.spacing(1),
-      height: 50,
-      color: darkSecondary,
     },
     inputButton: {
       margin: theme.spacing(1),
       height: 50,
     },
-    root: {
-      "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-        borderColor: darkSecondary,
-      },
-    },
   })
 );
 type props = {
-  whichTheme: boolean;
+  CustomTheme: Theme;
 };
 
-function Search(props: props) {
+// Thinking of moving this to a folder/file that stores common functionality
+export function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
+function SearchInfo(props: props) {
+  const urlQuery = useQuery().get("query");
+  const urlSearchType = useQuery().get("searchType");
+  const history = useHistory();
+
   //input in search field
-  const [searchInput, setSearchInput] = React.useState("");
+  const [searchInput, setSearchInput] = React.useState(urlQuery || "");
   //the query from searchInput when search button pressed
-  const [query, setQuery] = React.useState("");
+  const [query, setQuery] = React.useState(urlQuery || "");
   //two types of searches
-  const [searchType, setSearchType] = React.useState("");
+  const [searchType, setSearchType] = React.useState(urlSearchType || "");
 
   function getRes(sinput: string, stype: boolean) {
-    setQuery(searchInput);
-    setSearchType(stype ? "search" : "origin_search");
+    setQuery(sinput);
+    let inputSearchType = stype ? "search" : "origin_search";
+    setSearchType(inputSearchType);
+    history.push(`/search?query=${searchInput}&searchType=${inputSearchType}`);
   }
   function enterPress(event: React.KeyboardEvent) {
     if (event.key === "Enter") {
@@ -80,18 +81,14 @@ function Search(props: props) {
           id="search-input"
           variant="outlined"
           color="secondary"
-          className={props.whichTheme ? classes.root : ""}
           fullWidth
+          defaultValue={searchInput}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSearchInput(e.currentTarget.value)
           }
-          InputProps={
-            props.whichTheme
-              ? {
-                  className: classes.inputDark,
-                }
-              : { className: classes.inputLight }
-          }
+          InputProps={{
+            className: classes.input,
+          }}
           onKeyPress={(e) => enterPress(e)}
         />
       </Grid>
@@ -119,16 +116,16 @@ function Search(props: props) {
       </Grid>
       <InfoButton text="This is a description" />
       <Grid item xs={12}>
-        {query && (
-          <Res
-            search={searchType}
-            query={query}
-            whichTheme={props.whichTheme}
-          />
-        )}
+        <Route path="/search" component={Res} />
       </Grid>
     </Grid>
   );
 }
 
-export default Search;
+export default function Search(prop: props) {
+  return (
+    <Router>
+      <SearchInfo whichTheme={prop.whichTheme} />
+    </Router>
+  );
+}
