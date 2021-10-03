@@ -17,6 +17,10 @@
 
 - hosts: targets
   roles:
+    - caddy
+
+- hosts: targets
+  roles:
     - elasticsearch
 
 - hosts: targets

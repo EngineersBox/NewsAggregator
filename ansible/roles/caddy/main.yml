@@ -1,0 +1,23 @@
+- name: Docker stop and remove containers
+  vars:
+    container_names:
+      - caddy
+    containers: "{{ item }}"
+  include_tasks:
+    file: roles/common/tasks/docker_stop_remove_tasks.yml
+    apply:
+      tags:
+        - caddy
+  loop: "{{ container_names | batch(1) | list }}"
+  tags:
+    - caddy
+
+- name: Spin up new containers
+  docker_compose:
+    project_src: "temp"
+    build: yes
+    debug: yes
+  become: true
+  register: started_containers
+  tags:
+    - caddy
