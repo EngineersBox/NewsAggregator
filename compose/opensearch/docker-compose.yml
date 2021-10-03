@@ -1,0 +1,161 @@
+version: "3.5"
+services:
+    opensearch-master:
+        image: opensearchproject/opensearch:latest
+        container_name: opensearch-master
+        environment:
+            - cluster.name=opensearch-cluster
+            - node.name=opensearch-master
+            - node.master=true
+            - node.data=false
+            - node.ingest=false
+            - discovery.seed_hosts=opensearch-master,opensearch-data-ingest-1,opensearch-data-ingest-2,opensearch-coordinator
+            - cluster.initial_master_nodes=opensearch-master
+            - plugins.security.disabled=true # NOTE: This will need to be removed when SSL if configured
+            - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+            - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536 # maximum number of open files for the OpenSearch user, set to at least 65536 on modern systems
+                hard: 65536
+        volumes:
+            - opensearch-master:/usr/share/opensearch/data
+        ports:
+            - 9200:9200
+            - 9600:9600 # required for Performance Analyzer
+        networks:
+            - opensearch-net
+    opensearch-data-ingest1:
+        image: opensearchproject/opensearch:latest
+        container_name: opensearch-data-ingest1
+        environment:
+            - cluster.name=opensearch-cluster
+            - node.name=opensearch-data-ingest1
+            - node.master=false
+            - node.data=true
+            - node.ingest=true
+            - discovery.seed_hosts=opensearch-master,opensearch-data-ingest-1,opensearch-data-ingest-2,opensearch-coordinator
+            - cluster.initial_master_nodes=opensearch-master
+            - plugins.security.disabled=true # NOTE: This will need to be removed when SSL if configured
+            - bootstrap.memory_lock=true
+            - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        ports:
+            - 9201:9201
+            - 9601:9601 # required for Performance Analyzer
+        volumes:
+            - opensearch-data-ingest1:/usr/share/opensearch/data
+        networks:
+            - opensearch-net
+    opensearch-data-ingest2:
+        image: opensearchproject/opensearch:latest
+        container_name: opensearch-data-ingest2
+        environment:
+            - cluster.name=opensearch-cluster
+            - node.name=opensearch-data-ingest2
+            - node.master=false
+            - node.data=true
+            - node.ingest=true
+            - discovery.seed_hosts=opensearch-master,opensearch-data-ingest-1,opensearch-data-ingest-2,opensearch-coordinator
+            - cluster.initial_master_nodes=opensearch-master
+            - plugins.security.disabled=true # NOTE: This will need to be removed when SSL if configured
+            - bootstrap.memory_lock=true
+            - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        ports:
+            - 9202:9202
+            - 9602:9602 # required for Performance Analyzer
+        volumes:
+            - opensearch-data-ingest2:/usr/share/opensearch/data
+        networks:
+            - opensearch-net
+    opensearch-data-ingest3:
+        image: opensearchproject/opensearch:latest
+        container_name: opensearch-data-ingest3
+        environment:
+            - cluster.name=opensearch-cluster
+            - node.name=opensearch-data-ingest3
+            - node.master=false
+            - node.data=true
+            - node.ingest=true
+            - discovery.seed_hosts=opensearch-master,opensearch-data-ingest-1,opensearch-data-ingest-2,opensearch-coordinator
+            - cluster.initial_master_nodes=opensearch-master
+            - plugins.security.disabled=true # NOTE: This will need to be removed when SSL if configured
+            - bootstrap.memory_lock=true
+            - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        ports:
+            - 9203:9203
+            - 9603:9603 # required for Performance Analyzer
+        volumes:
+            - opensearch-data-ingest2:/usr/share/opensearch/data
+        networks:
+            - opensearch-net
+    opensearch-coordinator:
+        image: opensearchproject/opensearch:latest
+        container_name: opensearch-coordinator
+        environment:
+            - cluster.name=opensearch-cluster
+            - node.name=opensearch-coordinator
+            - node.master=false
+            - node.data=false
+            - node.ingest=false
+            - discovery.seed_hosts=opensearch-master,opensearch-data-ingest-1,opensearch-data-ingest-2,opensearch-coordinator
+            - cluster.initial_master_nodes=opensearch-master
+            - bootstrap.memory_lock=true
+            - "OPENSEARCH_JAVA_OPTS=-Xms1024m -Xmx1024m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        ports:
+            - 9204:9204
+            - 9604:9604 # required for Performance Analyzer
+        volumes:
+            - opensearch-coordinator:/usr/share/opensearch/data
+        networks:
+            - opensearch-net
+    opensearch-dashboards:
+        image: opensearchproject/opensearch-dashboards:latest
+        container_name: opensearch-dashboards
+        ports:
+            - 5601:5601
+        expose:
+            - "5601"
+        environment:
+            OPENSEARCH_HOSTS: '["http://opensearch-master:9200","http://opensearch-master:9201","http://opensearch-master:9202","http://opensearch-master:9203","http://opensearch-master:9204"]'
+        networks:
+            - opensearch-net
+
+volumes:
+    opensearch-master:
+    opensearch-data-ingest1:
+    opensearch-data-ingest2:
+    opensearch-coordinator:
+
+networks:
+    opensearch-net:

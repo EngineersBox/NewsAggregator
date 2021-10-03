@@ -1,4 +1,5 @@
-import functools, logging, logging.config, redis, gzip, json
+
+import functools, logging, logging.config, redis, gzip, time, json
 from lxml import etree
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS, cross_origin
@@ -28,7 +29,7 @@ autocomplete = AutoComplete(words=getAutocompleteEntries())
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
-CF_KEY = "test2"
+CF_KEY = "news"
 INDEX_NAME = "knn_index"
 ES = Elasticsearch("admin:admin@localhost:9200", verify_certs=False, ssl_show_warn=False)
 
@@ -67,16 +68,28 @@ class ErrorHandlerWrapper:
     def __exit__(self, _a, _b, _c):
         return
 
-# reference of kristoff-it 2020 https://github.com/kristoff-it/redis-cuckoofilter
+class TimedResponseWrapper:
+    
+    def __call__(self, func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            start_time = time.time_ns()
+            result = json.loads(func(*args, **kwargs))
+            result["duration"] = time.time_ns() - start_time
+            return jsonify(result)
+        return wrapper
+
+    def __enter__(self):
+        return
+
+    def __exit__(self, _a, _b, _c):
+        return
+
+
 rd = redis.Redis()
-# load the module in Cuckoofilter remember
 try:
-    rd.execute_command("cf.init", "test2", "64k")
-
+    rd.execute_command("cf.init", CF_KEY, "64k")
 except:
-    # print("the filter is already initialized")
-
-    # logging output
     logger.warning("the filter is already initialized")
 
 def fingerprint(x):
@@ -126,6 +139,7 @@ def base_search(query: str, search_method: Callable[[Elasticsearch, str, str], N
 @cross_origin()
 @ErrorHandlerWrapper()
 @RateLimiter()
+@TimedResponseWrapper()
 def search():
     query = request.args.get("query", None, type=str)
     return base_search(query, lambda es,en,q: simple_match_search(es,en,q))
@@ -134,6 +148,7 @@ def search():
 @cross_origin()
 @ErrorHandlerWrapper()
 @RateLimiter()
+@TimedResponseWrapper()
 def knn_search():
     query = request.args.get("query", None, type=str)
     return base_search(query, lambda _es,_en,q: knn_query(q))
