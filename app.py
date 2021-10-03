@@ -71,11 +71,9 @@ class ErrorHandlerWrapper:
 rd = redis.Redis()
 # load the module in Cuckoofilter remember
 try:
-
     rd.execute_command("cf.init", "test2", "64k")
 
 except:
-
     # print("the filter is already initialized")
 
     # logging output
