@@ -12,29 +12,25 @@ from collections import OrderedDict
 from typing import Callable
 from fast_autocomplete import AutoComplete
 
+AUTOCOMPLETE_MAX_COST = 3
+AUTOCOMPLETE_SIZE = 5
+
 #codes inspired -> JKL project owner TOM ..
 words = {}
-with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
-        doc_id = 1
-        for _, element in etree.iterparse(f, events=('end',), tag='doc'):
-            title = element.findtext('./title')
-                         
-            index = 10 + 1
-            title = title[index:]
-        # readin title
-        # doc_id = 1
-            doc_id += 1
-        # doc_id += 1
-        # iterparse will yield the entire `doc` element once it finds the closing `</doc>` tag
-            words[title]={}
 
-            if doc_id>200000:
-                break
+def getAutocompleteEntries() -> dict :
+    words = {}
+    with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
+         doc_id = 1
+         for _, element in etree.iterparse(f, events=('end',), tag='doc'):
+             title = element.findtext('./title')
+             words[title[11:]]={}
+             doc_id += 1
+            #  if doc_id>200000:
+            #      break
+    return words
+
 autocomplete = AutoComplete(words=words)
-# tests it
-suggu = autocomplete.search(word="ab", max_cost=4, size=4)
-print(suggu) 
-# print
 
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
@@ -47,11 +43,14 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 
-#Suggestion Route which takes POSTs and returns HTML to the HTMX on keypress in the template
-@app.route('/suggest', method='POST')
+#Suggestion route invoked by a POST request returning relevant JSON entries for suggestion values
+@app.route("/suggest")
 def suggest():
-        postdata = request.forms.get('q')
-        suggest = autocomplete.search(word=postdata, max_cost=3, size=5)
+        postdata = request.args.get("input", None, type=str)
+        suggest = autocomplete.search(
+        word=postdata,
+        max_cost=AUTOCOMPLETE_MAX_COST,
+        size=AUTOCOMPLETE_SIZE)
 
         #refactor to a template later - but also needs safe/dangerous handling
         result = {}
