@@ -59,8 +59,10 @@ jobs:
         run: ansible all ${{ env.verbosity_tags }} --ssh-extra-args=${{ env.verbosity_tags }} -i ${{ env.target_inventory }} --private-key=$PRIVATE_KEY_FILE -m ping
         working-directory: ${{ env.ANSIBLE_DIR }}
       - name: Run playbook
-        run: ansible-playbook ${{ env.verbosity_tags }} --ssh-extra-args=${{ env.verbosity_tags }}  -i ${{ env.target_inventory }} --tags "$(echo "${{ github.event.inputs.tags }}" | tr -ds "[:space:]" "")"  --private-key=$PRIVATE_KEY_FILE $PLAYBOOK
+        run: ansible-playbook ${{ env.verbosity_tags }} --ssh-extra-args=${{ env.verbosity_tags }}  -i ${{ env.target_inventory }} --tags "$(echo "${{ github.event.inputs.tags }}" | tr -ds "[:space:]" "")"  --private-key=$PRIVATE_KEY_FILE --extra-vars "ansible_sudo_pass=${{ env.SSH_USER_SUDO_PASS }}" $PLAYBOOK
         working-directory: ${{ env.ANSIBLE_DIR }}
+        env:
+          SSH_USER_SUDO_PASS: if [[ "${{ github.event.inputs.target }}" == "old" ]]; then echo ${{ secrets.OLD_SUDO_PASS }}; else if [[ "${{ github.event.inputs.target }}" == "prod" ]]; then echo ${{ secrets.PROD_SUDO_PASS }}; else echo "INVALID"; fi;
       - name: Remove key file
         run: sudo rm -rf $PRIVATE_KEY_FILE
         working-directory: ${{ env.ANSIBLE_DIR }}
