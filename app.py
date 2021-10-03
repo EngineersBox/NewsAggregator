@@ -15,21 +15,15 @@ from fast_autocomplete import AutoComplete
 AUTOCOMPLETE_MAX_COST = 3
 AUTOCOMPLETE_SIZE = 5
 
-#codes inspired -> JKL project owner TOM ..
-
-words = {}
-
 def getAutocompleteEntries() -> dict :
     words = {}
     with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
-         doc_id = 1
          for _, element in etree.iterparse(f, events=('end',), tag='doc'):
              title = element.findtext('./title')
              words[title[11:]]={}
-             doc_id += 1
     return words
 
-autocomplete = AutoComplete(words=words)
+autocomplete = AutoComplete(words=getAutocompleteEntries())
 
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
@@ -41,20 +35,6 @@ ES = Elasticsearch("admin:admin@localhost:9200", verify_certs=False, ssl_show_wa
 app = Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
-
-#Suggestion route invoked by a POST request returning relevant JSON entries for suggestion values
-@app.route("/suggest")
-def suggest():
-        postdata = request.args.get("input", None, type=str)
-        suggest = autocomplete.search(
-        word=postdata,
-        max_cost=AUTOCOMPLETE_MAX_COST,
-        size=AUTOCOMPLETE_SIZE)
-        #refactor to a template later - but also needs safe/dangerous handling
-        result = {}
-        for x in (0, len(suggest)):
-            result['suggest'+x] = suggest[x]
-        return jsonify(result)
 
 class ErrorHandlerWrapper:
 
@@ -159,6 +139,22 @@ def search():
 def knn_search():
     query = request.args.get("query", None, type=str)
     return base_search(query, lambda _es,_en,q: knn_query(q))
+
+#Suggestion route invoked by a POST request returning relevant JSON entries for suggestion values
+@cross_origin()
+@ErrorHandlerWrapper()
+@app.route("/suggest")
+def suggest():
+        postdata = request.args.get("input", None, type=str)
+        suggest = autocomplete.search(
+        word=postdata,
+        max_cost=AUTOCOMPLETE_MAX_COST,
+        size=AUTOCOMPLETE_SIZE)
+        #refactor to a template later - but also needs safe/dangerous handling
+        result = {}
+        for x in (0, len(suggest)):
+            result['suggest'+x] = suggest[x]
+        return jsonify(result)
 
 if __name__ == "__main__":
     app.run(debug=True)
