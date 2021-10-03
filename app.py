@@ -11,10 +11,8 @@ from urllib3.exceptions import SSLError
 from collections import OrderedDict
 from typing import Callable
 from fast_autocomplete import AutoComplete
-
 AUTOCOMPLETE_MAX_COST = 3
 AUTOCOMPLETE_SIZE = 5
-
 #codes inspired -> JKL project owner TOM ..
 words = {}
 
@@ -26,8 +24,6 @@ def getAutocompleteEntries() -> dict :
              title = element.findtext('./title')
              words[title[11:]]={}
              doc_id += 1
-            #  if doc_id>200000:
-            #      break
     return words
 
 autocomplete = AutoComplete(words=words)
@@ -51,7 +47,6 @@ def suggest():
         word=postdata,
         max_cost=AUTOCOMPLETE_MAX_COST,
         size=AUTOCOMPLETE_SIZE)
-
         #refactor to a template later - but also needs safe/dangerous handling
         result = {}
         for x in (0, len(suggest)):
@@ -88,7 +83,6 @@ class ErrorHandlerWrapper:
 
     def __exit__(self, _a, _b, _c):
         return
-
 
 # reference of kristoff-it 2020 https://github.com/kristoff-it/redis-cuckoofilter
 rd = redis.Redis()
