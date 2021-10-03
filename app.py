@@ -11,10 +11,14 @@ from urllib3.exceptions import SSLError
 from collections import OrderedDict
 from typing import Callable
 from fast_autocomplete import AutoComplete
+
 AUTOCOMPLETE_MAX_COST = 3
 AUTOCOMPLETE_SIZE = 5
+
 #codes inspired -> JKL project owner TOM ..
+
 words = {}
+
 def getAutocompleteEntries() -> dict :
     words = {}
     with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
@@ -24,6 +28,7 @@ def getAutocompleteEntries() -> dict :
              words[title[11:]]={}
              doc_id += 1
     return words
+
 autocomplete = AutoComplete(words=words)
 
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
@@ -96,7 +101,6 @@ except:
     # logging output
     logger.warning("the filter is already initialized")
 
-
 def fingerprint(x):
     return ord(x[0])
 
@@ -114,7 +118,6 @@ def send_css(filename):
 @ErrorHandlerWrapper()
 def send_js(filename):
     return send_from_directory("static/js", filename)
-
 
 def base_search(query: str, search_method: Callable[[Elasticsearch, str, str], None]):
     if not query:
