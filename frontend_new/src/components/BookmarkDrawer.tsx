@@ -25,6 +25,7 @@ import MailIcon from "@material-ui/icons/Mail";
 import BookmarksOutlinedIcon from "@material-ui/icons/BookmarksOutlined";
 import Switch from "@material-ui/core/Switch";
 import Search from "./Search";
+import ThemeSwitch from "./ThemeSwitch";
 import Grow from "@material-ui/core/Grow";
 import Grid from "@material-ui/core/Grid";
 import SimpleCard from "./Cards.tsx";
@@ -132,7 +133,7 @@ export default function PersistentDrawerLeft(props: props) {
           </IconButton>
           <Typography variant="h6" className={classes.title}></Typography>
           <Typography variant="h6"></Typography>
-          <Switch
+          <ThemeSwitch
             defaultChecked
             color="default"
             onChange={() => props.themeSwitch()}
