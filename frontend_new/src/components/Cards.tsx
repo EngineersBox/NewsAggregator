@@ -59,8 +59,8 @@ export default function SimpleCard(props: props) {
       let articleSaved = JSON.parse(
         localStorage.getItem("Articles Saved") || ""
       );
-      articleSaved = articleSaved["articles"].filter(
-        (item) => item !== props.id
+      articleSaved["articles"] = articleSaved["articles"].filter(
+        (item: string) => item !== props.id
       );
       localStorage.setItem("Articles Saved", JSON.stringify(articleSaved));
     }
