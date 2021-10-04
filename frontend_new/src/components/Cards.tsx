@@ -39,12 +39,11 @@ export default function SimpleCard(props: props) {
       localStorage.setItem(props.id, JSON.stringify(details));
       if (localStorage.getItem("Articles Saved") != null) {
         let articleSaved = JSON.parse(localStorage.getItem(props.id) || "");
-        articleSaved[props.id] = 1;
+        articleSaved["id"].push(props.id);
         localStorage.setItem("Articles Saved", JSON.stringify(articleSaved));
       } else {
-        let keyName = props.id;
         var first = {
-          keyName: 1,
+          id: props.id,
         };
         localStorage.setItem("Articles Saved", JSON.stringify(first));
       }
