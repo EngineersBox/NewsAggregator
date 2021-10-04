@@ -24,8 +24,11 @@ function gotoLink(url: string) {
 }
 
 export default function SimpleCard(props: props) {
-  const [bookmarked, setBookmarked] = React.useState(false);
+  const [bookmarked, setBookmarked] = React.useState(
+    localStorage.getItem("Articles Saved") != null || false
+  );
 
+  //Problem where clearning localStorage would not update bookmarks stage
   function handlebookmark() {
     console.log(props.id);
     console.log(bookmarked);
@@ -38,17 +41,28 @@ export default function SimpleCard(props: props) {
       };
       localStorage.setItem(props.id, JSON.stringify(details));
       if (localStorage.getItem("Articles Saved") != null) {
-        let articleSaved = JSON.parse(localStorage.getItem(props.id) || "");
-        articleSaved["id"].push(props.id);
+        let articleSaved = JSON.parse(
+          localStorage.getItem("Articles Saved") || ""
+        );
+        console.log("stored, ", articleSaved);
+        articleSaved["articles"].push(props.id);
         localStorage.setItem("Articles Saved", JSON.stringify(articleSaved));
       } else {
-        var first = {
-          id: props.id,
+        let articles = {
+          articles: [props.id],
         };
-        localStorage.setItem("Articles Saved", JSON.stringify(first));
+        localStorage.setItem("Articles Saved", JSON.stringify(articles));
       }
     } else {
       setBookmarked(false);
+      localStorage.removeItem(props.id);
+      let articleSaved = JSON.parse(
+        localStorage.getItem("Articles Saved") || ""
+      );
+      articleSaved = articleSaved["articles"].filter(
+        (item) => item !== props.id
+      );
+      localStorage.setItem("Articles Saved", JSON.stringify(articleSaved));
     }
   }
 
