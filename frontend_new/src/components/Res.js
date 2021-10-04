@@ -15,6 +15,7 @@ function Res(props) {
       .concat("?query=")
       .concat(props.query)
   );
+  console.log("Returned results,", res);
   const textColor = {
     color: "white",
   };
@@ -42,7 +43,8 @@ function Res(props) {
                 web_link={_source.link}
                 primary={_source.title}
                 secondary={_source.summary}
-                onClick={saveToLocalStorage(_source.link, _source.title)}
+                id={_id}
+                // onClick={saveToLocalStorage(_source.link, _source.title)}
               />
             </Grow>
           </React.Fragment>
