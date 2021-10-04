@@ -9,6 +9,7 @@ import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import BookmarksOutlinedIcon from "@material-ui/icons/BookmarksOutlined";
 import Switch from "@material-ui/core/Switch";
 import BookmarkDrawer from "./BookmarkDrawer";
+import ThemeSwitch from "./ThemeSwitch";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -48,11 +49,7 @@ export default function TopBar(props: props) {
           />
           <Typography variant="h6" className={classes.title}></Typography>
           <Typography variant="h6"></Typography>
-          <Switch
-            defaultChecked
-            color="default"
-            onChange={() => props.themeSwitch()}
-          />
+          <ThemeSwitch themeSwitch={props.themeSwitch} />
         </Toolbar>
       </AppBar>
     </div>

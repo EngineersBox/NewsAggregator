@@ -1,7 +1,6 @@
-
 function getDefaultTheme() {
-    let hour = new Date().getHours();
-    return hour < 6 || hour > 22;   
-};
+  let hour = new Date().getHours();
+  return hour < 8 || hour > 20;
+}
 
 export default getDefaultTheme;

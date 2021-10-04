@@ -9,6 +9,9 @@ export const light = createMuiTheme({
     secondary: {
       main: "#212121",
     },
+    themeswitch: {
+      main: "#e7c926",
+    },
     background: {
       default: "#dfdfdf",
       paper: "#bfbfbf",
@@ -26,6 +29,10 @@ export const dark = createMuiTheme({
     },
     secondary: {
       main: "#c9c9c9",
+    },
+    themeswitch: {
+      main: "#007cf2",
+      alternate: "#515151",
     },
     background: {
       default: "#111111",
