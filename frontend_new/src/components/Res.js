@@ -10,7 +10,14 @@ import Grow from "@material-ui/core/Grow";
 
 import { useQuery } from "./Search";
 
-function Res() {
+type prop = {
+  CustomTheme: Theme,
+  handlebookmark: () => void,
+  bookmarks: array,
+  isVisible: boolean,
+};
+
+function Res(props: prop) {
   const searchParams = useQuery();
   //Validate the search
   let searchType = searchParams.searchType;
