@@ -27,7 +27,6 @@ function App() {
     }
   };
   const [bookmarks, setBookmarks] = React.useState({});
-  console.log(bookmarks);
   function handlebookmark(
     web_link: string,
     primary: string,
