@@ -28,10 +28,6 @@ function Res(props) {
     window.location.href = url;
   }
 
-  function saveToLocalStorage(link: string, title: string) {
-    localStorage.setItem(link, title);
-  }
-
   return (
     <List>
       {!resStatus &&
