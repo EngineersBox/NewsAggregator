@@ -97,6 +97,7 @@ type props = {
   bookmarks: array;
   handlebookmark: () => void;
   whichTheme: Theme;
+  themeChoice: () => void;
 };
 
 export default function PersistentDrawerLeft(props: props) {
@@ -136,7 +137,7 @@ export default function PersistentDrawerLeft(props: props) {
           <ThemeSwitch
             defaultChecked
             color="default"
-            onChange={() => props.themeSwitch()}
+            themeChoice={props.themeChange}
           />
         </Toolbar>
       </AppBar>

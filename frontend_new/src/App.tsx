@@ -19,7 +19,7 @@ function App() {
     document.body.style.backgroundColor =
       themeChoice.palette.background.default;
   }, [themeChoice]);
-  const themeSwitch = () => {
+  const themeChange = () => {
     if (themeChoice.palette.type === "dark") {
       setThemeChoice(light);
     } else {
@@ -57,7 +57,7 @@ function App() {
               whichTheme={themeChoice}
               bookmarks={bookmarks}
               handlebookmark={handlebookmark}
-              themeSwitch={themeSwitch}
+              themeChange={themeChange}
             />
           </Grow>
         </Grid>
