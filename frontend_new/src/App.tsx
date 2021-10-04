@@ -20,11 +20,9 @@ function App() {
       themeChoice.palette.background.default;
   }, [themeChoice]);
   const themeChange = () => {
-    if (themeChoice.palette.type === "dark") {
-      setThemeChoice(light);
-    } else {
-      setThemeChoice(dark);
-    }
+    themeChoice.palette.type === "dark"
+      ? setThemeChoice(light)
+      : setThemeChoice(dark);
   };
   const [bookmarks, setBookmarks] = React.useState({});
   function handlebookmark(
