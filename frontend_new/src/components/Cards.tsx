@@ -44,7 +44,6 @@ export default function SimpleCard(props: props) {
   }
 
   React.useEffect(() => {
-    console.log("in use effect");
     if (props.id in props.bookmarks) {
       setBookmarked(true);
     } else {
