@@ -42,7 +42,6 @@ function Res(props) {
                 web_link={_source.link}
                 primary={_source.title}
                 secondary={_source.summary}
-                onClick={saveToLocalStorage(_source.link, _source.title)}
               />
             </Grow>
           </React.Fragment>
