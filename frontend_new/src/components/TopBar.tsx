@@ -32,15 +32,6 @@ type props = {
 export default function TopBar(props: props) {
   const classes = useStyles();
 
-  let isSavedColourDark =
-    localStorage.getItem("themeChoice") === "dark" ? true : false;
-  const [checked, setChecked] = React.useState(isSavedColourDark || "");
-
-  const handleChange = (event) => {
-    setChecked(event.target.checked);
-    props.themeSwitch();
-  };
-
   return (
     <div className={classes.root}>
       <AppBar position="static" color="primary">

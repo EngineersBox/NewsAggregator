@@ -55,11 +55,11 @@ type props = {
 };
 
 export default function CustomizedSwitches(props: props) {
-  const theme = useTheme();
+  const theme = useTheme() || localStorage.getItem("themeChoice");
   return (
     <MaterialUISwitch
       sx={{ m: 1 }}
-      defaultChecked={theme.palette.type === "dark" ? true : false}
+      checked={localStorage.getItem("themeChoice") === "dark" ? true : false}
       onChange={() => props.themeChoice()}
     />
   );
