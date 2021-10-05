@@ -51,7 +51,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 
 type props = {
   themeChoice: () => void;
-  whichtheme: theme;
+  whichtheme: Theme;
 };
 
 export default function CustomizedSwitches(props: props) {

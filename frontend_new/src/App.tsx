@@ -12,10 +12,12 @@ import getDefaultTheme from "./components/ThemeSetting";
 
 //using colors from theme - bit hacky but works
 function App() {
-  let themeColourSaved =
-    localStorage.getItem("themeChoice") === "dark" ? dark : light;
+  let themeColourSaved = localStorage.getItem("themeChoice");
+  let themeColor =
+    themeColourSaved == null ? getDefaultTheme() : themeColourSaved;
+
   const [themeChoice, setThemeChoice] = React.useState(
-    getDefaultTheme() ? dark : light
+    themeColor ? dark : light
   );
   React.useEffect(() => {
     document.body.style.backgroundColor =
