@@ -4,7 +4,7 @@ RUN npm install -g http-server
 
 WORKDIR /app
 
-COPY ../../frontend_new .
+COPY . .
 RUN npm install
 RUN npm run build
 

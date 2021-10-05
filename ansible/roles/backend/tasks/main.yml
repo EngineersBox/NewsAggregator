@@ -14,7 +14,7 @@
 
 - name: Spin up new containers
   docker_compose:
-    project_src: "temp"
+    project_src: "temp/compose/backend"
     build: yes
     debug: yes
   become: true

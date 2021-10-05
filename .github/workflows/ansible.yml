@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tags:
-        description: 'Comma seperated list of components to deploy from: [caddy, elasticsearch, elasticsearch_base_indexes, elasticsearch_knn_indexes, redis, redis_backup_restore, frontend, backend]'     
+        description: 'Comma seperated list of components to deploy from: [elasticsearch, elasticsearch_base_indexes, elasticsearch_knn_indexes, redis, redis_backup_restore, frontend, backend]'     
         required: true
         default: 'elasticsearch, elasticsearch_base_indexes, elasticsearch_knn_indexes, redis, redis_backup_restore, frontend, backend'
       verbosity:
@@ -35,11 +35,11 @@ jobs:
       - name: Create verbosity level flags
         run: |
           verbosity_tags="$(echo "-$(printf "%3s" | tr " " "v")")"
-          echo "verbosity_tags=\"$verbosity_tags\"" >> $GITHUB_ENV
+          echo "verbosity_tags=$verbosity_tags" >> $GITHUB_ENV
           echo "Generated verbosity flag: [$verbosity_tags]"
       - name: Mapping target to inventory
         run: |
-          echo "target_inventory=\"inventory/${{ github.event.inputs.target }}.ini\"" >> $GITHUB_ENV
+          echo "target_inventory=inventory/${{ github.event.inputs.target }}.ini" >> $GITHUB_ENV
           echo "Added specifier for target inventory"
       - name: Install ansible
         run: |
