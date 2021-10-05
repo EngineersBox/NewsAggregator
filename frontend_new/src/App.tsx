@@ -15,21 +15,24 @@ function App() {
   const [themeChoice, setThemeChoice] = React.useState(
     getDefaultTheme() ? dark : light
   );
+  console.log(light);
   React.useEffect(() => {
     document.body.style.backgroundColor =
       themeChoice.palette.background.default;
   }, [themeChoice]);
+
   const themeChange = () => {
     themeChoice.palette.type === "dark"
       ? setThemeChoice(light)
       : setThemeChoice(dark);
   };
-  const [bookmarks, setBookmarks] = React.useState({});
+
+  const [bookmarks, setBookmarks] = React.useState<{[key:number]:any}>({});
   function handlebookmark(
     web_link: string,
     primary: string,
     secondary: string,
-    id: integer
+    id: number,
   ) {
     if (id in bookmarks) {
       let temp_bookmarks = bookmarks;

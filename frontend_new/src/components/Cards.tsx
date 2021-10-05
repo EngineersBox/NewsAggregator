@@ -6,7 +6,6 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import { customTheme } from "../themes/customTheme";
 import ListItem from "@material-ui/core/ListItem";
 import BookmarkBorderOutlinedIcon from "@material-ui/icons/BookmarkBorderOutlined";
 import BookmarkOutlinedIcon from "@material-ui/icons/BookmarkOutlined";
@@ -18,9 +17,9 @@ type props = {
   web_link: string;
   primary: string;
   secondary: string;
-  id: integer;
-  handlebookmark: () => void;
-  bookmarks: array;
+  id: number;
+  handlebookmark: (web_link: string,primary: string,secondary:string, id:number) => void;
+  bookmarks: object;
   isVisible: boolean;
 };
 function gotoLink(url: string) {

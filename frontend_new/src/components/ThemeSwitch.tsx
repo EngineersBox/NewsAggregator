@@ -50,8 +50,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 type props = {
-  themeChoice: () => void;
-  whichtheme: theme;
+  themeChange: () => void;
 };
 
 export default function CustomizedSwitches(props: props) {
@@ -60,7 +59,7 @@ export default function CustomizedSwitches(props: props) {
     <MaterialUISwitch
       sx={{ m: 1 }}
       defaultChecked={theme.palette.type === "dark" ? true : false}
-      onChange={() => props.themeChoice()}
+      onChange={() => props.themeChange()}
     />
   );
 }

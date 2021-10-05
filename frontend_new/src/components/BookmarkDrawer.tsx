@@ -28,7 +28,7 @@ import Search from "./Search";
 import ThemeSwitch from "./ThemeSwitch";
 import Grow from "@material-ui/core/Grow";
 import Grid from "@material-ui/core/Grid";
-import SimpleCard from "./Cards.tsx";
+import SimpleCard from "./Cards";
 
 const drawerWidth = "100%";
 
@@ -94,10 +94,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 type props = {
-  bookmarks: array;
-  handlebookmark: () => void;
+  bookmarks: object;
+  handlebookmark: (web_link: string,primary: string,secondary:string, id:number) => void;
   whichTheme: Theme;
-  themeChoice: () => void;
+  themeChange: () => void;
 };
 
 export default function PersistentDrawerLeft(props: props) {
@@ -132,12 +132,10 @@ export default function PersistentDrawerLeft(props: props) {
           >
             {open ? <ChevronLeftIcon /> : <BookmarksOutlinedIcon />}
           </IconButton>
-          <Typography variant="h6" className={classes.title}></Typography>
+          <Typography variant="h6"></Typography>
           <Typography variant="h6"></Typography>
           <ThemeSwitch
-            defaultChecked
-            color="default"
-            themeChoice={props.themeChange}
+            themeChange={props.themeChange}
           />
         </Toolbar>
       </AppBar>
@@ -158,7 +156,7 @@ export default function PersistentDrawerLeft(props: props) {
                 ({ id, primary, secondary, web_link }) => (
                   <React.Fragment key={id}>
                     <Grow in={true} timeout={200}>
-                      <Grid container wrap="wrap" direction="rows" spacing={3}>
+                      <Grid container wrap="wrap" direction="row" spacing={3}>
                         <Grid item xs={12}>
                           <SimpleCard
                             web_link={web_link}
@@ -167,6 +165,8 @@ export default function PersistentDrawerLeft(props: props) {
                             secondary={secondary}
                             bookmarks={props.bookmarks}
                             handlebookmark={props.handlebookmark}
+			    isVisible={!open}
+
                           />
                         </Grid>
                       </Grid>
@@ -186,7 +186,6 @@ export default function PersistentDrawerLeft(props: props) {
         <Grid container>
           <Grid item xs={12}>
             <Search
-              whichTheme={props.themeChoice}
               bookmarks={props.bookmarks}
               handlebookmark={props.handlebookmark}
               isVisible={open}
