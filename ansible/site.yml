@@ -8,7 +8,7 @@
       become: true
     - name: Clone repo onto box
       git:
-        repo: https://github.com/EngineersBox/ansible-test.git
+        repo: https://github.com/EngineersBox/NewsAggregator.git
         dest: "temp"
         clone: yes
         version: main
