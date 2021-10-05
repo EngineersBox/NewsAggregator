@@ -2,11 +2,8 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
 import { dark, light } from "./themes/customTheme";
 import "./App.css";
-import TopBar from "./components/TopBar";
 import BookmarkDrawer from "./components/BookmarkDrawer";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import FrontPageInfo from "./components/FrontPageInfo";
 import Grow from "@material-ui/core/Grow";
 import getDefaultTheme from "./components/ThemeSetting";
 
@@ -27,12 +24,12 @@ function App() {
       : setThemeChoice(dark);
   };
 
-  const [bookmarks, setBookmarks] = React.useState<{[key:number]:any}>({});
+  const [bookmarks, setBookmarks] = React.useState<{ [key: number]: any }>({});
   function handlebookmark(
     web_link: string,
     primary: string,
     secondary: string,
-    id: number,
+    id: number
   ) {
     if (id in bookmarks) {
       let temp_bookmarks = bookmarks;

@@ -8,12 +8,7 @@ import Res from "./Res.js";
 import FrontPageInfo from "./FrontPageInfo";
 import { useHistory } from "react-router-dom";
 
-import {
-  BrowserRouter as Router,
-  useLocation,
-  Link,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, useLocation, Route } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,7 +24,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 type props = {
   bookmarks: object;
-  handlebookmark: (web_link: string,primary: string,secondary:string, id:number) => void;
+  handlebookmark: (
+    web_link: string,
+    primary: string,
+    secondary: string,
+    id: number
+  ) => void;
   isVisible: boolean;
 };
 
