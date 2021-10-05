@@ -40,11 +40,7 @@ export default function SimpleCard(props: props) {
   }
 
   React.useEffect(() => {
-    if (props.id in props.bookmarks) {
-      setBookmarked(true);
-    } else {
-      setBookmarked(false);
-    }
+      setBookmarked(props.id in props.bookmarks);
   }, [props.bookmarks, props.isVisible]);
 
   return (
