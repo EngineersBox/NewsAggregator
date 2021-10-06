@@ -7,12 +7,6 @@ network.host: 0.0.0.0
 # # set to 1 to allow single node clusters
 # discovery.zen.minimum_master_nodes: 1
 
-node.name: "node-1"
-# explicitly specify the node will be function as master, data and ingest
-node.master: true
-node.data: true
-node.ingest: true
-
 # Setting network.host to a non-loopback address enables the annoying bootstrap checks. "Single-node" mode disables them again.
 #discovery.type: single-node
 

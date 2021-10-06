@@ -23,9 +23,7 @@ services:
                 hard: 65536
         volumes:
             - opensearch-master:/usr/share/opensearch/data
-        ports:
-            - 9200:9200
-            - 9600:9600 # required for Performance Analyzer
+        network_mode: host
         networks:
             - opensearch-net
     opensearch-data-ingest1:
@@ -49,9 +47,7 @@ services:
             nofile:
                 soft: 65536
                 hard: 65536
-        ports:
-            - 9201:9201
-            - 9601:9601 # required for Performance Analyzer
+        network_mode: host
         volumes:
             - opensearch-data-ingest1:/usr/share/opensearch/data
         networks:
@@ -77,9 +73,7 @@ services:
             nofile:
                 soft: 65536
                 hard: 65536
-        ports:
-            - 9202:9202
-            - 9602:9602 # required for Performance Analyzer
+        network_mode: host
         volumes:
             - opensearch-data-ingest2:/usr/share/opensearch/data
         networks:
@@ -105,9 +99,7 @@ services:
             nofile:
                 soft: 65536
                 hard: 65536
-        ports:
-            - 9203:9203
-            - 9603:9603 # required for Performance Analyzer
+        network_mode: host
         volumes:
             - opensearch-data-ingest2:/usr/share/opensearch/data
         networks:
@@ -132,9 +124,7 @@ services:
             nofile:
                 soft: 65536
                 hard: 65536
-        ports:
-            - 9204:9204
-            - 9604:9604 # required for Performance Analyzer
+        network_mode: host
         volumes:
             - opensearch-coordinator:/usr/share/opensearch/data
         networks:
@@ -142,10 +132,7 @@ services:
     opensearch-dashboards:
         image: opensearchproject/opensearch-dashboards:latest
         container_name: opensearch-dashboards
-        ports:
-            - 5601:5601
-        expose:
-            - "5601"
+        network_mode: host
         environment:
             OPENSEARCH_HOSTS: '["http://opensearch-master:9200","http://opensearch-master:9201","http://opensearch-master:9202","http://opensearch-master:9203","http://opensearch-master:9204"]'
         networks:

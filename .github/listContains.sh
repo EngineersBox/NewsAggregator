@@ -6,5 +6,5 @@ printExit() {
 }
 
 for value in $2; do
-    [[ $1 =~ (^|[[:space:]])$value($|[[:space:]]) ]] || printExit "Invlid input: $value"
+    [[ $1 =~ (^|[[:space:]])$value($|[[:space:]]) ]] || printExit "Invalid input: $value"
 done
