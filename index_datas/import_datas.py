@@ -77,6 +77,9 @@ def start_import(test_size = 1000):
             print(doc_id,"/100million")
             doc_id += 1
             element.clear()
+            if(doc_id>200):
+                break
+            
 
     total_number = len(data_set)
     print('in total: ', total_number)
