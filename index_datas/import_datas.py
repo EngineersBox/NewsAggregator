@@ -84,8 +84,8 @@ def start_import(test_size = 1000):
     #             break
             
 
-    # total_number = len(data_set)
-    # print('in total: ', total_number)
+    # total_number = len(data_set) 
+    # print('in total: ', total_number) 
     # data_set_test = data_set[:total_number-2]
     global elastic_search
     if not elastic_search.indices.exists( index = 'wiki'):
