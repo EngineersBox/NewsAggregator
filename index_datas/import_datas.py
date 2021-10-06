@@ -79,10 +79,9 @@ def process(data):
     except (Exception) as e:
         print("Could not index document, {0}:".format(data["title"]), e) 
 
-def search_index_test(elastic_search):
+def search_index_test(elastic_search): 
     # u6250082 Xuguang Song
-    '''test with query to match ACT'''
-
+    '''test with query to match ACT''' 
     q = "ACT"
     position = "title"
     test1 = {
