@@ -18,8 +18,6 @@ AUTOCOMPLETE_SIZE = 5
 
 doc_id = 1
 
-
-
 def getAutocompleteEntries() -> dict :
     words = {}
     with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f: 
