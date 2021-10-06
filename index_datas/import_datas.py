@@ -18,6 +18,8 @@ elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=T
 from elasticsearch import helpers as h
 from dataclasses import dataclass 
 
+MAP_POOL_GENPULL_CHUNKSIZE=10
+
 @dataclass
 class Abstract:
     """Wikipedia abstract"""
@@ -69,18 +71,11 @@ def start_import(test_size = 1000):
 
     total_number = len(data_set)
     print('in total: ', total_number)
-
     data_set_test = data_set[:total_number-2]
     global elastic_search
     if not elastic_search.indices.exists( index = 'wiki'):
-        # create the index
 	    elastic_search.indices.create(index = 'wiki')
-    # for x in range(total_number-2):
-    #     print('adding: ', data_set_test[x]['title'])
-    #     index_elastic_search(data_set_test[x], elastic_search, x)
-    # search_index_test(elastic_search)
-
-    pool = Pool(10) 
+    pool = Pool(MAP_POOL_GENPULL_CHUNKSIZE) 
     result_iter = pool.map(process, data_set_test)
 
 def process(data):
