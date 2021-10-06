@@ -8,6 +8,7 @@ import Res from "./Res.js";
 import FrontPageInfo from "./FrontPageInfo";
 import { useHistory } from "react-router-dom";
 import { AutoCompleteSearch } from "./AutoComplete";
+import { useFetch } from "./Get";
 
 import {
   BrowserRouter as Router,
@@ -51,6 +52,15 @@ function SearchInfo(props: props) {
   const [query, setQuery] = React.useState(urlQuery || "");
   //two types of searches
   const [searchType, setSearchType] = React.useState(urlSearchType || "");
+  //AutoComplete
+  const [options, setOptions] = useFetch(
+    "https://anu.jkl.io/api/"
+      .concat("suggest")
+      .concat("?input=")
+      .concat(searchInput)
+  );
+
+  console.log(options);
 
   function getRes(sinput: string, stype: boolean) {
     setQuery(sinput);
@@ -58,11 +68,13 @@ function SearchInfo(props: props) {
     setSearchType(inputSearchType);
     history.push(`/search?query=${searchInput}&searchType=${inputSearchType}`);
   }
-  function getAutocomplete(sinput: string) {
-    setSearchInput(sinput);
-    let res = AutoCompleteSearch(sinput);
-    console.log(res);
-  }
+  // function getAutocomplete(sinput: string) {
+  //   setSearchInput(sinput);
+  //   let res = useFetch(
+  //     "https://anu.jkl.io/api/".concat("suggest").concat("?input=").concat(sinput)
+  //   );
+  //   console.log(res);
+  // }
   function enterPress(event: React.KeyboardEvent) {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -92,7 +104,7 @@ function SearchInfo(props: props) {
           fullWidth
           defaultValue={searchInput}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            getAutocomplete(e.currentTarget.value)
+            setSearchInput(e.currentTarget.value)
           }
           InputProps={{
             className: classes.input,
