@@ -97,7 +97,7 @@ function SearchInfo(props: props) {
         <Button
           className={classes.inputButton}
           variant="contained"
-          color="secondary"
+          color="primary"
           fullWidth
           onClick={() => getRes(searchInput, false)}
         >
@@ -108,7 +108,7 @@ function SearchInfo(props: props) {
         <Button
           className={classes.inputButton}
           variant="contained"
-          color="secondary"
+          color="primary"
           fullWidth
           onClick={() => getRes(searchInput, true)}
         >
