@@ -77,7 +77,7 @@ def start_import(test_size = 1000):
             print(doc_id,"/100million")
             doc_id += 1
             element.clear()
-            if(doc_id>200):
+            if(doc_id>206):
                 break
             
 
@@ -88,7 +88,7 @@ def start_import(test_size = 1000):
     if not elastic_search.indices.exists( index = 'wiki'):
 	    elastic_search.indices.create(index = 'wiki')
     pool = Pool(MAP_POOL_GENPULL_CHUNKSIZE) 
-    result_iter = pool.map(process, data_set_test)
+    result_iter = pool.map(process, data_set_test, 50)
 
 def process(data):
 
