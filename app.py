@@ -16,14 +16,19 @@ from fast_autocomplete import AutoComplete
 AUTOCOMPLETE_MAX_COST = 3
 AUTOCOMPLETE_SIZE = 5
 
+doc_id = 1
+
+
+
 def getAutocompleteEntries() -> dict :
     words = {}
     with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f: 
-         doc_id = 1 
+         global doc_id
          for _, element in etree.iterparse(f, events=('end',), tag='doc'): 
              if (doc_id%78==1): 
                 title = element.findtext('./title')
                 words[title[11:]]={}
+             doc_id += 1 
     return words
 
 autocomplete = AutoComplete(words=getAutocompleteEntries())
