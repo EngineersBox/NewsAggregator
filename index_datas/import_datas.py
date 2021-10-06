@@ -58,7 +58,7 @@ def generate_abstract_elements():
             element.clear()
 
 # the code with idea inspired by https://www.cnblogs.com/shaosks/p/7592229.html
-def start_import(test_size = 1000):
+def start_import():
     # u6250082 Xuguang Song
     '''import all the data news from data set and use 1000 as test set'''
 
@@ -69,7 +69,6 @@ def start_import(test_size = 1000):
     result_iter = pool.map(process, generate_abstract_elements())
 
 def process(data):
-
     global elastic_search
 
     print("thread_id :", multiprocessing.current_process())
