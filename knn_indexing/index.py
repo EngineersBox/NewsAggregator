@@ -56,7 +56,7 @@ def import_data_with_knn(index_name=INDEX_NAME):
     print("Initialising KNN indexes...")
     init_knn_es_index(index_name)
     print("Complete", "Loading data...")
-    data_list = json.loads(open("../minitask/result.json").read())
+    data_list = json.loads(open("../index_datas/result.json").read())
     print("Complete")
 
     for i in range(len(data_list)):
