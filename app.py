@@ -3,7 +3,7 @@ import functools, logging, logging.config, redis, gzip, time, json
 from lxml import etree
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS, cross_origin
-from minitask.simple_search import simple_match_search
+from index_datas.simple_search import simple_match_search
 from elasticsearch import Elasticsearch
 from summary_1.summary import body_summary
 from knn_indexing.index import knn_query
@@ -16,12 +16,17 @@ from fast_autocomplete import AutoComplete
 AUTOCOMPLETE_MAX_COST = 3
 AUTOCOMPLETE_SIZE = 5
 
+doc_id = 1
+
 def getAutocompleteEntries() -> dict :
     words = {}
-    with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
-         for _, element in etree.iterparse(f, events=('end',), tag='doc'):
-             title = element.findtext('./title')
-             words[title[11:]]={}
+    with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f: 
+         global doc_id
+         for _, element in etree.iterparse(f, events=('end',), tag='doc'): 
+             if (doc_id%78==1): 
+                title = element.findtext('./title')
+                words[title[11:]]={}
+             doc_id += 1 
     return words
 
 autocomplete = AutoComplete(words=getAutocompleteEntries())
