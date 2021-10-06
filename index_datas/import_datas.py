@@ -46,7 +46,7 @@ def index_elastic_search(data, elastic_search):
         print(data)
     print('success')
 
-def generate_elements():
+def generate_elements(): 
     with gzip.open('../../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
         for _, element in etree.iterparse(f, events=('end',), tag='doc'):
             title = element.findtext('./title')
@@ -63,7 +63,7 @@ def start_import():
     '''import all the data news from data set and use 1000 as test set'''
 
     global elastic_search
-    if not elastic_search.indices.exists( index = 'wiki'):
+    if not elastic_search.indices.exists( index = 'wiki'): 
 	    elastic_search.indices.create(index = 'wiki')
     pool = Pool(POOL_THREAD_COUNT) 
     result_iter = pool.map(process, generate_elements(), MAP_POOL_GENPULL_CHUNKSIZE)
