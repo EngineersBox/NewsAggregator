@@ -50,27 +50,16 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 type props = {
-<<<<<<< HEAD
-  themeChoice: () => void;
-  whichtheme: Theme;
-=======
   themeChange: () => void;
->>>>>>> origin/UIUX-30-setup-new-frontend
 };
 
 export default function CustomizedSwitches(props: props) {
-  const theme = useTheme() || localStorage.getItem("themeChoice");
+  const theme = useTheme();
   return (
     <MaterialUISwitch
-<<<<<<< HEAD
-      sx={{ m: 1 }}
-      checked={localStorage.getItem("themeChoice") === "dark" ? true : false}
-      onChange={() => props.themeChoice()}
-=======
       //@ts-ignore:
       defaultChecked={theme.palette.type === "dark" ? true : false}
       onChange={() => props.themeChange()}
->>>>>>> origin/UIUX-30-setup-new-frontend
     />
   );
 }

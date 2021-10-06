@@ -27,11 +27,7 @@ function App() {
     localStorage.setItem("themeChoice", themeColourSwitch.palette.type);
   };
 
-<<<<<<< HEAD
-  const [bookmarks, setBookmarks] = React.useState({});
-=======
   const [bookmarks, setBookmarks] = React.useState<{ [key: number]: any }>({});
->>>>>>> origin/UIUX-30-setup-new-frontend
   function handlebookmark(
     web_link: string,
     primary: string,
