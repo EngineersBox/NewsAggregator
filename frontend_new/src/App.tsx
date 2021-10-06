@@ -12,7 +12,6 @@ function App() {
   const [themeChoice, setThemeChoice] = React.useState(
     getDefaultTheme() ? dark : light
   );
-  console.log(light);
   React.useEffect(() => {
     document.body.style.backgroundColor =
       themeChoice.palette.background.default;
