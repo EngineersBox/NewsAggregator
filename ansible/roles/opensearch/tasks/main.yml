@@ -41,8 +41,8 @@
 
 - name: Create base indexes
   shell:
-    cmd: "python3.8 import_data.py"
-    chdir: "temp/minitask"
+    cmd: "python3.8 import_datas.py"
+    chdir: "temp/import_datas"
   register: create_base
   tags:
     - opensearch_base_indexes

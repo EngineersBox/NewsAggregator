@@ -38,7 +38,7 @@ def index_elastic_search(data, elastic_search):
     print('success')
 
 def generate_elements(): 
-    with gzip.open('../../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
+    with gzip.open('wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
         for _, element in etree.iterparse(f, events=('end',), tag='doc'):
             title = element.findtext('./title')
             title = title[11:]
