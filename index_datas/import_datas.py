@@ -82,7 +82,6 @@ def search_index_test(elastic_search):
                 }
             }
         }
-    # output = elastic_search.search(index='news', doc_type='web_news', body=test1) 
     print('\n', 'searching for keyword: ', q, " ", "in", " article ", position, '\n')
     output = elastic_search.search(index='news', body=test1)
     print('searching finished with total time: ', output['took'], '\n')
