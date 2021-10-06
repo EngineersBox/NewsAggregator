@@ -28,8 +28,6 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 
-autocomplete = None
-
 def getAutocompleteEntries() -> dict:
     words = {}
     logger.info("Starting autocomplete words intialisation...")
@@ -44,6 +42,8 @@ def getAutocompleteEntries() -> dict:
             element.clear()
     logger.info("Finished autocomplete words intialisation")
     return words
+
+autocomplete = AutoComplete(words=getAutocompleteEntries())
 
 class ErrorHandlerWrapper:
 
@@ -179,8 +179,6 @@ def suggest():
         return jsonify(result)
 
 def main():
-    global autocomplete
-    autocomplete = AutoComplete(words=getAutocompleteEntries())
     app.run(debug=True)
 
 if __name__ == "__main__":
