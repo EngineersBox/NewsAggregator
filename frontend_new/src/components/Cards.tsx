@@ -6,8 +6,9 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
-import { customTheme } from "../themes/customTheme";
+import {customColours} from "../themes/customTheme";
 import ListItem from "@material-ui/core/ListItem";
+
 
 type props = {
   web_link: string;
@@ -27,13 +28,13 @@ export default function SimpleCard(props: props) {
             <Grid xs={12} md={12} lg={13}>
               <Card>
                 <CardContent>
-                  <Typography variant="body2" component="h1" color="secondary">
+                  <Typography variant="body2" component="h1" color={customColours.button.light}>
                     {props.web_link}
                   </Typography>
-                  <Typography variant="h5" component="h2" color="secondary">
+                  <Typography variant="h5" component="h2" color={customColours.button.light}>
                     {props.primary}
                   </Typography>
-                  <Typography variant="body2" component="p" color="secondary">
+                  <Typography variant="body2" component="p" color={customColours.button.light}>
                     {props.secondary}
                   </Typography>
                 </CardContent>

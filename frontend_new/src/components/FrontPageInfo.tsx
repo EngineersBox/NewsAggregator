@@ -1,6 +1,8 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import mainLogo from './v4.png';
+import Box from '@material-ui/core/Box'
 
 export default function FrontPageInfo() {
   return (
@@ -13,20 +15,9 @@ export default function FrontPageInfo() {
     >
       <Grid item xs={12}></Grid>
       <Grid item xs={12}>
-        <Typography
-          color="secondary"
-          align="center"
-          variant="h4"
-          component="h2"
-          
-        >
-          NewsAggregator
-        </Typography>
-      </Grid>
-      <Grid item xs={12}>
-        <Typography color="secondary" align="center" variant="body1">
-          Using Open Source Technologies to Create a Search Engine
-        </Typography>
+      <Box paddingLeft={58}> 
+          { <img  src={mainLogo} alt="Logo"/> }
+      </Box>
       </Grid>
     </Grid>
   );
