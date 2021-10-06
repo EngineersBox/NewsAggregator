@@ -1,4 +1,5 @@
-import functools, logging, logging.config, redis, gzip, json
+
+import functools, logging, logging.config, redis, gzip, time, json
 from lxml import etree
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS, cross_origin
@@ -12,52 +13,29 @@ from collections import OrderedDict
 from typing import Callable
 from fast_autocomplete import AutoComplete
 
-#codes inspired -> JKL project owner TOM ..
-words = {}
-with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
-        doc_id = 1
-        for _, element in etree.iterparse(f, events=('end',), tag='doc'):
-            title = element.findtext('./title')
-                         
-            index = 10 + 1
-            title = title[index:]
-        # readin title
-        # doc_id = 1
-            doc_id += 1
-        # doc_id += 1
-        # iterparse will yield the entire `doc` element once it finds the closing `</doc>` tag
-            words[title]={}
+AUTOCOMPLETE_MAX_COST = 3
+AUTOCOMPLETE_SIZE = 5
 
-            if doc_id>200000:
-                break
-autocomplete = AutoComplete(words=words)
-# tests it
-suggu = autocomplete.search(word="ab", max_cost=4, size=4)
-print(suggu) 
-# print
+def getAutocompleteEntries() -> dict :
+    words = {}
+    with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
+         for _, element in etree.iterparse(f, events=('end',), tag='doc'):
+             title = element.findtext('./title')
+             words[title[11:]]={}
+    return words
+
+autocomplete = AutoComplete(words=getAutocompleteEntries())
 
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
-CF_KEY = "test2"
+CF_KEY = "news"
 INDEX_NAME = "knn_index"
 ES = Elasticsearch("admin:admin@localhost:9200", verify_certs=False, ssl_show_warn=False)
 
 app = Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
-
-#Suggestion Route which takes POSTs and returns HTML to the HTMX on keypress in the template
-@app.route('/suggest', method='POST')
-def suggest():
-        postdata = request.forms.get('q')
-        suggest = autocomplete.search(word=postdata, max_cost=3, size=5)
-
-        #refactor to a template later - but also needs safe/dangerous handling
-        result = {}
-        for x in (0, len(suggest)):
-            result['suggest'+x] = suggest[x]
-        return jsonify(result)
 
 class ErrorHandlerWrapper:
 
@@ -90,21 +68,29 @@ class ErrorHandlerWrapper:
     def __exit__(self, _a, _b, _c):
         return
 
+class TimedResponseWrapper:
+    
+    def __call__(self, func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            start_time = time.time_ns()
+            result = json.loads(func(*args, **kwargs))
+            result["duration"] = time.time_ns() - start_time
+            return jsonify(result)
+        return wrapper
 
-# reference of kristoff-it 2020 https://github.com/kristoff-it/redis-cuckoofilter
+    def __enter__(self):
+        return
+
+    def __exit__(self, _a, _b, _c):
+        return
+
+
 rd = redis.Redis()
-# load the module in Cuckoofilter remember
 try:
-
-    rd.execute_command("cf.init", "test2", "64k")
-
+    rd.execute_command("cf.init", CF_KEY, "64k")
 except:
-
-    # print("the filter is already initialized")
-
-    # logging output
     logger.warning("the filter is already initialized")
-
 
 def fingerprint(x):
     return ord(x[0])
@@ -123,7 +109,6 @@ def send_css(filename):
 @ErrorHandlerWrapper()
 def send_js(filename):
     return send_from_directory("static/js", filename)
-
 
 def base_search(query: str, search_method: Callable[[Elasticsearch, str, str], None]):
     if not query:
@@ -154,6 +139,7 @@ def base_search(query: str, search_method: Callable[[Elasticsearch, str, str], N
 @cross_origin()
 @ErrorHandlerWrapper()
 @RateLimiter()
+@TimedResponseWrapper()
 def search():
     query = request.args.get("query", None, type=str)
     return base_search(query, lambda es,en,q: simple_match_search(es,en,q))
@@ -162,9 +148,26 @@ def search():
 @cross_origin()
 @ErrorHandlerWrapper()
 @RateLimiter()
+@TimedResponseWrapper()
 def knn_search():
     query = request.args.get("query", None, type=str)
     return base_search(query, lambda _es,_en,q: knn_query(q))
+
+#Suggestion route invoked by a POST request returning relevant JSON entries for suggestion values
+@cross_origin()
+@ErrorHandlerWrapper()
+@app.route("/suggest")
+def suggest():
+        postdata = request.args.get("input", None, type=str)
+        suggest = autocomplete.search(
+        word=postdata,
+        max_cost=AUTOCOMPLETE_MAX_COST,
+        size=AUTOCOMPLETE_SIZE)
+        #refactor to a template later - but also needs safe/dangerous handling
+        result = {}
+        for x in (0, len(suggest)):
+            result['suggest'+x] = suggest[x]
+        return jsonify(result)
 
 if __name__ == "__main__":
     app.run(debug=True)

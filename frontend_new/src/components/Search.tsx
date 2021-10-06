@@ -7,6 +7,7 @@ import InfoButton from "./SlideAlert";
 import Res from "./Res.js";
 import FrontPageInfo from "./FrontPageInfo";
 import { useHistory } from "react-router-dom";
+import { AutoCompleteSearch } from "./AutoComplete";
 
 import {
   BrowserRouter as Router,
@@ -57,6 +58,11 @@ function SearchInfo(props: props) {
     setSearchType(inputSearchType);
     history.push(`/search?query=${searchInput}&searchType=${inputSearchType}`);
   }
+  function getAutocomplete(sinput: string) {
+    setSearchInput(sinput);
+    let res = AutoCompleteSearch(sinput);
+    console.log(res);
+  }
   function enterPress(event: React.KeyboardEvent) {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -86,7 +92,7 @@ function SearchInfo(props: props) {
           fullWidth
           defaultValue={searchInput}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setSearchInput(e.currentTarget.value)
+            getAutocomplete(e.currentTarget.value)
           }
           InputProps={{
             className: classes.input,
