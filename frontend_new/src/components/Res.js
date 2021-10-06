@@ -11,8 +11,8 @@ import { useQuery } from "./Search";
 function Res(props) {
   const searchParams = useQuery();
   //Validate the search
-  let searchType = searchParams.searchType;
-  if (searchType !== "search" || searchType !== "origin_search") {
+  let searchType = searchParams.get("searchType");
+  if (searchType !== "search" && searchType !== "origin_search") {
     searchType = "search";
   }
   const [res, resStatus] = useFetch(
