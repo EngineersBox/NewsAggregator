@@ -8,12 +8,7 @@ import Res from "./Res.js";
 import FrontPageInfo from "./FrontPageInfo";
 import { useHistory } from "react-router-dom";
 
-import {
-  BrowserRouter as Router,
-  useLocation,
-  Link,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, useLocation, Route } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,9 +23,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 type props = {
-  CustomTheme: Theme;
-  handlebookmark: () => void;
-  bookmarks: array;
+  bookmarks: object;
+  handlebookmark: (
+    web_link: string,
+    primary: string,
+    secondary: string,
+    id: number
+  ) => void;
   isVisible: boolean;
 };
 
@@ -98,7 +97,7 @@ function SearchInfo(props: props) {
         <Button
           className={classes.inputButton}
           variant="contained"
-          color="secondary"
+          color="primary"
           fullWidth
           onClick={() => getRes(searchInput, false)}
         >
@@ -109,7 +108,7 @@ function SearchInfo(props: props) {
         <Button
           className={classes.inputButton}
           variant="contained"
-          color="secondary"
+          color="primary"
           fullWidth
           onClick={() => getRes(searchInput, true)}
         >
@@ -117,13 +116,12 @@ function SearchInfo(props: props) {
         </Button>
       </Grid>
       <InfoButton text="This is a description" />
-      <Grid item xs={12} style={{ display: props.isVisible && "none" }}>
+      <Grid item xs={12} style={{ display: String(props.isVisible) }}>
         {query && (
           <Route path="/search">
             <Res
               search={searchType}
               query={query}
-              whichTheme={props.whichTheme}
               handlebookmark={props.handlebookmark}
               bookmarks={props.bookmarks}
               isVisible={props.isVisible}
@@ -139,7 +137,6 @@ export default function Search(props: props) {
   return (
     <Router>
       <SearchInfo
-        whichTheme={props.themeChoice}
         bookmarks={props.bookmarks}
         handlebookmark={props.handlebookmark}
         isVisible={props.isVisible}
