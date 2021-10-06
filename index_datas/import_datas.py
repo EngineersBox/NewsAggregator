@@ -74,8 +74,8 @@ def process(data):
 
     print("thread_id :", multiprocessing.current_process())
     try:
-        print('adding: ', data['title'])
-        index_elastic_search(data, elastic_search)
+        print('adding: ', data['title']) 
+        index_elastic_search(data, elastic_search) 
     except (Exception) as e:
         print("Could not index document, {0}:".format(data["title"]), e) 
 
