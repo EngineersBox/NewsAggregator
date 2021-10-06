@@ -174,7 +174,7 @@ def suggest():
             size=AUTOCOMPLETE_SIZE
         )
         result = {}
-        for x in (0, len(suggest)):
+        for x in range(len(suggest)):
             result["suggest{0}".format(x)] = suggest[x]
         return jsonify(result)
 
