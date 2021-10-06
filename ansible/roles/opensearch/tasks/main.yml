@@ -1,38 +1,43 @@
 - name: Stop and remove container
   vars:
     container_names:
-      - elasticsearch
+      - opensearch-master
+      - opensearch-data-ingest1
+      - opensearch-data-ingest2
+      - opensearch-data-ingest3
+      - opensearch-coordinator
+      - opensearch-dashboards
     containers: "{{ item }}"
   include_tasks:
     file: roles/common/tasks/docker_stop_remove_tasks.yml
     apply:
       tags:
-        - elasticsearch
+        - opensearch
   loop: "{{ container_names | batch(1) | list }}"
   tags:
-    - elasticsearch
+    - opensearch
 
 - name: Spin up new container
   docker_compose:
-    project_src: "temp/compose/elasticsearch"
+    project_src: "temp/compose/opensearch"
     build: true
     debug: true
   become: true
   register: started_containers
   tags:
-    - elasticsearch
+    - opensearch
 
-- name: Wait for elasticsearch to start
-  command: docker exec elasticsearch curl localhost:9200/_recovery -sS
+- name: Wait for opensearch to start
+  command: docker exec opensearch curl localhost:9200/_recovery -sS
   register: result
   until: result.stdout == '{}'
   retries: 30
   delay: 5 # Seconds
   become: true
   tags:
-    - elasticsearch
-    - elasticsearch_base_indexes
-    - elasticsearch_knn_indexes
+    - opensearch
+    - opensearch_base_indexes
+    - opensearch_knn_indexes
 
 - name: Create base indexes
   shell:
@@ -40,7 +45,7 @@
     chdir: "temp/minitask"
   register: create_base
   tags:
-    - elasticsearch_base_indexes
+    - opensearch_base_indexes
 
 - debug: var=create_base
 
@@ -50,6 +55,6 @@
     chdir: "temp/knn_indexing"
   register: create_knn
   tags:
-    - elasticsearch_knn_indexes
+    - opensearch_knn_indexes
 
 - debug: var=create_knn

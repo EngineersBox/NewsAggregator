@@ -1,24 +1,15 @@
 
-import pandas as pd
-import requests
-import json
-import gzip
+import gzip, multiprocessing
 from lxml import etree
-
-import wikipedia, gzip, threading
-from urllib.request import urlopen
-
 from elasticsearch import Elasticsearch as es
-from wikipedia.exceptions import PageError, DisambiguationError
-import ssl
 from multiprocessing import Pool
-import multiprocessing
-from elasticsearch import Elasticsearch as es
-elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
-from elasticsearch import helpers as h
 from dataclasses import dataclass 
+
 POOL_THREAD_COUNT = 10
 MAP_POOL_GENPULL_CHUNKSIZE=50
+
+elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
+
 @dataclass
 class Abstract:
     """Wikipedia abstract"""
