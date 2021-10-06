@@ -1,5 +1,6 @@
 
 import functools, logging, logging.config, redis, gzip, time, json
+from flask.wrappers import Response
 from lxml import etree
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS, cross_origin
@@ -16,21 +17,6 @@ from fast_autocomplete import AutoComplete
 AUTOCOMPLETE_MAX_COST = 3
 AUTOCOMPLETE_SIZE = 5
 
-doc_id = 1
-
-def getAutocompleteEntries() -> dict :
-    words = {}
-    with gzip.open('wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f: 
-         global doc_id
-         for _, element in etree.iterparse(f, events=('end',), tag='doc'): 
-             if (doc_id%78==1): 
-                title = element.findtext('./title')
-                words[title[11:]]={}
-             doc_id += 1 
-    return words
-
-autocomplete = AutoComplete(words=getAutocompleteEntries())
-
 logging.config.fileConfig(fname="flask_logging.conf", disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
@@ -41,6 +27,23 @@ ES = Elasticsearch("admin:admin@localhost:9200", verify_certs=False, ssl_show_wa
 app = Flask(__name__)
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
+
+autocomplete = None
+
+def getAutocompleteEntries() -> dict:
+    words = {}
+    logger.info("Starting autocomplete words intialisation...")
+    with gzip.open('wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
+        doc_id = 1
+        for _, element in etree.iterparse(f, events=('end',), tag='doc'):
+            if (doc_id % 78 == 1):
+                title = element.findtext('./title')
+                logger.debug("Creating autocomplete word entry for [id={0}] [title={1}]".format(doc_id, title))
+                words[title[11:]] = {}
+            doc_id += 1
+            element.clear()
+    logger.info("Finished autocomplete words intialisation")
+    return words
 
 class ErrorHandlerWrapper:
 
@@ -59,10 +62,10 @@ class ErrorHandlerWrapper:
                 }
                 return jsonify(response), e.status_code
             except Exception as e:
-                logger.error("An unknown internal error occurred", e)
+                logger.error("An internal error occurred", e)
                 response = {
                     "status_code": 500,
-                    "status": "An unknown internal error occurred: {}".format(e)
+                    "status": "An internal error occurred: {}".format(e)
                 }
                 return jsonify(response), 500
         return wrapper
@@ -79,7 +82,8 @@ class TimedResponseWrapper:
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             start_time = time.time_ns()
-            result = json.loads(func(*args, **kwargs))
+            response: Response = func(*args, **kwargs)
+            result = json.loads(response.get_data())
             result["duration"] = time.time_ns() - start_time
             return jsonify(result)
         return wrapper
@@ -165,14 +169,19 @@ def knn_search():
 def suggest():
         postdata = request.args.get("input", None, type=str)
         suggest = autocomplete.search(
-        word=postdata,
-        max_cost=AUTOCOMPLETE_MAX_COST,
-        size=AUTOCOMPLETE_SIZE)
-        #refactor to a template later - but also needs safe/dangerous handling
+            word=postdata,
+            max_cost=AUTOCOMPLETE_MAX_COST,
+            size=AUTOCOMPLETE_SIZE
+        )
         result = {}
         for x in (0, len(suggest)):
-            result['suggest'+x] = suggest[x]
+            result["suggest{0}".format(x)] = suggest[x]
         return jsonify(result)
 
-if __name__ == "__main__":
+def main():
+    global autocomplete
+    autocomplete = AutoComplete(words=getAutocompleteEntries())
     app.run(debug=True)
+
+if __name__ == "__main__":
+    main()

@@ -20,4 +20,4 @@ RUN python3 -m pip install --no-cache-dir -r requirements.txt
 RUN python3 -m spacy download en_core_web_trf
 
 EXPOSE 3001
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:3001", "app:app"]
+CMD ["gunicorn", "-t", "0", "--log-level", "debug", "-w", "4", "-b", "0.0.0.0:3001", "app:app"]
