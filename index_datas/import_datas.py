@@ -36,8 +36,16 @@ curl -XPUT https://localhost:9200/example3 --insecure -u admin:admin
 """
 URL = 'https://localhost:9200/example3/_doc/'
 
-# the code with idea inspired by https://www.cnblogs.com/shaosks/p/7592229.html
+def index_elastic_search(data, elastic_search):
+    # u6250082 Xuguang Song
+    '''parameter: data, elastic search engine, ind'''
+    try:
+        index_result = elastic_search.index(index='wiki', body=data)
+    except:
+        print(data)
+    print('success')
 
+# the code with idea inspired by https://www.cnblogs.com/shaosks/p/7592229.html
 def start_import(test_size = 1000):
     # u6250082 Xuguang Song
     '''import all the data news from data set and use 1000 as test set'''
@@ -49,6 +57,7 @@ def start_import(test_size = 1000):
         # closing `</doc>` tag
         for _, element in etree.iterparse(f, events=('end',), tag='doc'):
             title = element.findtext('./title')
+            title = title[11:0]
             link = element.findtext('./url')
             art = element.findtext('./abstract')
             data_set.append({"link": link, "title": title, "art": art})
@@ -56,10 +65,6 @@ def start_import(test_size = 1000):
             print("added", title)
             print(doc_id,"/100million")
             doc_id += 1
-            # if doc_id >= 200000:
-            #     break
-            # the `element.clear()` call will explicitly free up the memory
-            # used to store the element
             element.clear()
 
     total_number = len(data_set)
@@ -88,21 +93,6 @@ def process(data):
         index_elastic_search(data, elastic_search)
     except (Exception) as e:
         print("Could not index document, {0}:".format(data["title"]), e) 
-
-
-def index_elastic_search(data, elastic_search):
-    # u6250082 Xuguang Song
-    '''parameter: data, elastic search engine, ind'''
-    
-    try:
-
-        index_result = elastic_search.index(index='wiki', body=data)
-
-    except:
-        print(data)
-    
-    print('success')
-
 
 def search_index_test(elastic_search):
     # u6250082 Xuguang Song
