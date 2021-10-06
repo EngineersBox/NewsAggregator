@@ -16,6 +16,16 @@
     - always
 
 - hosts: targets
+  tasks:
+    - name: Copy wikidump to accessible directory
+      command: cp -r /home/ansible/wikidump /home/ansible/temp/wikidump
+      become: true
+  tags:
+    - backend
+    - opensearch_base_indexes
+    - opensearch_knn_indexes
+
+- hosts: targets
   roles:
     - opensearch
 
