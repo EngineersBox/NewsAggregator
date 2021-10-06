@@ -4,6 +4,7 @@ ENV PYTHONBUFFERED 1
 RUN mkdir -p /app
 WORKDIR /app
 
+COPY ../wikidump wikidump
 COPY app.py app.py
 COPY fileLogHandler.py fileLogHandler.py
 COPY flask_logging.conf flask_logging.conf

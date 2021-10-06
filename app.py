@@ -22,7 +22,7 @@ doc_id = 1
 
 def getAutocompleteEntries() -> dict :
     words = {}
-    with gzip.open('../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f: 
+    with gzip.open('wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f: 
          global doc_id
          for _, element in etree.iterparse(f, events=('end',), tag='doc'): 
              if (doc_id%78==1): 
