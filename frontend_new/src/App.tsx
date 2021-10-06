@@ -2,11 +2,8 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
 import { dark, light } from "./themes/customTheme";
 import "./App.css";
-import TopBar from "./components/TopBar";
 import BookmarkDrawer from "./components/BookmarkDrawer";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import FrontPageInfo from "./components/FrontPageInfo";
 import Grow from "@material-ui/core/Grow";
 import getDefaultTheme from "./components/ThemeSetting";
 
@@ -23,18 +20,23 @@ function App() {
     document.body.style.backgroundColor =
       themeChoice.palette.background.default;
   }, [themeChoice]);
+
   const themeChange = () => {
     let themeColourSwitch = themeChoice.palette.type === "dark" ? light : dark;
     setThemeChoice(themeColourSwitch);
     localStorage.setItem("themeChoice", themeColourSwitch.palette.type);
   };
 
+<<<<<<< HEAD
   const [bookmarks, setBookmarks] = React.useState({});
+=======
+  const [bookmarks, setBookmarks] = React.useState<{ [key: number]: any }>({});
+>>>>>>> origin/UIUX-30-setup-new-frontend
   function handlebookmark(
     web_link: string,
     primary: string,
     secondary: string,
-    id: integer
+    id: number
   ) {
     if (id in bookmarks) {
       let temp_bookmarks = bookmarks;
