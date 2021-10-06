@@ -8,7 +8,7 @@ COPY app.py app.py
 COPY fileLogHandler.py fileLogHandler.py
 COPY flask_logging.conf flask_logging.conf
 COPY requirements.txt requirements.txt
-COPY minitask minitask
+COPY index_datas index_datas
 COPY knn_indexing knn_indexing
 COPY summary summary
 COPY summary_1 summary_1
