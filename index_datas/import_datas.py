@@ -17,10 +17,8 @@ from elasticsearch import Elasticsearch as es
 elastic_search = es(["127.0.0.1"], timeout=35, max_retries=8, retry_on_timeout=True)
 from elasticsearch import helpers as h
 from dataclasses import dataclass 
-
 POOL_THREAD_COUNT = 10
 MAP_POOL_GENPULL_CHUNKSIZE=50
-
 @dataclass
 class Abstract:
     """Wikipedia abstract"""
@@ -48,7 +46,7 @@ def index_elastic_search(data, elastic_search):
         print(data)
     print('success')
 
-def generate_abstract_elements():
+def generate_elements():
     with gzip.open('../../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
         for _, element in etree.iterparse(f, events=('end',), tag='doc'):
             title = element.findtext('./title')
@@ -57,41 +55,18 @@ def generate_abstract_elements():
             art = element.findtext('./abstract')
             yield {"link": link, "title": title, "art": art}
             print("added ", title)
-            element.clear()
+            element.clear() 
 
 # the code with idea inspired by https://www.cnblogs.com/shaosks/p/7592229.html
-def start_import(test_size = 1000):
+def start_import():
     # u6250082 Xuguang Song
     '''import all the data news from data set and use 1000 as test set'''
 
-    # data_set = []
-    # with gzip.open('../../wikidump/enwiki-20210820-abstract.xml.gz', 'rb') as f:
-    #     doc_id = 1
-    #     # iterparse will yield the entire `doc` element once it finds the
-    #     # closing `</doc>` tag
-    #     for _, element in etree.iterparse(f, events=('end',), tag='doc'):
-    #         title = element.findtext('./title')
-    #         title = title[11:]
-    #         link = element.findtext('./url')
-    #         art = element.findtext('./abstract')
-    #         data_set.append({"link": link, "title": title, "art": art})
-
-    #         print("added", title)
-    #         print(doc_id,"/100million")
-    #         doc_id += 1
-    #         element.clear()
-    #         if(doc_id>206):
-    #             break
-            
-
-    # total_number = len(data_set) 
-    # print('in total: ', total_number) 
-    # data_set_test = data_set[:total_number-2]
     global elastic_search
     if not elastic_search.indices.exists( index = 'wiki'):
 	    elastic_search.indices.create(index = 'wiki')
     pool = Pool(POOL_THREAD_COUNT) 
-    result_iter = pool.map(process, generate_abstract_elements(), MAP_POOL_GENPULL_CHUNKSIZE)
+    result_iter = pool.map(process, generate_elements(), MAP_POOL_GENPULL_CHUNKSIZE)
 
 def process(data):
 
