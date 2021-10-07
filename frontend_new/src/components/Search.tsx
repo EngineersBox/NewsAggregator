@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from "@material-ui/icons/Search";
 import IconButton from "@material-ui/core/IconButton";
+import Box from "@material-ui/core/Box";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { useFetch } from "./Get";
 import AutoCompleteRes from "./AutoCompleteRes";
@@ -89,7 +90,7 @@ function SearchInfo(props: props) {
       <Grid item xs={12}>
         {!urlQuery && <FrontPageInfo />}
       </Grid>
-      <Grid item xs={12} lg={urlQuery ? 4 : 6}>
+      <Grid item xs={12} lg={8}>
         <Autocomplete
           freeSolo
           id="free-solo-2-demo"
@@ -106,10 +107,12 @@ function SearchInfo(props: props) {
               fullWidth
               InputProps={{
                 ...params.InputProps,
-                startAdornment: (
+                endAdornment: (
                   //@ts-ignore:
                   <InputAdornment>
-                    <SearchIcon />
+                    <IconButton onClick={() => getRes(searchInput, false)}>
+                      <SearchIcon />
+                    </IconButton>
                   </InputAdornment>
                 ),
                 type: "search",
@@ -121,7 +124,7 @@ function SearchInfo(props: props) {
       {!urlQuery && <Grid item lg={12} />}
       <Grid
         alignItems="stretch"
-        style={{ display: "inline-block" }}
+        style={{ display: urlQuery ? "none" : "inline-block" }}
         xs={6}
         lg={3}
       >
