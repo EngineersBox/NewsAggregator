@@ -15,7 +15,6 @@ import ThemeSwitch from "./ThemeSwitch";
 import Grow from "@material-ui/core/Grow";
 import Grid from "@material-ui/core/Grid";
 import SimpleCard from "./Cards";
-import console from "console";
 
 const drawerWidth = "100%";
 
@@ -104,7 +103,7 @@ export default function PersistentDrawerLeft(props: props) {
     setOpen(false);
   };
 
-  let savedArticlesIds = JSON.parse(localStorage.getItem("articles") || "");
+  let bookmarkedArticles = JSON.parse(localStorage.getItem("articles") || "");
 
   return (
     <div>
@@ -142,8 +141,8 @@ export default function PersistentDrawerLeft(props: props) {
         <div className={classes.drawerHeader}></div>
         <div>
           <List>
-            {savedArticlesIds &&
-              savedArticlesIds.map(
+            {bookmarkedArticles &&
+              bookmarkedArticles.map(
                 ({
                   id,
                   primary,

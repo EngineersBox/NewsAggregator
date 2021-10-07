@@ -31,10 +31,11 @@ export default function SimpleCard(props: props) {
     localStorage.getItem(props.id.toString()) != null || false
   );
 
-  //Problem where clearning localStorage would not update bookmarks stage
+  // Check if the article is saved in localStorage.
+  // Save/ Remove 2 things into localStorage
+  // 1. The article id as key so it is easier to check if the article has been saved
+  // 2. the articles array with json article data to map  during bookmarks
   function handlebookmark() {
-    console.log(props.id);
-    console.log(bookmarked);
     if (localStorage.getItem(props.id.toString()) == null) {
       setBookmarked(true);
       localStorage.setItem(props.id.toString(), "saved");
@@ -46,7 +47,6 @@ export default function SimpleCard(props: props) {
       };
       if (localStorage.getItem("articles") != null) {
         let articleSaved = JSON.parse(localStorage.getItem("articles") || "");
-        console.log("stored, ", articleSaved);
         articleSaved.push(details);
         localStorage.setItem("articles", JSON.stringify(articleSaved));
       } else {

@@ -9,9 +9,7 @@ import getDefaultTheme from "./components/ThemeSetting";
 
 //using colors from theme - bit hacky but works
 function App() {
-  let themeColourSaved = localStorage.getItem("themeChoice");
-  let themeColor =
-    themeColourSaved == null ? getDefaultTheme() : themeColourSaved;
+  let themeColor = localStorage.getItem("themeChoice") || getDefaultTheme();
 
   const [themeChoice, setThemeChoice] = React.useState(
     themeColor === "dark" ? dark : light
