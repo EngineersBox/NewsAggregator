@@ -2,11 +2,8 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import React from "react";
 import { dark, light } from "./themes/customTheme";
 import "./App.css";
-import TopBar from "./components/TopBar";
-import Search from "./components/Search";
+import BookmarkDrawer from "./components/BookmarkDrawer";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import FrontPageInfo from "./components/FrontPageInfo";
 import Grow from "@material-ui/core/Grow";
 import getDefaultTheme from "./components/ThemeSetting";
 
@@ -19,32 +16,48 @@ function App() {
     document.body.style.backgroundColor =
       themeChoice.palette.background.default;
   }, [themeChoice]);
-  const themeSwitch = () => {
-    if (themeChoice.palette.type === "dark") {
-      setThemeChoice(light);
-    } else {
-      setThemeChoice(dark);
-    }
+
+  const themeChange = () => {
+    themeChoice.palette.type === "dark"
+      ? setThemeChoice(light)
+      : setThemeChoice(dark);
   };
+
+  const [bookmarks, setBookmarks] = React.useState<{ [key: number]: any }>({});
+  function handlebookmark(
+    web_link: string,
+    primary: string,
+    secondary: string,
+    id: number
+  ) {
+    if (id in bookmarks) {
+      let temp_bookmarks = bookmarks;
+      delete temp_bookmarks[id];
+      setBookmarks(temp_bookmarks);
+    } else {
+      let temp_bookmarks = bookmarks;
+      temp_bookmarks[id] = {
+        web_link: web_link,
+        primary: primary,
+        secondary: secondary,
+        id: id,
+      };
+    }
+  }
   return (
     <ThemeProvider theme={{ ...themeChoice }}>
-      <TopBar themeSwitch={() => themeSwitch()} themeChoice={themeChoice} />
-      <Grow in={true} timeout={600}>
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="stretch"
-          direction="row"
-          spacing={3}
-          style={{
-            width: "100%",
-          }}
-        >
-          <Grid item xs={12}>
-            <Search whichTheme={themeChoice} />
-          </Grid>
+      <Grid container>
+        <Grid item xs={12}>
+          <Grow in={true} timeout={600}>
+            <BookmarkDrawer
+              whichTheme={themeChoice}
+              bookmarks={bookmarks}
+              handlebookmark={handlebookmark}
+              themeChange={themeChange}
+            />
+          </Grow>
         </Grid>
-      </Grow>
+      </Grid>
     </ThemeProvider>
   );
 }
