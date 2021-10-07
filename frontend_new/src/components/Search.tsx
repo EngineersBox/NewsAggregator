@@ -4,11 +4,12 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import InfoButton from "./SlideAlert";
-import { useFetch } from "./Get";
 import Res from "./Res.js";
 import FrontPageInfo from "./FrontPageInfo";
+import { useHistory } from "react-router-dom";
 
-//using colors from theme - bit hacky but works
+import { BrowserRouter as Router, useLocation, Route } from "react-router-dom";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     input: {
@@ -22,20 +23,38 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 type props = {
-  CustomTheme: Theme;
+  bookmarks: object;
+  handlebookmark: (
+    web_link: string,
+    primary: string,
+    secondary: string,
+    id: number
+  ) => void;
+  isVisible: boolean;
 };
 
-function Search(props: props) {
+// Thinking of moving this to a folder/file that stores common functionality
+export function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
+function SearchInfo(props: props) {
+  const urlQuery = useQuery().get("query");
+  const urlSearchType = useQuery().get("searchType");
+  const history = useHistory();
+
   //input in search field
-  const [searchInput, setSearchInput] = React.useState("");
+  const [searchInput, setSearchInput] = React.useState(urlQuery || "");
   //the query from searchInput when search button pressed
-  const [query, setQuery] = React.useState("");
+  const [query, setQuery] = React.useState(urlQuery || "");
   //two types of searches
-  const [searchType, setSearchType] = React.useState("");
+  const [searchType, setSearchType] = React.useState(urlSearchType || "");
 
   function getRes(sinput: string, stype: boolean) {
-    setQuery(searchInput);
-    setSearchType(stype ? "search" : "origin_search");
+    setQuery(sinput);
+    let inputSearchType = stype ? "search" : "origin_search";
+    setSearchType(inputSearchType);
+    history.push(`/search?query=${searchInput}&searchType=${inputSearchType}`);
   }
   function enterPress(event: React.KeyboardEvent) {
     if (event.key === "Enter") {
@@ -64,6 +83,7 @@ function Search(props: props) {
           variant="outlined"
           color="secondary"
           fullWidth
+          defaultValue={searchInput}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSearchInput(e.currentTarget.value)
           }
@@ -73,40 +93,43 @@ function Search(props: props) {
           onKeyPress={(e) => enterPress(e)}
         />
       </Grid>
-      <Grid item xs={6} lg={2}>
+      <Grid item xs={12} lg={2}>
         <Button
           className={classes.inputButton}
           variant="contained"
-          color="secondary"
+          color="primary"
           fullWidth
           onClick={() => getRes(searchInput, false)}
         >
-          Accurate Search
-        </Button>
-      </Grid>
-      <Grid item xs={6} lg={2}>
-        <Button
-          className={classes.inputButton}
-          variant="contained"
-          color="secondary"
-          fullWidth
-          onClick={() => getRes(searchInput, true)}
-        >
-          Associative Search
+          Search
         </Button>
       </Grid>
       <InfoButton text="This is a description" />
-      <Grid item xs={12}>
+      <Grid item xs={12} style={{ display: String(props.isVisible) }}>
         {query && (
-          <Res
-            search={searchType}
-            query={query}
-            whichTheme={props.whichTheme}
-          />
+          <Route path="/search">
+            <Res
+              search={searchType}
+              query={query}
+              handlebookmark={props.handlebookmark}
+              bookmarks={props.bookmarks}
+              isVisible={props.isVisible}
+            />
+          </Route>
         )}
       </Grid>
     </Grid>
   );
 }
 
-export default Search;
+export default function Search(props: props) {
+  return (
+    <Router>
+      <SearchInfo
+        bookmarks={props.bookmarks}
+        handlebookmark={props.handlebookmark}
+        isVisible={props.isVisible}
+      />
+    </Router>
+  );
+}
