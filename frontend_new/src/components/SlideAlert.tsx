@@ -33,7 +33,7 @@ export default function AlertDialogSlide(props: props) {
 
   return (
     <div>
-      <IconButton color="secondary" onClick={handleClickOpen}>
+      <IconButton color="inherit" onClick={handleClickOpen}>
         <InfoOutlinedIcon />
       </IconButton>
       <Dialog
@@ -49,12 +49,6 @@ export default function AlertDialogSlide(props: props) {
           <DialogContentText id="alert-dialog-slide-description">
             NewsAggregator used Elastic Search, Redis and Rust in the backend,
             and React and Material UI for the frontend.
-          </DialogContentText>
-          <DialogContentText id="alert-dialog-slide-description">
-            Accurate Search: Search via a basic query matching keyword
-          </DialogContentText>
-          <DialogContentText id="alert-dialog-slide-description">
-            Associative Search: Search using a classification model, KNN
           </DialogContentText>
         </DialogContent>
         <DialogActions>

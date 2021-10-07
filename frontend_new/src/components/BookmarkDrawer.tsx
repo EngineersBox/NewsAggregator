@@ -15,6 +15,7 @@ import ThemeSwitch from "./ThemeSwitch";
 import Grow from "@material-ui/core/Grow";
 import Grid from "@material-ui/core/Grid";
 import SimpleCard from "./Cards";
+import InfoButton from "./SlideAlert";
 
 const drawerWidth = "100%";
 
@@ -122,9 +123,8 @@ export default function PersistentDrawerLeft(props: props) {
           >
             {open ? <ChevronLeftIcon /> : <BookmarksOutlinedIcon />}
           </IconButton>
-          <Typography variant="h6"></Typography>
-          <Typography variant="h6"></Typography>
           <ThemeSwitch themeChange={props.themeChange} />
+          <InfoButton text="This is a description" />
         </Toolbar>
       </AppBar>
       <Drawer
