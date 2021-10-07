@@ -136,7 +136,7 @@ def base_search(query: str, search_method: Callable[[Elasticsearch, str, str], N
     for one in list_res:
         sum_txt = body_summary(one["_source"]["art"])
         one["_source"]["summary"] = " ".join(sum_txt)
-    rd.execute_command("cf.add", "test2", hash(query), fingerprint(query))
+    rd.execute_command("cf.add", CF_KEY, hash(query), fingerprint(query))
     for elem in list_res:
         rd.execute_command("RPUSH", query, json.dumps(elem))
     return jsonify(result={
