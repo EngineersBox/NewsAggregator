@@ -11,7 +11,9 @@ function useFetch(url: string) {
     setLoading(false);
   }
   useEffect(() => {
+  if (url){
     fetchUrl();
+    }
   }, [url]);
   return [data, loading];
 }
