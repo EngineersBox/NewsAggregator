@@ -27,20 +27,53 @@ function gotoLink(url: string) {
 }
 
 export default function SimpleCard(props: props) {
-  const [bookmarked, setBookmarked] = React.useState(true);
+  const [bookmarked, setBookmarked] = React.useState(
+    localStorage.getItem(props.id.toString()) != null || false
+  );
+
+  //Problem where clearning localStorage would not update bookmarks stage
   function handlebookmark() {
-    props.handlebookmark(
-      props.web_link,
-      props.primary,
-      props.secondary,
-      props.id
-    );
-    setBookmarked(props.id in props.bookmarks);
+    console.log(props.id);
+    console.log(bookmarked);
+    if (localStorage.getItem(props.id.toString()) == null) {
+      setBookmarked(true);
+      localStorage.setItem(props.id.toString(), "saved");
+      var details = {
+        id: props.id,
+        link: props.web_link,
+        primary: props.primary,
+        secondary: props.secondary,
+      };
+      if (localStorage.getItem("articles") != null) {
+        let articleSaved = JSON.parse(localStorage.getItem("articles") || "");
+        console.log("stored, ", articleSaved);
+        articleSaved.push(details);
+        localStorage.setItem("articles", JSON.stringify(articleSaved));
+      } else {
+        let articleArray = [details];
+        localStorage.setItem("articles", JSON.stringify(articleArray));
+      }
+    } else {
+      setBookmarked(false);
+      localStorage.removeItem(props.id.toString());
+      let articleSaved = JSON.parse(localStorage.getItem("articles") || "");
+      articleSaved = articleSaved.filter(
+        (item: {
+          id: number;
+          link: string;
+          primary: string;
+          secondary: string;
+        }) => item.id !== props.id
+      );
+      localStorage.setItem("articles", JSON.stringify(articleSaved));
+    }
   }
 
   React.useEffect(() => {
-    setBookmarked(props.id in props.bookmarks);
-  }, [props.bookmarks, props.isVisible]);
+    if (localStorage.getItem(props.id.toString()) != null) {
+      setBookmarked(true);
+    }
+  }, [props.id]);
 
   return (
     <Card>
