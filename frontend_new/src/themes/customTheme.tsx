@@ -10,8 +10,8 @@ export const light = createMuiTheme({
       main: "#212121",
     },
     background: {
-      default: "#f2f2f2",
-      paper: "#f2f2f2",
+      default: "#f7f7f7",
+      paper: "#fafafa",
     },
   },
 });
