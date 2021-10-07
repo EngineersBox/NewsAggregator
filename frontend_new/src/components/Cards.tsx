@@ -28,7 +28,7 @@ function gotoLink(url: string) {
 
 export default function SimpleCard(props: props) {
   const [bookmarked, setBookmarked] = React.useState(
-    localStorage.getItem("Articles Saved") != null || false
+    localStorage.getItem(props.id.toString()) != null || false
   );
 
   //Problem where clearning localStorage would not update bookmarks stage
@@ -37,41 +37,43 @@ export default function SimpleCard(props: props) {
     console.log(bookmarked);
     if (localStorage.getItem(props.id.toString()) == null) {
       setBookmarked(true);
+      localStorage.setItem(props.id.toString(), "saved");
       var details = {
+        id: props.id,
         link: props.web_link,
         primary: props.primary,
         secondary: props.secondary,
       };
-      localStorage.setItem(props.id, JSON.stringify(details));
-      if (localStorage.getItem("Articles Saved") != null) {
-        let articleSaved = JSON.parse(
-          localStorage.getItem("Articles Saved") || ""
-        );
+      if (localStorage.getItem("articles") != null) {
+        let articleSaved = JSON.parse(localStorage.getItem("articles") || "");
         console.log("stored, ", articleSaved);
-        articleSaved["articles"].push(props.id);
-        localStorage.setItem("Articles Saved", JSON.stringify(articleSaved));
+        articleSaved.push(details);
+        localStorage.setItem("articles", JSON.stringify(articleSaved));
       } else {
-        let articles = {
-          articles: [props.id],
-        };
-        localStorage.setItem("Articles Saved", JSON.stringify(articles));
+        let articleArray = [details];
+        localStorage.setItem("articles", JSON.stringify(articleArray));
       }
     } else {
       setBookmarked(false);
-      localStorage.removeItem(props.id);
-      let articleSaved = JSON.parse(
-        localStorage.getItem("Articles Saved") || ""
+      localStorage.removeItem(props.id.toString());
+      let articleSaved = JSON.parse(localStorage.getItem("articles") || "");
+      articleSaved = articleSaved.filter(
+        (item: {
+          id: number;
+          link: string;
+          primary: string;
+          secondary: string;
+        }) => item.id !== props.id
       );
-      articleSaved["articles"] = articleSaved["articles"].filter(
-        (item: string) => item !== props.id.toString()
-      );
-      localStorage.setItem("Articles Saved", JSON.stringify(articleSaved));
+      localStorage.setItem("articles", JSON.stringify(articleSaved));
     }
   }
 
   React.useEffect(() => {
-    setBookmarked(props.id in props.bookmarks);
-  }, [props.bookmarks, props.isVisible]);
+    if (localStorage.getItem(props.id.toString()) != null) {
+      setBookmarked(true);
+    }
+  }, [props.id]);
 
   return (
     <Card>

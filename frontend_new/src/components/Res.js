@@ -21,6 +21,7 @@ function Res(props) {
       .concat("?query=")
       .concat(searchParams.get("query"))
   );
+  console.log("what is the result", res);
 
   function saveToLocalStorage(link: string, title: string) {
     localStorage.setItem(link, title);
