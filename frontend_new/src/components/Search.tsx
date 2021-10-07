@@ -96,6 +96,7 @@ function SearchInfo(props: props) {
           id="free-solo-2-demo"
           disableClearable
           onInputChange={handleChangeSearchInput}
+          onChange={(event, value) => getRes(value, false)}
           options={suggest}
           renderInput={(params) => (
             <TextField
