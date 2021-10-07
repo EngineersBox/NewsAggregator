@@ -2,17 +2,11 @@ import React from "react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-<<<<<<< HEAD
-import Grid from "@material-ui/core/Grid";
-import {customColours} from "../themes/customTheme";
-=======
->>>>>>> 0d5600ad11984d4f9a3fba2889bcb01beffa9a14
 import ListItem from "@material-ui/core/ListItem";
 import BookmarkBorderOutlinedIcon from "@material-ui/icons/BookmarkBorderOutlined";
 import BookmarkOutlinedIcon from "@material-ui/icons/BookmarkOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-
 
 type props = {
   web_link: string;
@@ -49,31 +43,6 @@ export default function SimpleCard(props: props) {
   }, [props.bookmarks, props.isVisible]);
 
   return (
-<<<<<<< HEAD
-    <Grid container justifyContent="center">
-      <Grid xs={12} md={12} lg={11}>
-        <ListItem button onClick={() => gotoLink(props.web_link)}>
-          <Grid container justifyContent="center">
-            <Grid xs={12} md={12} lg={13}>
-              <Card>
-                <CardContent>
-                  <Typography variant="body2" component="h1" color={customColours.button.light}>
-                    {props.web_link}
-                  </Typography>
-                  <Typography variant="h5" component="h2" color={customColours.button.light}>
-                    {props.primary}
-                  </Typography>
-                  <Typography variant="body2" component="p" color={customColours.button.light}>
-                    {props.secondary}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-        </ListItem>
-      </Grid>
-    </Grid>
-=======
     <Card>
       <ListItem button onClick={() => gotoLink(props.web_link)}>
         <CardContent>
@@ -98,6 +67,5 @@ export default function SimpleCard(props: props) {
         </ListItemSecondaryAction>
       </ListItem>
     </Card>
->>>>>>> 0d5600ad11984d4f9a3fba2889bcb01beffa9a14
   );
 }
