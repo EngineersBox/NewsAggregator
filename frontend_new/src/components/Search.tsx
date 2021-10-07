@@ -47,7 +47,6 @@ function SearchInfo(props: props) {
   const [searchInput, setSearchInput] = React.useState(urlQuery || "");
   //the query from searchInput when search button pressed
   const [query, setQuery] = React.useState(urlQuery || "");
-  console.log(query);
   //two types of searches
   const [searchType, setSearchType] = React.useState(urlSearchType || "");
 
