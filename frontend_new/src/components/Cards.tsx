@@ -8,6 +8,7 @@ import BookmarkOutlinedIcon from "@material-ui/icons/BookmarkOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import { withStyles } from "@material-ui/core/styles";
+import Tooltip from "@material-ui/core/Tooltip";
 
 type props = {
   web_link: string;
@@ -67,9 +68,13 @@ export default function SimpleCard(props: props) {
         <ListItemSecondaryAction>
           <IconButton color="secondary" onClick={() => handlebookmark()}>
             {bookmarked ? (
-              <BookmarkOutlinedIcon />
+              <Tooltip title="Remove Bookmark">
+                <BookmarkOutlinedIcon />
+              </Tooltip>
             ) : (
-              <BookmarkBorderOutlinedIcon />
+              <Tooltip title="Add Bookmark">
+                <BookmarkBorderOutlinedIcon />
+              </Tooltip>
             )}
           </IconButton>
         </ListItemSecondaryAction>
