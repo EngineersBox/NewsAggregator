@@ -65,7 +65,6 @@ function SearchInfo(props: props) {
     setQuery(sinput);
     let inputSearchType = stype ? "search" : "origin_search";
     setSearchType(inputSearchType);
-    //history.push(`/search?query=${query}&searchType=${inputSearchType}`);
   }
 
   React.useEffect(() => {
@@ -105,9 +104,6 @@ function SearchInfo(props: props) {
           //@ts-ignore:
           getOptionSelected={(event, value) => getRes(String(value), false)}
           limitTags={5}
-          //onKeyPress={(e) => console.log(e)}
-          //onChange={(event, value) => getRes(value, false)}
-
           options={suggest}
           renderInput={(params) => (
             <TextField
