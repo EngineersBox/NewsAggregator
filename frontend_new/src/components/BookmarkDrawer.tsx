@@ -160,14 +160,14 @@ export default function PersistentDrawerLeft(props: props) {
               bookmarkedArticles.map(
                 ({
                   id,
+                  web_link,
                   primary,
                   secondary,
-                  web_link,
                 }: {
                   id: number;
+                  web_link: string;
                   primary: string;
                   secondary: string;
-                  web_link: string;
                 }) => (
                   <React.Fragment key={id}>
                     <Grow in={true} timeout={200}>

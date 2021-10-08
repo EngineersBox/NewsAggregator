@@ -35,7 +35,7 @@ export default function SimpleCard(props: props) {
       localStorage.setItem(props.id.toString(), "saved");
       var details = {
         id: props.id,
-        link: props.web_link,
+        web_link: props.web_link,
         primary: props.primary,
         secondary: props.secondary,
       };
@@ -54,7 +54,7 @@ export default function SimpleCard(props: props) {
       articleSaved = articleSaved.filter(
         (item: {
           id: number;
-          link: string;
+          web_link: string;
           primary: string;
           secondary: string;
         }) => item.id !== props.id
@@ -64,9 +64,6 @@ export default function SimpleCard(props: props) {
   }
 
   React.useEffect(() => {
-    if (props.id in props.bookmarks) {
-      setBookmarked(true);
-    }
     localStorage.getItem(props.id.toString()) != null
       ? setBookmarked(true)
       : setBookmarked(false);
