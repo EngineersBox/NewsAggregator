@@ -7,6 +7,7 @@ import InfoButton from "./SlideAlert";
 import Res from "./Res.js";
 import FrontPageInfo from "./FrontPageInfo";
 import { useHistory } from "react-router-dom";
+import { customColours } from "../themes/customTheme";
 
 import { BrowserRouter as Router, useLocation, Route } from "react-router-dom";
 
@@ -15,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
     input: {
       margin: theme.spacing(1),
       height: 50,
+      color: "#FFFFF"
     },
     inputButton: {
       margin: theme.spacing(1),
@@ -64,8 +66,9 @@ function SearchInfo(props: props) {
       }
     }
   }
-
+  
   const classes = useStyles();
+  const css = `.main-search-input-field {background-color: gray;} `
   return (
     <Grid
       container
@@ -78,10 +81,13 @@ function SearchInfo(props: props) {
         {!query && <FrontPageInfo />}
       </Grid>
       <Grid item xs={11} lg={6}>
+        <style>
+          {css}
+        </style>
         <TextField
           id="search-input"
           variant="outlined"
-          color="secondary"
+          color= "secondary"
           fullWidth
           defaultValue={searchInput}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

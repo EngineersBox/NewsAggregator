@@ -19,14 +19,14 @@ export const dark = createMuiTheme({
   palette: {
     type: "dark",
     primary: {
-      main: "#242424",
+      main: "#2A3537"
     },
     secondary: {
       main: "#c9c9c9",
     },
     background: {
-      default: "#111111",
-      paper: "#212121",
+      default: "#171F24",
+      paper: "#2A3537",
     },
   },
 });

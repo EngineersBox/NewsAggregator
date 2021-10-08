@@ -1,10 +1,13 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import mainLogo from './v4.png';
+import mainLogo from './Light_Mode_Logo.png';
+import darkLogo from './Logo_Dark_Mode.png';
 import Box from '@material-ui/core/Box'
+import { ThemeProvider, useTheme } from "@material-ui/core/styles";
 
 export default function FrontPageInfo() {
+  const theme = useTheme();
   return (
     <Grid
       container
@@ -16,7 +19,9 @@ export default function FrontPageInfo() {
       <Grid item xs={12}></Grid>
       <Grid item xs={12}>
       <Box paddingLeft={58}> 
-          { <img  src={mainLogo} alt="Logo"/> }
+      {/* // @ts-ignore: */}
+      {theme.palette.type === "dark" ? <img src={darkLogo} alt="Logo"/> : <img src={mainLogo} alt="Logo"/>};
+
       </Box>
       </Grid>
     </Grid>

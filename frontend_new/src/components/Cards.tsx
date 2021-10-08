@@ -7,6 +7,7 @@ import BookmarkBorderOutlinedIcon from "@material-ui/icons/BookmarkBorderOutline
 import BookmarkOutlinedIcon from "@material-ui/icons/BookmarkOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import { withStyles } from "@material-ui/core/styles";
 
 type props = {
   web_link: string;
@@ -22,6 +23,13 @@ type props = {
   bookmarks: object;
   isVisible: boolean;
 };
+
+const GreenText = withStyles({
+  root: {
+    color: "#7AC39C"
+  }
+})(Typography);
+
 function gotoLink(url: string) {
   window.location.href = url;
 }
@@ -46,9 +54,9 @@ export default function SimpleCard(props: props) {
     <Card>
       <ListItem button onClick={() => gotoLink(props.web_link)}>
         <CardContent>
-          <Typography variant="body2" component="h1" color="secondary">
+          <GreenText variant="body2">
             {props.web_link}
-          </Typography>
+          </GreenText>
           <Typography variant="h5" component="h2" color="secondary">
             {props.primary}
           </Typography>
