@@ -64,7 +64,7 @@ export default function SimpleCard(props: props) {
                 <BookmarkOutlinedIcon />
               </Tooltip>
             ) : (
-              <Tooltip title="Bookmark">
+              <Tooltip title="Add Bookmark">
                 <BookmarkBorderOutlinedIcon />
               </Tooltip>
             )}
