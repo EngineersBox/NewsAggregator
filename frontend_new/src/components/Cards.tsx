@@ -28,20 +28,49 @@ function gotoLink(url: string) {
 }
 
 export default function SimpleCard(props: props) {
-  const [bookmarked, setBookmarked] = React.useState(true);
+  const [bookmarked, setBookmarked] = React.useState(false);
   function handlebookmark() {
-    props.handlebookmark(
-      props.web_link,
-      props.primary,
-      props.secondary,
-      props.id
-    );
-    setBookmarked(props.id in props.bookmarks);
+    if (localStorage.getItem(props.id.toString()) == null) {
+      setBookmarked(true);
+      localStorage.setItem(props.id.toString(), "saved");
+      var details = {
+        id: props.id,
+        link: props.web_link,
+        primary: props.primary,
+        secondary: props.secondary,
+      };
+      if (localStorage.getItem("articles") != null) {
+        let articleSaved = JSON.parse(localStorage.getItem("articles") || "");
+        articleSaved.push(details);
+        localStorage.setItem("articles", JSON.stringify(articleSaved));
+      } else {
+        let articleArray = [details];
+        localStorage.setItem("articles", JSON.stringify(articleArray));
+      }
+    } else {
+      setBookmarked(false);
+      localStorage.removeItem(props.id.toString());
+      let articleSaved = JSON.parse(localStorage.getItem("articles") || "");
+      articleSaved = articleSaved.filter(
+        (item: {
+          id: number;
+          link: string;
+          primary: string;
+          secondary: string;
+        }) => item.id !== props.id
+      );
+      localStorage.setItem("articles", JSON.stringify(articleSaved));
+    }
   }
 
   React.useEffect(() => {
-    setBookmarked(props.id in props.bookmarks);
-  }, [props.bookmarks, props.isVisible]);
+    if (props.id in props.bookmarks) {
+      setBookmarked(true);
+    }
+    localStorage.getItem(props.id.toString()) != null
+      ? setBookmarked(true)
+      : setBookmarked(false);
+  }, [props.bookmarks, props.isVisible, props.id]);
 
   return (
     <Card>

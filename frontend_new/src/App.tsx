@@ -9,8 +9,10 @@ import getDefaultTheme from "./components/ThemeSetting";
 
 //using colors from theme - bit hacky but works
 function App() {
+  let themeColor = localStorage.getItem("themeChoice") || getDefaultTheme();
+
   const [themeChoice, setThemeChoice] = React.useState(
-    getDefaultTheme() ? dark : light
+    themeColor === "dark" ? dark : light
   );
   React.useEffect(() => {
     document.body.style.backgroundColor =
@@ -18,9 +20,9 @@ function App() {
   }, [themeChoice]);
 
   const themeChange = () => {
-    themeChoice.palette.type === "dark"
-      ? setThemeChoice(light)
-      : setThemeChoice(dark);
+    let themeColourSwitch = themeChoice.palette.type === "dark" ? light : dark;
+    setThemeChoice(themeColourSwitch);
+    localStorage.setItem("themeChoice", themeColourSwitch.palette.type);
   };
 
   const [bookmarks, setBookmarks] = React.useState<{ [key: number]: any }>({});
