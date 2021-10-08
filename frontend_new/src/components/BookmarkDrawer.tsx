@@ -16,6 +16,7 @@ import Grow from "@material-ui/core/Grow";
 import Grid from "@material-ui/core/Grid";
 import SimpleCard from "./Cards";
 import InfoButton from "./SlideAlert";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const drawerWidth = "100%";
 
@@ -121,7 +122,15 @@ export default function PersistentDrawerLeft(props: props) {
             edge="start"
             className={clsx(classes.menuButton)}
           >
-            {open ? <ChevronLeftIcon /> : <BookmarksOutlinedIcon />}
+            {open ? (
+              <Tooltip title="Close Bookmarks">
+                <ChevronLeftIcon />
+              </Tooltip>
+            ) : (
+              <Tooltip title="Open Bookmarks">
+                <BookmarksOutlinedIcon />
+              </Tooltip>
+            )}
           </IconButton>
           <ThemeSwitch themeChange={props.themeChange} />
           <InfoButton text="This is a description" />
