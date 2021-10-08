@@ -69,7 +69,7 @@ function SearchInfo(props: props) {
   }
 
   React.useEffect(() => {
-    history.push(`/search?query=${query}&searchType=origin_search`);
+    query && history.push(`/search?query=${query}&searchType=origin_search`);
   }, [query]);
 
   function enterPress(event: React.KeyboardEvent) {
