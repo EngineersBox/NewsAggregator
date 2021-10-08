@@ -65,8 +65,13 @@ function SearchInfo(props: props) {
     setQuery(sinput);
     let inputSearchType = stype ? "search" : "origin_search";
     setSearchType(inputSearchType);
-    history.push(`/search?query=${searchInput}&searchType=${inputSearchType}`);
+    //history.push(`/search?query=${query}&searchType=${inputSearchType}`);
   }
+
+  React.useEffect(() => {
+    history.push(`/search?query=${query}&searchType=origin_search`);
+  }, [query]);
+
   function enterPress(event: React.KeyboardEvent) {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -97,6 +102,12 @@ function SearchInfo(props: props) {
           disableClearable
           onInputChange={handleChangeSearchInput}
           onChange={(event, value) => getRes(value, false)}
+          //@ts-ignore:
+          getOptionSelected={(event, value) => getRes(String(value), false)}
+          limitTags={5}
+          //onKeyPress={(e) => console.log(e)}
+          //onChange={(event, value) => getRes(value, false)}
+
           options={suggest}
           renderInput={(params) => (
             <TextField
@@ -139,7 +150,7 @@ function SearchInfo(props: props) {
         </Button>
       </Grid>
       <Grid item xs={12} style={{ display: String(props.isVisible) }}>
-        {query && (
+        {query !== "" && query && (
           <Route path="/search">
             <Res
               search={searchType}

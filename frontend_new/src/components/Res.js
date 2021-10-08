@@ -19,7 +19,7 @@ function Res(props) {
     "https://anu.jkl.io/api/"
       .concat(searchType)
       .concat("?query=")
-      .concat(searchParams.get("query"))
+      .concat(searchParams.get("query") || props.query)
   );
 
   return (
