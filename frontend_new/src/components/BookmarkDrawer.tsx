@@ -96,6 +96,14 @@ export default function PersistentDrawerLeft(props: props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
+  let bookmarkedArticles = JSON.parse(
+    localStorage.getItem("articles") || "null"
+  );
+  bookmarkedArticles =
+    bookmarkedArticles != null && bookmarkedArticles.length > 0
+      ? bookmarkedArticles
+      : null;
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -103,8 +111,6 @@ export default function PersistentDrawerLeft(props: props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
-  let bookmarkedArticles = JSON.parse(localStorage.getItem("articles") || "");
 
   return (
     <div>
@@ -154,14 +160,14 @@ export default function PersistentDrawerLeft(props: props) {
               bookmarkedArticles.map(
                 ({
                   id,
+                  web_link,
                   primary,
                   secondary,
-                  web_link,
                 }: {
                   id: number;
+                  web_link: string;
                   primary: string;
                   secondary: string;
-                  web_link: string;
                 }) => (
                   <React.Fragment key={id}>
                     <Grow in={true} timeout={200}>

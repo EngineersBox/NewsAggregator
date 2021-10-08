@@ -28,9 +28,7 @@ function gotoLink(url: string) {
 }
 
 export default function SimpleCard(props: props) {
-  const [bookmarked, setBookmarked] = React.useState(
-    localStorage.getItem(props.id.toString()) != null || false
-  );
+  const [bookmarked, setBookmarked] = React.useState(false);
 
   // Check if the article is saved in localStorage.
   // Save/ Remove 2 things into localStorage
@@ -42,7 +40,7 @@ export default function SimpleCard(props: props) {
       localStorage.setItem(props.id.toString(), "saved");
       var details = {
         id: props.id,
-        link: props.web_link,
+        web_link: props.web_link,
         primary: props.primary,
         secondary: props.secondary,
       };
@@ -61,7 +59,7 @@ export default function SimpleCard(props: props) {
       articleSaved = articleSaved.filter(
         (item: {
           id: number;
-          link: string;
+          web_link: string;
           primary: string;
           secondary: string;
         }) => item.id !== props.id
@@ -71,10 +69,10 @@ export default function SimpleCard(props: props) {
   }
 
   React.useEffect(() => {
-    if (localStorage.getItem(props.id.toString()) != null) {
-      setBookmarked(true);
-    }
-  }, [props.id]);
+    localStorage.getItem(props.id.toString()) != null
+      ? setBookmarked(true)
+      : setBookmarked(false);
+  }, [props.bookmarks, props.isVisible, props.id]);
 
   return (
     <Card>
