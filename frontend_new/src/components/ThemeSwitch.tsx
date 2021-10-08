@@ -1,6 +1,5 @@
 import Switch from "@material-ui/core/Switch";
-import { styled } from "@material-ui/core/styles";
-import { ThemeProvider, useTheme } from "@material-ui/styles";
+import { styled, useTheme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -57,10 +56,12 @@ type props = {
 export default function CustomizedSwitches(props: props) {
   const theme = useTheme();
   return (
-    <MaterialUISwitch
-      //@ts-ignore:
-      defaultChecked={theme.palette.type === "dark" ? true : false}
-      onChange={() => props.themeChange()}
-    />
+    <Tooltip title={theme.palette.type}>
+      <MaterialUISwitch
+        //@ts-ignore:
+        defaultChecked={theme.palette.type === "dark" ? true : false}
+        onChange={() => props.themeChange()}
+      />
+    </Tooltip>
   );
 }
