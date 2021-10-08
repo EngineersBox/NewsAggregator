@@ -93,7 +93,7 @@ function SearchInfo(props: props) {
           onKeyPress={(e) => enterPress(e)}
         />
       </Grid>
-      <Grid item xs={6} lg={2}>
+      <Grid item xs={12} lg={2}>
         <Button
           className={classes.inputButton}
           variant="contained"
@@ -101,18 +101,7 @@ function SearchInfo(props: props) {
           fullWidth
           onClick={() => getRes(searchInput, false)}
         >
-          Accurate Search
-        </Button>
-      </Grid>
-      <Grid item xs={6} lg={2}>
-        <Button
-          className={classes.inputButton}
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={() => getRes(searchInput, true)}
-        >
-          Associative Search
+          Search
         </Button>
       </Grid>
       <InfoButton text="This is a description" />
