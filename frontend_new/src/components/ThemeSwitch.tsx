@@ -57,12 +57,10 @@ type props = {
 export default function CustomizedSwitches(props: props) {
   const theme = useTheme();
   return (
-    <Tooltip title={theme.palette.type}>
-      <MaterialUISwitch
-        //@ts-ignore:
-        defaultChecked={theme.palette.type === "dark" ? true : false}
-        onChange={() => props.themeChange()}
-      />
-    </Tooltip>
+    <MaterialUISwitch
+      //@ts-ignore:
+      defaultChecked={theme.palette.type === "dark" ? true : false}
+      onChange={() => props.themeChange()}
+    />
   );
 }
