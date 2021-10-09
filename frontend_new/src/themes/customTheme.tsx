@@ -11,7 +11,7 @@ export const light = createMuiTheme({
     },
     background: {
       default: "#f2f2f2",
-      paper: "#f2f2f2",
+      paper: "#e2e2e2",
     },
   },
 });
