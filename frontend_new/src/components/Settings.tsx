@@ -51,7 +51,7 @@ export default function AlertDialogSlide(props: props) {
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
             NewsAggregator has two themes, light and dark. Please pick your
-            preferance below!
+            preference below!
           </DialogContentText>
           <ThemeSwitch themeChange={props.themeChange} />
         </DialogContent>
