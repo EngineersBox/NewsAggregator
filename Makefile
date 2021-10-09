@@ -29,4 +29,4 @@ install_ansible:
 	@apt install ansible -y
 
 create_indexes:
-	@cd minitask && python3.8 import_data.py
+	@cd index_datas && python3.8 import_datas.py

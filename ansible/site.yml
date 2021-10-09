@@ -8,7 +8,7 @@
       become: true
     - name: Clone repo onto box
       git:
-        repo: https://github.com/EngineersBox/ansible-test.git
+        repo: https://github.com/EngineersBox/NewsAggregator.git
         dest: "temp"
         clone: yes
         version: main
@@ -16,8 +16,18 @@
     - always
 
 - hosts: targets
+  tasks:
+    - name: Copy wikidump to accessible directory
+      command: cp -r /home/ansible/wikidump /home/ansible/temp/wikidump
+      become: true
+  tags:
+    - backend
+    - opensearch_base_indexes
+    - opensearch_knn_indexes
+
+- hosts: targets
   roles:
-    - elasticsearch
+    - opensearch
 
 - hosts: targets
   roles:
