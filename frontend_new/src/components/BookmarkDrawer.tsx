@@ -17,6 +17,7 @@ import Grid from "@material-ui/core/Grid";
 import SimpleCard from "./Cards";
 import InfoButton from "./SlideAlert";
 import Tooltip from "@material-ui/core/Tooltip";
+import Settings from "./Settings";
 
 const drawerWidth = "100%";
 
@@ -118,32 +119,31 @@ export default function PersistentDrawerLeft(props: props) {
         })}
       >
         <Toolbar>
-                        <Grid item >
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={open ? handleDrawerClose : handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton)}
-          >
-            {open ? (
-              <Tooltip title="Close Bookmarks">
-                <ChevronLeftIcon />
-              </Tooltip>
-            ) : (
-              <Tooltip title="Open Bookmarks">
-                <BookmarksOutlinedIcon />
-              </Tooltip>
-            )}
-          </IconButton>
-	  </Grid>
-                        <Grid item >
-          <ThemeSwitch themeChange={props.themeChange} />
-	  </Grid>
-                        <Grid item xs/>
-                        <Grid item >
-          <InfoButton text="This is a description" />
-	  </Grid>
+          <Grid item>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={open ? handleDrawerClose : handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton)}
+            >
+              {open ? (
+                <Tooltip title="Close Bookmarks">
+                  <ChevronLeftIcon />
+                </Tooltip>
+              ) : (
+                <Tooltip title="Open Bookmarks">
+                  <BookmarksOutlinedIcon />
+                </Tooltip>
+              )}
+            </IconButton>
+          </Grid>
+          <Grid item></Grid>
+          <Grid item xs />
+          <Settings themeChange={props.themeChange} />
+          <Grid item>
+            <InfoButton text="This is a description" />
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer
