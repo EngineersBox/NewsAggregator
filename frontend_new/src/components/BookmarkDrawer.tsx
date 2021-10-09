@@ -46,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
     hide: {
       display: "none",
     },
+    title: {
+      flexgrow: 1,
+    },
     drawer: {
       flexShrink: 0,
     },
@@ -115,6 +118,7 @@ export default function PersistentDrawerLeft(props: props) {
         })}
       >
         <Toolbar>
+                        <Grid item >
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -132,8 +136,14 @@ export default function PersistentDrawerLeft(props: props) {
               </Tooltip>
             )}
           </IconButton>
+	  </Grid>
+                        <Grid item >
           <ThemeSwitch themeChange={props.themeChange} />
+	  </Grid>
+                        <Grid item xs/>
+                        <Grid item >
           <InfoButton text="This is a description" />
+	  </Grid>
         </Toolbar>
       </AppBar>
       <Drawer

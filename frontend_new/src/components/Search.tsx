@@ -13,7 +13,6 @@ import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { useFetch } from "./Get";
-import AutoCompleteRes from "./AutoCompleteRes";
 import { Typography } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
