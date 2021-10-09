@@ -96,7 +96,6 @@ function SearchInfo(props: props) {
       <Grid item xs={12} lg={8}>
         <Autocomplete
           freeSolo
-          id="free-solo-2-demo"
           disableClearable
           onInputChange={handleChangeSearchInput}
           onChange={(event, value) => getRes(value, false)}

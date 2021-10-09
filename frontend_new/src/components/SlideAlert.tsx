@@ -47,7 +47,7 @@ export default function AlertDialogSlide(props: props) {
         <DialogTitle id="alert-dialog-slide-title">{"Information"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            NewsAggregator used Elastic Search, Redis and Rust in the backend,
+            NewsAggregator uses Elastic Search, Redis and Rust in the backend,
             and React and Material UI for the frontend.
           </DialogContentText>
         </DialogContent>
