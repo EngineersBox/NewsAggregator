@@ -23,15 +23,15 @@ export default function FrontPageInfo() {
     <Grid
       container
       justifyContent="center"
-      alignItems="stretch"
+      alignItems="center"
       direction="row"
       spacing={3}
     >
       <Grid item xs={12}></Grid>
-      <Grid item xs={12}>
-      <Box className={classes.paper}> 
+      <Grid item xs={12} lg={12}>
+      <Box className={classes.paper} > 
       {theme.palette.type === "dark" ? (<a href={"https://anu.jkl.io/"}><img style= {image_size} src={darkLogo} alt="Dark Logo"/></a>) : 
-        (<a href={"https://anu.jkl.io/"}><img style= {image_size} src={mainLogo} alt="Light Logo"/></a>)};
+        (<a href={"https://anu.jkl.io/"}><img style= {image_size} src={mainLogo} alt="Light Logo"/></a>)}
 
       </Box>
       </Grid>
