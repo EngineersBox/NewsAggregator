@@ -92,12 +92,12 @@ type props = {
   themeChange: () => void;
 };
 
-type bookmark = {
-  web_link: string;
-  primary: string;
-  secondary: string;
-  id: number;
-};
+// type bookmark = {
+//   web_link: string;
+//   primary: string;
+//   secondary: string;
+//   id: number;
+// };
 
 export default function PersistentDrawerLeft(props: props) {
   const classes = useStyles();
@@ -106,14 +106,16 @@ export default function PersistentDrawerLeft(props: props) {
   let bookmarkedArticles = JSON.parse(
     localStorage.getItem("articles") || "null"
   );
+
+  // To handle the case where the localStorage is empty {}
   bookmarkedArticles =
     bookmarkedArticles != null && Object.keys(bookmarkedArticles).length > 0
       ? bookmarkedArticles
       : null;
-  console.log("articles ", bookmarkedArticles);
 
-  console.log("");
-  Object.values(bookmarkedArticles).map((item) => console.log(item));
+  // Need to declare any as the Object.values(bookmarkedArticles) returns unknown type
+  let valuesOfBookmarkedArticles: any =
+    bookmarkedArticles === null ? null : Object.values(bookmarkedArticles);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -167,8 +169,8 @@ export default function PersistentDrawerLeft(props: props) {
         <div className={classes.drawerHeader}></div>
         <div>
           <List>
-            {props.bookmarks &&
-              Object.values(props.bookmarks).map(
+            {bookmarkedArticles &&
+              valuesOfBookmarkedArticles.map(
                 ({
                   id,
                   web_link,
