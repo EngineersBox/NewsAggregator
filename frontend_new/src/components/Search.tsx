@@ -54,8 +54,8 @@ type props = {
 };
 
 const image_size = {
-  height: 50,
-  width: 200,
+  height: 52,
+  width: 250,
 };
 
 // Thinking of moving this to a folder/file that stores common functionality
