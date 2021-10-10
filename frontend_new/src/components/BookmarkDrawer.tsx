@@ -96,6 +96,10 @@ export default function PersistentDrawerLeft(props: props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
+  let bookmarkedArticles: object = JSON.parse(
+    localStorage.getItem("articles") || "null"
+  );
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -148,9 +152,20 @@ export default function PersistentDrawerLeft(props: props) {
         <div className={classes.drawerHeader}></div>
         <div>
           <List>
-            {props.bookmarks &&
-              Object.values(props.bookmarks).map(
-                ({ id, primary, secondary, web_link }) => (
+            {bookmarkedArticles &&
+              Object.keys(bookmarkedArticles).length > 0 &&
+              Object.values(bookmarkedArticles).map(
+                ({
+                  id,
+                  web_link,
+                  primary,
+                  secondary,
+                }: {
+                  id: number;
+                  web_link: string;
+                  primary: string;
+                  secondary: string;
+                }) => (
                   <React.Fragment key={id}>
                     <Grow in={true} timeout={200}>
                       <Grid container wrap="wrap" direction="row" spacing={3}>

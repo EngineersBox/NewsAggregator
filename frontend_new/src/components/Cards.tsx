@@ -28,20 +28,49 @@ function gotoLink(url: string) {
 }
 
 export default function SimpleCard(props: props) {
-  const [bookmarked, setBookmarked] = React.useState(true);
+  let articleSaved = JSON.parse(localStorage.getItem("articles") || "null");
+  let initialState =
+    articleSaved && articleSaved.hasOwnProperty(props.id) ? true : false;
+  const [bookmarked, setBookmarked] = React.useState(initialState);
+
   function handlebookmark() {
-    props.handlebookmark(
-      props.web_link,
-      props.primary,
-      props.secondary,
-      props.id
+    let articleSavedObject = JSON.parse(
+      localStorage.getItem("articles") || "null"
     );
-    setBookmarked(props.id in props.bookmarks);
+
+    // Check if the object has the key
+    if (articleSavedObject && articleSavedObject.hasOwnProperty(props.id)) {
+      // Remove the saved article
+      setBookmarked(false);
+      delete articleSavedObject[props.id];
+      localStorage.setItem("articles", JSON.stringify(articleSavedObject));
+    } else {
+      // Add article
+      setBookmarked(true);
+      let articleDetails = {
+        id: props.id,
+        web_link: props.web_link,
+        primary: props.primary,
+        secondary: props.secondary,
+      };
+      // Check if the Object is null and decalre {}
+      if (
+        articleSavedObject === null ||
+        Object.keys(articleSavedObject).length === 0
+      ) {
+        let articleInitialObject: any = {};
+        articleSavedObject = articleInitialObject;
+      }
+      articleSavedObject[props.id.toString()] = articleDetails;
+      localStorage.setItem("articles", JSON.stringify(articleSavedObject));
+    }
   }
 
   React.useEffect(() => {
-    setBookmarked(props.id in props.bookmarks);
-  }, [props.bookmarks, props.isVisible]);
+    articleSaved && articleSaved.hasOwnProperty(props.id)
+      ? setBookmarked(true)
+      : setBookmarked(false);
+  }, [props.id, articleSaved]);
 
   return (
     <Card>
