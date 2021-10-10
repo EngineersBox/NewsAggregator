@@ -12,8 +12,14 @@ import Box from "@material-ui/core/Box";
 import { useTheme } from "@material-ui/core/styles";
 import mainLogo from "./Light_Mode_Logo.png";
 import darkLogo from "./Logo_Dark_Mode.png";
+import App from "../App";
 
-import { BrowserRouter as Router, useLocation, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  useLocation,
+  Route,
+  Switch,
+} from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -81,6 +87,11 @@ function SearchInfo(props: props) {
     }
   }
 
+  function resetInput() {
+    setQuery("");
+    history.push("/");
+  }
+
   const classes = useStyles();
   const theme = useTheme();
   const css = `.main-search-input-field {background-color: gray;} `;
@@ -93,24 +104,16 @@ function SearchInfo(props: props) {
       spacing={1}
     >
       <Grid item xs={12}>
-        {!query && <FrontPageInfo />}
+        {!query && <Route path="/" component={FrontPageInfo} />}
       </Grid>
       {query && (
         <Box className={classes.paper}>
           {theme.palette.type === "dark" ? (
-            <a
-              onClick={() => {
-                history.push("/");
-              }}
-            >
+            <a onClick={resetInput}>
               <img style={image_size} src={darkLogo} alt="Dark Logo" />
             </a>
           ) : (
-            <a
-              onClick={() => {
-                history.push("/");
-              }}
-            >
+            <a onClick={resetInput}>
               <img style={image_size} src={mainLogo} alt="Light Logo" />
             </a>
           )}
