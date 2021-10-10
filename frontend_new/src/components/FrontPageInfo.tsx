@@ -12,7 +12,7 @@ const image_size= {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    paddingLeft: theme.spacing(45), 
+    paddingLeft: theme.spacing(48), 
     paddingBottom: theme.spacing(4), 
     paddingTop: theme.spacing(3), 
   },
