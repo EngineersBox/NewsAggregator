@@ -95,10 +95,11 @@ function SearchInfo(props: props) {
       <Grid item xs={12}>
         {!query && <FrontPageInfo />}
       </Grid>
-
       {query && 
-      <Box className={classes.paper}> {theme.palette.type === "dark" ? (<a onClick={() => {history.push('/')}}><img style= {image_size} src={darkLogo} alt="Dark Logo"/></a>) : 
-      (<a onClick={() => {history.push('/')}}><img style= {image_size} src={mainLogo} alt="Light Logo"/></a>)}
+      <Box className={classes.paper}>
+        
+         {theme.palette.type === "dark" ? ( <a onClick={() => {history.push('/')}}><img style= {image_size} src={darkLogo} alt="Dark Logo"/></a>) : 
+         (<a onClick={() => {history.push('/')}}><img style= {image_size} src={mainLogo} alt="Light Logo"/></a>)}
       </Box>}
     
 
