@@ -43,7 +43,6 @@ export default function SimpleCard(props: props) {
       // Remove the saved article
       setBookmarked(false);
       delete articleSavedObject[props.id];
-      console.log("articles removed, ", articleSavedObject);
       localStorage.setItem("articles", JSON.stringify(articleSavedObject));
     } else {
       // Add article
@@ -63,7 +62,6 @@ export default function SimpleCard(props: props) {
         articleSavedObject = articleInitialObject;
       }
       articleSavedObject[props.id.toString()] = articleDetails;
-      console.log("articles added, ", articleSavedObject);
       localStorage.setItem("articles", JSON.stringify(articleSavedObject));
     }
   }
