@@ -96,10 +96,11 @@ function SearchInfo(props: props) {
         {!query && <FrontPageInfo />}
       </Grid>
       <Box className={classes.paper}> 
-           {theme.palette.type === "dark" ? (<a href={"https://anu.jkl.io/"}><img style= {image_size} src={darkLogo} alt="Dark Logo"/></a>) 
-           : (<a href={"https://anu.jkl.io/"}><img style= {image_size} src={mainLogo} alt="Light Logo"/></a>)};
+      {theme.palette.type === "dark" ? (<a onClick={() => {history.push('/')}}><img style= {image_size} src={darkLogo} alt="Dark Logo"/></a>) : 
+        (<a onClick={() => {history.push('/')}}><img style= {image_size} src={mainLogo} alt="Light Logo"/></a>)};
+
       </Box>
-      
+
       <Grid item xs={11} lg={6}>
         <style>
           {css}
@@ -143,6 +144,7 @@ function SearchInfo(props: props) {
             />
           </Route>
         )}
+        
       </Grid>
     </Grid>
   );
@@ -155,7 +157,8 @@ export default function Search(props: props) {
         bookmarks={props.bookmarks}
         handlebookmark={props.handlebookmark}
         isVisible={props.isVisible}
-      />
+      />    
     </Router>
   );
 }
+
