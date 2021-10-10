@@ -83,7 +83,6 @@ function SearchInfo(props: props) {
     if (autocomplete) {
       //@ts-ignore:
       setSuggest(Object.values(autocomplete).map((x) => x.toString()));
-      console.log(suggest);
     }
   };
 
