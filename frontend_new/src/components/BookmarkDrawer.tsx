@@ -96,19 +96,9 @@ export default function PersistentDrawerLeft(props: props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
-  let bookmarkedArticles = JSON.parse(
+  let bookmarkedArticles: object = JSON.parse(
     localStorage.getItem("articles") || "null"
   );
-
-  // To handle the case where the localStorage is empty {}
-  bookmarkedArticles =
-    bookmarkedArticles != null && Object.keys(bookmarkedArticles).length > 0
-      ? bookmarkedArticles
-      : null;
-
-  // Need to declare any as the Object.values(bookmarkedArticles) returns unknown type
-  let valuesOfBookmarkedArticles: any =
-    bookmarkedArticles === null ? null : Object.values(bookmarkedArticles);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -163,7 +153,8 @@ export default function PersistentDrawerLeft(props: props) {
         <div>
           <List>
             {bookmarkedArticles &&
-              valuesOfBookmarkedArticles.map(
+              Object.keys(bookmarkedArticles).length > 0 &&
+              Object.values(bookmarkedArticles).map(
                 ({
                   id,
                   web_link,
