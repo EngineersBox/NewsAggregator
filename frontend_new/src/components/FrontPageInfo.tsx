@@ -30,8 +30,7 @@ export default function FrontPageInfo() {
       <Grid item xs={12}></Grid>
       <Grid item xs={12}>
       <Box className={classes.paper}> 
-      {theme.palette.type === "dark" ? (<a href={"https://anu.jkl.io/"}>
-        <img style= {image_size} src={darkLogo} alt="Dark Logo"/></a>) : 
+      {theme.palette.type === "dark" ? (<a href={"https://anu.jkl.io/"}><img style= {image_size} src={darkLogo} alt="Dark Logo"/></a>) : 
         (<a href={"https://anu.jkl.io/"}><img style= {image_size} src={mainLogo} alt="Light Logo"/></a>)};
 
       </Box>
