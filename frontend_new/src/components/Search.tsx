@@ -107,15 +107,11 @@ function SearchInfo(props: props) {
         {!query && <Route path="/" component={FrontPageInfo} />}
       </Grid>
       {query && (
-        <Box className={classes.paper}>
+        <Box className={classes.paper} onClick={resetInput}>
           {theme.palette.type === "dark" ? (
-            <a onClick={resetInput}>
-              <img style={image_size} src={darkLogo} alt="Dark Logo" />
-            </a>
+            <img style={image_size} src={darkLogo} alt="Dark Logo" />
           ) : (
-            <a onClick={resetInput}>
-              <img style={image_size} src={mainLogo} alt="Light Logo" />
-            </a>
+            <img style={image_size} src={mainLogo} alt="Light Logo" />
           )}
         </Box>
       )}
