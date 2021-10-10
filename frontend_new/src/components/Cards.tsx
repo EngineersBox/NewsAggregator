@@ -26,12 +26,6 @@ type props = {
   isVisible: boolean;
 };
 
-const GreenText = withStyles({
-  root: {
-    color: "#7AC39C"
-  }
-})(Typography);
-
 function gotoLink(url: string) {
   window.location.href = url;
 }
