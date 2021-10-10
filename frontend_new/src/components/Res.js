@@ -22,6 +22,8 @@ function Res(props) {
       .concat(searchParams.get("query"))
   );
 
+  console.log("res, ", res);
+
   return (
     <List>
       {!resStatus &&

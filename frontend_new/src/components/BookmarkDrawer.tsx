@@ -92,6 +92,13 @@ type props = {
   themeChange: () => void;
 };
 
+type bookmark = {
+  web_link: string;
+  primary: string;
+  secondary: string;
+  id: number;
+};
+
 export default function PersistentDrawerLeft(props: props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -100,9 +107,13 @@ export default function PersistentDrawerLeft(props: props) {
     localStorage.getItem("articles") || "null"
   );
   bookmarkedArticles =
-    bookmarkedArticles != null && bookmarkedArticles.length > 0
+    bookmarkedArticles != null && Object.keys(bookmarkedArticles).length > 0
       ? bookmarkedArticles
       : null;
+  console.log("articles ", bookmarkedArticles);
+
+  console.log("");
+  Object.values(bookmarkedArticles).map((item) => console.log(item));
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -156,8 +167,8 @@ export default function PersistentDrawerLeft(props: props) {
         <div className={classes.drawerHeader}></div>
         <div>
           <List>
-            {bookmarkedArticles &&
-              bookmarkedArticles.map(
+            {props.bookmarks &&
+              Object.values(props.bookmarks).map(
                 ({
                   id,
                   web_link,

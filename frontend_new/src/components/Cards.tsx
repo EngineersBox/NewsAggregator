@@ -35,44 +35,41 @@ export default function SimpleCard(props: props) {
   // 1. The article id as key so it is easier to check if the article has been saved
   // 2. the articles array with json article data to map  during bookmarks
   function handlebookmark() {
-    if (localStorage.getItem(props.id.toString()) == null) {
+    let articleSavedObject = JSON.parse(
+      localStorage.getItem("articles") || "null"
+    );
+    // Check if the object has the key
+    if (articleSavedObject && articleSavedObject.hasOwnProperty(props.id)) {
+      // Remove the saved article
+      setBookmarked(false);
+      delete articleSavedObject[props.id];
+    } else {
+      // Add article
       setBookmarked(true);
-      localStorage.setItem(props.id.toString(), "saved");
-      var details = {
+      let articleDetails = {
         id: props.id,
         web_link: props.web_link,
         primary: props.primary,
         secondary: props.secondary,
       };
-      if (localStorage.getItem("articles") != null) {
-        let articleSaved = JSON.parse(localStorage.getItem("articles") || "");
-        articleSaved.push(details);
-        localStorage.setItem("articles", JSON.stringify(articleSaved));
-      } else {
-        let articleArray = [details];
-        localStorage.setItem("articles", JSON.stringify(articleArray));
+      // Check if the Object is null
+      if (articleSavedObject === null) {
+        let articleInitialObject: any = {};
+        articleSavedObject = articleInitialObject;
       }
-    } else {
-      setBookmarked(false);
-      localStorage.removeItem(props.id.toString());
-      let articleSaved = JSON.parse(localStorage.getItem("articles") || "");
-      articleSaved = articleSaved.filter(
-        (item: {
-          id: number;
-          web_link: string;
-          primary: string;
-          secondary: string;
-        }) => item.id !== props.id
-      );
-      localStorage.setItem("articles", JSON.stringify(articleSaved));
+      articleSavedObject[props.id] = articleDetails;
     }
+    localStorage.setItem("articles", JSON.stringify(articleSavedObject));
   }
 
   React.useEffect(() => {
-    localStorage.getItem(props.id.toString()) != null
+    let articleSavedObject = JSON.parse(
+      localStorage.getItem("articles") || "null"
+    );
+    articleSavedObject.hasOwnProperty(props.id)
       ? setBookmarked(true)
       : setBookmarked(false);
-  }, [props.bookmarks, props.isVisible, props.id]);
+  }, [props.id]);
 
   return (
     <Card>
