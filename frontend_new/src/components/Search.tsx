@@ -8,10 +8,10 @@ import Res from "./Res.js";
 import FrontPageInfo from "./FrontPageInfo";
 import { useHistory } from "react-router-dom";
 import { customColours } from "../themes/customTheme";
-import Box from '@material-ui/core/Box';
+import Box from "@material-ui/core/Box";
 import { useTheme } from "@material-ui/core/styles";
-import mainLogo from './Light_Mode_Logo.png';
-import darkLogo from './Logo_Dark_Mode.png';
+import mainLogo from "./Light_Mode_Logo.png";
+import darkLogo from "./Logo_Dark_Mode.png";
 
 import { BrowserRouter as Router, useLocation, Route } from "react-router-dom";
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
     input: {
       margin: theme.spacing(1),
       height: 50,
-      color: "#FFFFF"
+      color: "#FFFFF",
     },
     inputButton: {
       margin: theme.spacing(1),
@@ -44,10 +44,10 @@ type props = {
   isVisible: boolean;
 };
 
-const image_size= {
+const image_size = {
   height: 50,
   width: 200,
-}
+};
 
 // Thinking of moving this to a folder/file that stores common functionality
 export function useQuery() {
@@ -80,10 +80,10 @@ function SearchInfo(props: props) {
       }
     }
   }
-  
+
   const classes = useStyles();
   const theme = useTheme();
-  const css = `.main-search-input-field {background-color: gray;} `
+  const css = `.main-search-input-field {background-color: gray;} `;
   return (
     <Grid
       container
@@ -96,20 +96,35 @@ function SearchInfo(props: props) {
         {!query && <FrontPageInfo />}
       </Grid>
 
-      {query && 
-      <Box className={classes.paper}> {theme.palette.type === "dark" ? (<a onClick={() => {history.push('/')}}><img style= {image_size} src={darkLogo} alt="Dark Logo"/></a>) : 
-      (<a onClick={() => {history.push('/')}}><img style= {image_size} src={mainLogo} alt="Light Logo"/></a>)}
-      </Box>}
-    
+      {query && (
+        <Box className={classes.paper}>
+          {" "}
+          {theme.palette.type === "dark" ? (
+            <a
+              onClick={() => {
+                history.push("/");
+              }}
+            >
+              <img style={image_size} src={darkLogo} alt="Dark Logo" />
+            </a>
+          ) : (
+            <a
+              onClick={() => {
+                history.push("/");
+              }}
+            >
+              <img style={image_size} src={mainLogo} alt="Light Logo" />
+            </a>
+          )}
+        </Box>
+      )}
 
       <Grid item xs={11} lg={6}>
-        <style>
-          {css}
-        </style>
+        <style>{css}</style>
         <TextField
           id="search-input"
           variant="outlined"
-          color= "secondary"
+          color="secondary"
           fullWidth
           defaultValue={searchInput}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -145,7 +160,6 @@ function SearchInfo(props: props) {
             />
           </Route>
         )}
-        
       </Grid>
     </Grid>
   );
@@ -158,8 +172,7 @@ export default function Search(props: props) {
         bookmarks={props.bookmarks}
         handlebookmark={props.handlebookmark}
         isVisible={props.isVisible}
-      />    
+      />
     </Router>
   );
 }
-
