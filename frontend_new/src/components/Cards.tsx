@@ -28,7 +28,10 @@ function gotoLink(url: string) {
 }
 
 export default function SimpleCard(props: props) {
-  const [bookmarked, setBookmarked] = React.useState(false);
+  let articleSaved = JSON.parse(localStorage.getItem("articles") || "null");
+  let initialState =
+    articleSaved && articleSaved.hasOwnProperty(props.id) ? true : false;
+  const [bookmarked, setBookmarked] = React.useState(initialState);
 
   // Check if the article is saved in localStorage.
   // Save/ Remove 2 things into localStorage
@@ -38,11 +41,14 @@ export default function SimpleCard(props: props) {
     let articleSavedObject = JSON.parse(
       localStorage.getItem("articles") || "null"
     );
+
     // Check if the object has the key
     if (articleSavedObject && articleSavedObject.hasOwnProperty(props.id)) {
       // Remove the saved article
       setBookmarked(false);
       delete articleSavedObject[props.id];
+      console.log("articles removed, ", articleSavedObject);
+      localStorage.setItem("articles", JSON.stringify(articleSavedObject));
     } else {
       // Add article
       setBookmarked(true);
@@ -53,23 +59,24 @@ export default function SimpleCard(props: props) {
         secondary: props.secondary,
       };
       // Check if the Object is null
-      if (articleSavedObject === null) {
+      if (
+        articleSavedObject === null ||
+        Object.keys(articleSavedObject).length === 0
+      ) {
         let articleInitialObject: any = {};
         articleSavedObject = articleInitialObject;
       }
-      articleSavedObject[props.id] = articleDetails;
+      articleSavedObject[props.id.toString()] = articleDetails;
+      console.log("articles added, ", articleSavedObject);
+      localStorage.setItem("articles", JSON.stringify(articleSavedObject));
     }
-    localStorage.setItem("articles", JSON.stringify(articleSavedObject));
   }
 
   React.useEffect(() => {
-    let articleSavedObject = JSON.parse(
-      localStorage.getItem("articles") || "null"
-    );
-    articleSavedObject.hasOwnProperty(props.id)
+    articleSaved && articleSaved.hasOwnProperty(props.id)
       ? setBookmarked(true)
       : setBookmarked(false);
-  }, [props.id]);
+  }, [props.id, articleSaved]);
 
   return (
     <Card>

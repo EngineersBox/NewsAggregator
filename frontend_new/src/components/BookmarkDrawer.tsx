@@ -92,13 +92,6 @@ type props = {
   themeChange: () => void;
 };
 
-// type bookmark = {
-//   web_link: string;
-//   primary: string;
-//   secondary: string;
-//   id: number;
-// };
-
 export default function PersistentDrawerLeft(props: props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
