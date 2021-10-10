@@ -27,8 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 50,
     },
     paper: {
-      // paddingLeft: theme.spacing(45), //grid padding
-      // paddingBottom: theme.spacing(3), //grid padding
       paddingTop: theme.spacing(1),
     },
   })

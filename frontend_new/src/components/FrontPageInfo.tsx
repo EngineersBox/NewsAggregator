@@ -6,9 +6,11 @@ import { useTheme } from "@material-ui/core/styles";
 import { makeStyles } from '@material-ui/core/styles';
 
 const image_size= {
-  height: 150,
-  width: 600,
+  height: 140,
+  width: 560,
 }
+
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     paddingLeft: theme.spacing(45), //grid padding
