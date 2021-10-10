@@ -6,8 +6,7 @@ import { useTheme } from "@material-ui/core/styles";
 import { makeStyles } from '@material-ui/core/styles';
 
 const image_size= {
-  height: 140,
-  width: 560,
+  width: "50vw",
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -26,15 +25,14 @@ export default function FrontPageInfo() {
       container
       justifyContent="center"
       alignItems="center"
-      direction="row"
+      alignContent="center"
+      direction="column"
       spacing={3}
     >
       <Grid item xs={12}>
-      <Box className={classes.paper} > 
         {theme.palette.type === "dark" ? 
         (<a><img style= {image_size} src={darkLogo} alt="Dark Logo"/></a>) : 
         (<a><img style= {image_size} src={mainLogo} alt="Light Logo"/></a>)}
-      </Box>
 
       </Grid>
       

@@ -15,7 +15,9 @@ import ThemeSwitch from "./ThemeSwitch";
 import Grow from "@material-ui/core/Grow";
 import Grid from "@material-ui/core/Grid";
 import SimpleCard from "./Cards";
+import InfoButton from "./SlideAlert";
 import Tooltip from "@material-ui/core/Tooltip";
+import Settings from "./Settings";
 
 const drawerWidth = "100%";
 
@@ -44,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     hide: {
       display: "none",
+    },
+    title: {
+      flexgrow: 1,
     },
     drawer: {
       flexShrink: 0,
@@ -92,9 +97,37 @@ type props = {
   themeChange: () => void;
 };
 
+
 export default function PersistentDrawerLeft(props: props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+function BookmarkButton(){
+return(
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={open ? handleDrawerClose : handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton)}
+            >
+              {open ? (
+                <Tooltip title="Close Bookmarks">
+                  <ChevronLeftIcon />
+                </Tooltip>
+              ) : (
+                <Tooltip title="Open Bookmarks">
+                  <BookmarksOutlinedIcon />
+                </Tooltip>
+              )}
+            </IconButton>
+
+);
+
+}
+
+  let bookmarkedArticles: object = JSON.parse(
+    localStorage.getItem("articles") || "null"
+  );
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -114,26 +147,15 @@ export default function PersistentDrawerLeft(props: props) {
         })}
       >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={open ? handleDrawerClose : handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton)}
-          >
-            {open ? (
-              <Tooltip title="Close Bookmarks">
-                <ChevronLeftIcon />
-              </Tooltip>
-            ) : (
-              <Tooltip title="Open Bookmarks">
-                <BookmarksOutlinedIcon />
-              </Tooltip>
-            )}
-          </IconButton>
-          <Typography variant="h6"></Typography>
-          <Typography variant="h6"></Typography>
-          <ThemeSwitch themeChange={props.themeChange} />
+          <Grid item>
+	  {BookmarkButton()}
+          </Grid>
+          <Grid item></Grid>
+          <Grid item xs />
+          <Settings themeChange={props.themeChange} />
+          <Grid item>
+            <InfoButton text="This is a description" />
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -148,9 +170,20 @@ export default function PersistentDrawerLeft(props: props) {
         <div className={classes.drawerHeader}></div>
         <div>
           <List>
-            {props.bookmarks &&
-              Object.values(props.bookmarks).map(
-                ({ id, primary, secondary, web_link }) => (
+            {bookmarkedArticles &&
+              Object.keys(bookmarkedArticles).length > 0 &&
+              Object.values(bookmarkedArticles).map(
+                ({
+                  id,
+                  web_link,
+                  primary,
+                  secondary,
+                }: {
+                  id: number;
+                  web_link: string;
+                  primary: string;
+                  secondary: string;
+                }) => (
                   <React.Fragment key={id}>
                     <Grow in={true} timeout={200}>
                       <Grid container wrap="wrap" direction="row" spacing={3}>

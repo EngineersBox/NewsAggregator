@@ -11,7 +11,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     padding: 0,
     transform: "translateX(6px)",
     "&.Mui-checked": {
-      color: theme.palette.primary.main,
+      color: theme.palette.secondary.main,
       transform: "translateX(22px)",
       "& .MuiSwitch-thumb:before": {
         backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 20 20"><path fill="${encodeURIComponent(
@@ -20,12 +20,12 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
       },
       "& + .MuiSwitch-track": {
         opacity: 1,
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: "#d2d2d2",
       },
     },
   },
   "& .MuiSwitch-thumb": {
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.type === "dark" ? "#1D7CF2" : "#FD8813",
     width: 32,
     height: 32,
     "&:before": {
@@ -44,7 +44,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   },
   "& .MuiSwitch-track": {
     opacity: 1,
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: "#414141",
     borderRadius: 20 / 2,
   },
 }));

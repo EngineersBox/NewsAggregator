@@ -1,0 +1,6 @@
+version: "3.5"
+services:
+  new-frontend:
+    build:
+      context: ../../frontend_new
+    network_mode: host
