@@ -7,17 +7,23 @@ import InfoButton from "./SlideAlert";
 import Res from "./Res.js";
 import FrontPageInfo from "./FrontPageInfo";
 import { useHistory } from "react-router-dom";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import SearchIcon from "@material-ui/icons/Search";
+import IconButton from "@material-ui/core/IconButton";
+import Box from "@material-ui/core/Box";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { useFetch } from "./Get";
+import { Typography } from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import { BrowserRouter as Router, useLocation, Route } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     input: {
-      margin: theme.spacing(1),
       height: 50,
     },
     inputButton: {
-      margin: theme.spacing(1),
       height: 50,
     },
   })
@@ -49,13 +55,21 @@ function SearchInfo(props: props) {
   const [query, setQuery] = React.useState(urlQuery || "");
   //two types of searches
   const [searchType, setSearchType] = React.useState(urlSearchType || "");
+  const [suggest, setSuggest] = React.useState([]);
+  const [autocomplete, isLoadingAutoComplete] = useFetch(
+    "https://anu.jkl.io/api/suggest?input=".concat(searchInput)
+  );
 
   function getRes(sinput: string, stype: boolean) {
     setQuery(sinput);
     let inputSearchType = stype ? "search" : "origin_search";
     setSearchType(inputSearchType);
-    history.push(`/search?query=${searchInput}&searchType=${inputSearchType}`);
   }
+
+  React.useEffect(() => {
+    query && history.push(`/search?query=${query}&searchType=origin_search`);
+  }, [query]);
+
   function enterPress(event: React.KeyboardEvent) {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -64,38 +78,62 @@ function SearchInfo(props: props) {
       }
     }
   }
+  const handleChangeSearchInput = (event: any) => {
+    setSearchInput(event.target.value);
+    if (autocomplete) {
+      //@ts-ignore:
+      setSuggest(Object.values(autocomplete).map((x) => x.toString()));
+    }
+  };
 
   const classes = useStyles();
   return (
-    <Grid
-      container
-      justifyContent="center"
-      alignContent="center"
-      direction="row"
-      spacing={1}
-    >
+    <Grid container justifyContent="center" direction="row" spacing={1}>
       <Grid item xs={12}>
-        {!query && <FrontPageInfo />}
+        {!urlQuery && <FrontPageInfo />}
       </Grid>
-      <Grid item xs={11} lg={6}>
-        <TextField
-          id="search-input"
-          variant="outlined"
-          color="secondary"
-          fullWidth
-          defaultValue={searchInput}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setSearchInput(e.currentTarget.value)
-          }
-          InputProps={{
-            className: classes.input,
-          }}
-          onKeyPress={(e) => enterPress(e)}
+      <Grid item xs={12} lg={8}>
+        <Autocomplete
+          freeSolo
+          disableClearable
+          onInputChange={handleChangeSearchInput}
+          onChange={(event, value) => getRes(value, false)}
+          //@ts-ignore:
+          getOptionSelected={(event, value) => getRes(String(value), false)}
+          limitTags={5}
+          options={suggest}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              onKeyPress={(e) => enterPress(e)}
+              color="secondary"
+              defaultValue={searchInput}
+              variant="outlined"
+              fullWidth
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  //@ts-ignore:
+                  <InputAdornment>
+                    <IconButton onClick={() => getRes(searchInput, false)}>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                type: "search",
+              }}
+            />
+          )}
         />
       </Grid>
-      <Grid item xs={12} lg={2}>
+      {!urlQuery && <Grid item lg={12} />}
+      <Grid
+        alignItems="stretch"
+        style={{ display: urlQuery ? "none" : "inline-block" }}
+        xs={6}
+        lg={3}
+      >
         <Button
-          className={classes.inputButton}
           variant="contained"
           color="primary"
           fullWidth
@@ -104,9 +142,8 @@ function SearchInfo(props: props) {
           Search
         </Button>
       </Grid>
-      <InfoButton text="This is a description" />
       <Grid item xs={12} style={{ display: String(props.isVisible) }}>
-        {query && (
+        {query !== "" && query && (
           <Route path="/search">
             <Res
               search={searchType}

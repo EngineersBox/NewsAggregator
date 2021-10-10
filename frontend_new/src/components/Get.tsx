@@ -11,8 +11,10 @@ function useFetch(url: string) {
     setLoading(false);
   }
   useEffect(() => {
-    fetchUrl();
-  }, [url]);
+	if (url){
+	fetchUrl();
+	}
+	}, [url]);
   return [data, loading];
 }
 export { useFetch };

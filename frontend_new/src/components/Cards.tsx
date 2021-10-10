@@ -8,6 +8,7 @@ import BookmarkOutlinedIcon from "@material-ui/icons/BookmarkOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Tooltip from "@material-ui/core/Tooltip";
+import Grid from "@material-ui/core/Grid";
 
 type props = {
   web_link: string;
@@ -75,8 +76,14 @@ export default function SimpleCard(props: props) {
   return (
     <Card>
       <ListItem button onClick={() => gotoLink(props.web_link)}>
+              <Grid container>
+                <Grid item  xs={12} lg={10}>
         <CardContent>
-          <Typography variant="body2" component="h1" color="secondary">
+              <Grid
+                container
+              >
+                <Grid item xs={12}>
+          <Typography variant="body2" component="h1" color="secondary" style={{wordWrap:'break-word'}}>
             {props.web_link}
           </Typography>
           <Typography variant="h5" component="h2" color="secondary">
@@ -85,7 +92,11 @@ export default function SimpleCard(props: props) {
           <Typography variant="body2" component="p" color="secondary">
             {props.secondary}
           </Typography>
+	  </Grid>
+	  </Grid>
         </CardContent>
+	  </Grid>
+	  </Grid>
         <ListItemSecondaryAction>
           <IconButton color="secondary" onClick={() => handlebookmark()}>
             {bookmarked ? (

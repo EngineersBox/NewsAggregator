@@ -6,9 +6,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import { TransitionProps } from "@material-ui/core/transitions";
+import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
+import ThemeSwitch from "./ThemeSwitch";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & { children?: React.ReactElement<any, any> },
@@ -17,7 +18,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="left" ref={ref} {...props} />;
 });
 type props = {
-  text: string;
+  themeChange: () => void;
 };
 
 export default function AlertDialogSlide(props: props) {
@@ -34,7 +35,7 @@ export default function AlertDialogSlide(props: props) {
   return (
     <div>
       <IconButton color="inherit" onClick={handleClickOpen}>
-        <InfoOutlinedIcon />
+        <SettingsOutlinedIcon />
       </IconButton>
       <Dialog
         open={open}
@@ -44,12 +45,15 @@ export default function AlertDialogSlide(props: props) {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">{"Information"}</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">
+          {"Theme Settings"}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            NewsAggregator uses Elastic Search, Redis and Rust in the backend,
-            and React and Material UI for the frontend.
+            NewsAggregator has two themes, light and dark. Please pick your
+            preference below!
           </DialogContentText>
+          <ThemeSwitch themeChange={props.themeChange} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
