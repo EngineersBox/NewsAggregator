@@ -33,10 +33,6 @@ export default function SimpleCard(props: props) {
     articleSaved && articleSaved.hasOwnProperty(props.id) ? true : false;
   const [bookmarked, setBookmarked] = React.useState(initialState);
 
-  // Check if the article is saved in localStorage.
-  // Save/ Remove 2 things into localStorage
-  // 1. The article id as key so it is easier to check if the article has been saved
-  // 2. the articles array with json article data to map  during bookmarks
   function handlebookmark() {
     let articleSavedObject = JSON.parse(
       localStorage.getItem("articles") || "null"
@@ -58,7 +54,7 @@ export default function SimpleCard(props: props) {
         primary: props.primary,
         secondary: props.secondary,
       };
-      // Check if the Object is null
+      // Check if the Object is null and decalre {}
       if (
         articleSavedObject === null ||
         Object.keys(articleSavedObject).length === 0
