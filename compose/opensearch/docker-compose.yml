@@ -1,7 +1,8 @@
 version: "3.5"
 services:
     opensearch-master:
-        image: opensearchproject/opensearch:latest
+        build:
+            context: .
         container_name: opensearch-master
         environment:
             - cluster.name=opensearch-cluster
@@ -27,7 +28,8 @@ services:
         networks:
             - opensearch-net
     opensearch-data-ingest1:
-        image: opensearchproject/opensearch:latest
+        build:
+            context: .
         container_name: opensearch-data-ingest1
         environment:
             - cluster.name=opensearch-cluster
@@ -53,7 +55,8 @@ services:
         networks:
             - opensearch-net
     opensearch-data-ingest2:
-        image: opensearchproject/opensearch:latest
+        build:
+            context: .
         container_name: opensearch-data-ingest2
         environment:
             - cluster.name=opensearch-cluster
@@ -79,7 +82,8 @@ services:
         networks:
             - opensearch-net
     opensearch-data-ingest3:
-        image: opensearchproject/opensearch:latest
+        build:
+            context: .
         container_name: opensearch-data-ingest3
         environment:
             - cluster.name=opensearch-cluster
@@ -105,7 +109,8 @@ services:
         networks:
             - opensearch-net
     opensearch-coordinator:
-        image: opensearchproject/opensearch:latest
+        build:
+            context: .
         container_name: opensearch-coordinator
         environment:
             - cluster.name=opensearch-cluster
