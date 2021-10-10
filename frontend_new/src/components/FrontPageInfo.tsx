@@ -10,11 +10,11 @@ const image_size= {
   width: 560,
 }
 
-
 const useStyles = makeStyles((theme) => ({
   paper: {
-    paddingLeft: theme.spacing(45), //grid padding
-    paddingBottom: theme.spacing(3), //grid padding
+    paddingLeft: theme.spacing(45), 
+    paddingBottom: theme.spacing(4), 
+    paddingTop: theme.spacing(3), 
   },
 }));
 
@@ -29,14 +29,15 @@ export default function FrontPageInfo() {
       direction="row"
       spacing={3}
     >
-      <Grid item xs={12}></Grid>
-      <Grid item xs={12} lg={12}>
+      <Grid item xs={12}>
       <Box className={classes.paper} > 
-      {theme.palette.type === "dark" ? (<a><img style= {image_size} src={darkLogo} alt="Dark Logo"/></a>) : 
+        {theme.palette.type === "dark" ? 
+        (<a><img style= {image_size} src={darkLogo} alt="Dark Logo"/></a>) : 
         (<a><img style= {image_size} src={mainLogo} alt="Light Logo"/></a>)}
-
       </Box>
+
       </Grid>
+      
     </Grid>
   );
 }
