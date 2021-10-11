@@ -163,6 +163,3 @@ volumes:
     opensearch-data-ingest2:
     opensearch-data-ingest3:
     opensearch-coordinator:
-
-networks:
-    opensearch-net:
