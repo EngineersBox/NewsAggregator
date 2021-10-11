@@ -6,7 +6,7 @@ import { useTheme } from "@material-ui/core/styles";
 import { makeStyles } from '@material-ui/core/styles';
 
 const image_size= {
-  width: "38vw",
+  width: "37vw",
   marginTop: "3vw",
   marginBottom: "1vw"
 }

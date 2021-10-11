@@ -10,6 +10,8 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import { withStyles } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import Grid from "@material-ui/core/Grid";
+import { useTheme } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
 type props = {
   web_link: string;
@@ -26,6 +28,20 @@ type props = {
   isVisible: boolean;
 };
 
+const useStyles = makeStyles((theme) => ({
+  light_h1: {
+    color: "#7AC39C",
+  },
+  dark_h1: {
+    color: "#288140",   
+  },
+  light_h2: {
+    color: "#ffffff",
+  },
+  dark_h2: {
+    color: "#4942F4",   
+  },
+}));
 function gotoLink(url: string) {
   window.location.href = url;
 }
@@ -74,7 +90,8 @@ export default function SimpleCard(props: props) {
       ? setBookmarked(true)
       : setBookmarked(false);
   }, [props.id, articleSaved]);
-
+  const theme = useTheme();
+  const classes = useStyles();
   return (
     <Card>
       <ListItem button onClick={() => gotoLink(props.web_link)}>
@@ -85,10 +102,15 @@ export default function SimpleCard(props: props) {
                 container
               >
                 <Grid item xs={12}>
-          <Typography variant="body2" component="h1" style={{wordWrap:'break-word',color: "#7AC39C"}}>
+          <Typography 
+          variant="body2" 
+          component="h1" 
+          className = {theme.palette.type === "dark" ? (classes.light_h1) : (classes.dark_h1)}
+          >
             {props.web_link}
           </Typography>
-          <Typography variant="h5" component="h2" color="secondary">
+          <Typography variant="h5" component="h2" 
+          className = {theme.palette.type === "dark" ? (classes.light_h2) : (classes.dark_h2)}>
             {props.primary}
           </Typography>
           <Typography variant="body2" component="p" color="secondary">
