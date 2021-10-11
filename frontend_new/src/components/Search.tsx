@@ -54,7 +54,6 @@ type props = {
 };
 
 const image_size = {
-  height: 52,
   width: 250,
 };
 
