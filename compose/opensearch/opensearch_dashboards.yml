@@ -1,0 +1,3 @@
+opensearch.hosts: ["http://opensearch-master:9200","http://opensearch-data-ingest1:9201","http://opensearch-data-ingest2:9202","http://opensearch-data-ingest3:9203","http://opensearch-coordinator:9204"]
+opensearch.username: "admin" # Default username on the docker image
+opensearch.password: "admin" # Default password on the docker image

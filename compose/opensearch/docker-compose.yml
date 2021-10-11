@@ -24,7 +24,9 @@ services:
                 hard: 65536
         volumes:
             - opensearch-master:/usr/share/opensearch/data
-        network_mode: host
+        ports:
+            - 9200:9200
+            - 9600:9600
         networks:
             - opensearch-net
     opensearch-data-ingest1:
@@ -49,11 +51,13 @@ services:
             nofile:
                 soft: 65536
                 hard: 65536
-        network_mode: host
-        volumes:
-            - opensearch-data-ingest1:/usr/share/opensearch/data
         networks:
             - opensearch-net
+        ports:
+            - 9201:9200
+            - 9601:9600
+        volumes:
+            - opensearch-data-ingest1:/usr/share/opensearch/data
     opensearch-data-ingest2:
         build:
             context: .
@@ -76,11 +80,13 @@ services:
             nofile:
                 soft: 65536
                 hard: 65536
-        network_mode: host
-        volumes:
-            - opensearch-data-ingest2:/usr/share/opensearch/data
         networks:
             - opensearch-net
+        ports:
+            - 9202:9200
+            - 9602:9600
+        volumes:
+            - opensearch-data-ingest2:/usr/share/opensearch/data
     opensearch-data-ingest3:
         build:
             context: .
@@ -103,11 +109,13 @@ services:
             nofile:
                 soft: 65536
                 hard: 65536
-        network_mode: host
-        volumes:
-            - opensearch-data-ingest2:/usr/share/opensearch/data
         networks:
             - opensearch-net
+        ports:
+            - 9203:9200
+            - 9603:9600
+        volumes:
+            - opensearch-data-ingest3:/usr/share/opensearch/data
     opensearch-coordinator:
         build:
             context: .
@@ -129,24 +137,29 @@ services:
             nofile:
                 soft: 65536
                 hard: 65536
-        network_mode: host
-        volumes:
-            - opensearch-coordinator:/usr/share/opensearch/data
         networks:
             - opensearch-net
+        ports:
+            - 9204:9200
+            - 9604:9600
+        volumes:
+            - opensearch-coordinator:/usr/share/opensearch/data
     opensearch-dashboards:
         image: opensearchproject/opensearch-dashboards:latest
         container_name: opensearch-dashboards
-        network_mode: host
-        environment:
-            OPENSEARCH_HOSTS: '["http://opensearch-master:9200","http://opensearch-master:9201","http://opensearch-master:9202","http://opensearch-master:9203","http://opensearch-master:9204"]'
         networks:
             - opensearch-net
+        ports:
+            - 5601:5601
+        volumes:
+            - ./opensearch_dashboards.yml:/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml
+
 
 volumes:
     opensearch-master:
     opensearch-data-ingest1:
     opensearch-data-ingest2:
+    opensearch-data-ingest3:
     opensearch-coordinator:
 
 networks:
