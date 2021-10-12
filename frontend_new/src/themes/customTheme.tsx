@@ -19,7 +19,7 @@ export const dark = createMuiTheme({
   palette: {
     type: "dark",
     primary: {
-      main: "#2A3537"
+      main: "#2A3537",
     },
     secondary: {
       main: "#c9c9c9",
@@ -31,9 +31,17 @@ export const dark = createMuiTheme({
   },
 });
 
-export const customColours= {
-    button: {
-      dark: "#000000",
-      light: "#00FF00",
-    }  
+export const customColours = {
+  button: {
+    dark: "#000000",
+    light: "#00FF00",
+  },
+  title: {
+    dark: "#ffffff",
+    light: "#4942F4",
+  },
+  weblink: {
+    light: "#288140",
+    dark: "#7AC39C",
+  },
 };
