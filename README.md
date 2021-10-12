@@ -24,7 +24,7 @@ In order to start up the services and work on them there is a few bits a pieces 
 | Node JS                                                                                                        	| <https://nodejs.org/en/download/>                                                                                                                                                                                                                    	|
 | An IDE and/or text editor such as:<br>* VSCode<br>* IntelliJ<br>* Sublime Text<br>* Atom<br>* PyCharm<br>* etc 	| * <https://code.visualstudio.com/><br>* <https://www.sublimetext.com/><br>* <https://atom.io/><br>* <https://www.jetbrains.com/idea/><br>* <https://www.jetbrains.com/pycharm/>                                                                      	|
 | Ansible [Optional]                                                                                             	| We use ansible for the deployment system. If you are not working on it then you can skip installing it.<br>However here is the installation page if need be:<br><https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html> 	|
-| Cargo (Rust CLI) [Optional]                                                                                    	| If you are working on the Redis modules, then you’ll need to install Rust’s cargo cli tool.<br>You can do so with the following instructions:<br><https://doc.rust-lang.org/cargo/getting-started/installation.html>                                 	|
+| Rust + Cargo (Rust CLI) [Optional]                                                                                    	| If you are working on the Redis modules, then you’ll need to install Rust and it's Cargo cli tool.<br>You can do so with the following instructions:<br><https://www.rust-lang.org/tools/install><br><https://doc.rust-lang.org/cargo/getting-started/installation.html>                                 	|
 
 Once you have those installed, we can move on to setting up the repo itself.
 
@@ -59,17 +59,6 @@ Even when developing for Redis or Elasticsearch, we recommend running them in th
 
 On the other hand, if you are developing the Dockerized platform, testing deployable situations or otherwise this also applies. Note that the containers will be deployed with the host network attached, allowing you to directly access the ports for services such as Elasticsearch as if they were running on your regular local environment (E.g. `localhost:9200`)
 
-Below is a magic script that will start each of the containers without having to do each one manually. You’ll want to run this in the top level directory, in `NewsAggregator`.
+All of the services can be ran with already define compose files. These can be found in the `compose/*` directories, depending on the component you are looking for, there will be subdirectories to account for this.
 
-```shell
-#!/bin/bash
-
-docker compose up -d
-cd frontend
-docker compose up -d
-cd - && cd compose/elasticsearch
-docker compose up -d
-cd ../redis
-docker compose up -d
-cd ../..
-```
+You can start any of these services as containers by running `docker compose up -d` or `docker-compose up -d` depending on your version of docker and support.
