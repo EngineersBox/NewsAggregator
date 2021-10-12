@@ -1,5 +1,11 @@
 # NewsAggregator
 
+We live in an era where both the demand and quantity of information are enormous. However, the way we store and access that information has remained unchanged, via keywords. Given such a direct association, it is hard to algorithmically determine the relationship between pieces of information.
+
+So we want to introduce a knowledge engine to work with data inference within a given search. Wolfram Alpha does just this, but limited to mathematical context. We will branch beyond this into many subjects and topics including news and knowledge databases.
+
+Thus, we are building a knowledge engine that will utilise machine learning models to show and find information related to a query. Users will be able to search for information that has better association, allowing them the ability to more efficiently learn and expand on a topic
+
 ## Overview
 
 Setting up the components of News Aggregator is suprisingly straightforward. We rely on Dockerized services in order to ensure ease of use, modularity, reliability and configurability. Each of the Redis, Elasticsearch, Frontend and Backend containers have portions of the repository shared onto this via mounted volumes, including configuration.
