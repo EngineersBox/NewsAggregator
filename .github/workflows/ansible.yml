@@ -28,7 +28,7 @@ jobs:
       - name: Validate workflow inputs
         run: |
           chmod +x ./.github/listContains.sh
-          ./.github/listContains.sh "opensearch opensearch_base_indexes opensearch_knn_indexes redis redis_backup_restore frontend backend" "$(echo ${{ github.event.inputs.tags }} | tr -ds "," " ")"
+          ./.github/listContains.sh "opensearch opensearch_base_indexes opensearch_knn_indexes redis redis_backup_restore frontend backend caddy" "$(echo ${{ github.event.inputs.tags }} | tr -ds "," " ")"
           echo "Using validated tags: [${{ github.event.inputs.tags }}]"
           ./.github/listContains.sh "0 1 2 3" "${{ github.event.inputs.verbosity }}"
           echo "Using validated verbosity: [${{ github.event.inputs.verbosity }}]"
