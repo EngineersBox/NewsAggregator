@@ -42,6 +42,10 @@
     - backend
 
 - hosts: targets
+  roles:
+    - caddy
+
+- hosts: targets
   tasks:
     - name: Remove repo content
       file:

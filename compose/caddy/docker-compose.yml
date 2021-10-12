@@ -2,7 +2,9 @@ version: "3.5"
 services:
   caddy:
     container_name: caddy
-    network_mode: host
+    ports:
+      - 80:80
+      - 443:443
     build:
       context: ../../caddy
     restart: unless-stopped
