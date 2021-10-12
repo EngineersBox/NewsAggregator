@@ -9,4 +9,4 @@ RUN npm install
 RUN npm run build
 
 EXPOSE 3002
-CMD ["http-server", "-p", "3002"]
+CMD ["http-server", "-p", "3002", "./build"]
