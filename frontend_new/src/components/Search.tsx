@@ -22,7 +22,7 @@ import { Typography } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   useLocation,
   Route,
   Switch,
