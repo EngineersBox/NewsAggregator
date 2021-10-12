@@ -115,18 +115,18 @@ function SearchInfo(props: props) {
   return (
     <Grid container justifyContent="center" direction="row" spacing={1}>
       <Grid item xs={12}>
-        {!urlQuery && <Route path = "/" component={FrontPageInfo}/>}
+        {!urlQuery && <Route path="/" component={FrontPageInfo} />}
       </Grid>
       {urlQuery && (
-      <Box m={-0.9}>
-        <Button className={classes.paper} onClick={resetInput}>
-          {theme.palette.type === "dark" ? (
-            <img style={image_size} src={darkLogo} alt="Dark Logo" />
-          ) : (
-            <img style={image_size} src={mainLogo} alt="Light Logo" />
-          )}
-        </Button>
-	</Box>
+        <Box m={-0.9}>
+          <Button className={classes.paper} onClick={resetInput}>
+            {theme.palette.type === "dark" ? (
+              <img style={image_size} src={darkLogo} alt="Dark Logo" />
+            ) : (
+              <img style={image_size} src={mainLogo} alt="Light Logo" />
+            )}
+          </Button>
+        </Box>
       )}
       <Grid item xs={12} lg={8}>
         <Autocomplete

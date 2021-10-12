@@ -97,33 +97,30 @@ type props = {
   themeChange: () => void;
 };
 
-
 export default function PersistentDrawerLeft(props: props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-function BookmarkButton(){
-return(
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={open ? handleDrawerClose : handleDrawerOpen}
-              edge="start"
-              className={clsx(classes.menuButton)}
-            >
-              {open ? (
-                <Tooltip title="Close Bookmarks">
-                  <ChevronLeftIcon />
-                </Tooltip>
-              ) : (
-                <Tooltip title="Open Bookmarks">
-                  <BookmarksOutlinedIcon />
-                </Tooltip>
-              )}
-            </IconButton>
-
-);
-
-}
+  function BookmarkButton() {
+    return (
+      <IconButton
+        color="inherit"
+        aria-label="open drawer"
+        onClick={open ? handleDrawerClose : handleDrawerOpen}
+        edge="start"
+        className={clsx(classes.menuButton)}
+      >
+        {open ? (
+          <Tooltip title="Close Bookmarks">
+            <ChevronLeftIcon />
+          </Tooltip>
+        ) : (
+          <Tooltip title="Open Bookmarks">
+            <BookmarksOutlinedIcon />
+          </Tooltip>
+        )}
+      </IconButton>
+    );
+  }
 
   let bookmarkedArticles: object = JSON.parse(
     localStorage.getItem("articles") || "null"
@@ -147,9 +144,7 @@ return(
         })}
       >
         <Toolbar>
-          <Grid item>
-	  {BookmarkButton()}
-          </Grid>
+          <Grid item>{BookmarkButton()}</Grid>
           <Grid item></Grid>
           <Grid item xs />
           <Settings themeChange={props.themeChange} />

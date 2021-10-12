@@ -50,8 +50,8 @@ export default function AlertDialogSlide(props: props) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            JKL.IO has two themes, light and dark. Please pick your
-            preference below!
+            JKL.IO has two themes, light and dark. Please pick your preference
+            below!
           </DialogContentText>
           <ThemeSwitch themeChange={props.themeChange} />
         </DialogContent>

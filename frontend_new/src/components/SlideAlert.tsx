@@ -47,9 +47,10 @@ export default function AlertDialogSlide(props: props) {
         <DialogTitle id="alert-dialog-slide-title">{"Information"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            JKL.IO is a TechLauncher project at The Australian National University that aims to create a 
-            knowledge engine. This is an open source project using Elastic Search, Redis and Rust in the backend,
-            and React and Material UI for the frontend. 
+            JKL.IO is a TechLauncher project at The Australian National
+            University that aims to create a knowledge engine. This is an open
+            source project using Elastic Search, Redis and Rust in the backend,
+            and React and Material UI for the frontend.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
