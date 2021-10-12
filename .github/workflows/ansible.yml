@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tags:
-        description: 'Comma seperated list of components to deploy from: [opensearch, opensearch_base_indexes, opensearch_knn_indexes, redis, redis_backup_restore, frontend, backend]'     
+        description: 'Comma seperated list of components to deploy from: [opensearch, opensearch_base_indexes, opensearch_knn_indexes, redis, redis_backup_restore, frontend, backend, caddy]'     
         required: true
         default: 'opensearch, opensearch_base_indexes, opensearch_knn_indexes, redis, redis_backup_restore, frontend, backend'
       verbosity:
