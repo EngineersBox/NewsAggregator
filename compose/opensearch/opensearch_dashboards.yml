@@ -1,0 +1,5 @@
+opensearch.username: "admin" # Default username on the docker image
+opensearch.password: "admin" # Default password on the docker image
+logging.verbose: true
+server.port: 5601
+server.host: "localhost"
