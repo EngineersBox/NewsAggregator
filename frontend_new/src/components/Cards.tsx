@@ -19,13 +19,6 @@ type props = {
   primary: string;
   secondary: string;
   id: number;
-  handlebookmark: (
-    web_link: string,
-    primary: string,
-    secondary: string,
-    id: number
-  ) => void;
-  bookmarks: object;
   isVisible: boolean;
 };
 

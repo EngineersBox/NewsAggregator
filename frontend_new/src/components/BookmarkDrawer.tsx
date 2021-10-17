@@ -86,13 +86,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 type props = {
-  bookmarks: object;
-  handlebookmark: (
-    web_link: string,
-    primary: string,
-    secondary: string,
-    id: number
-  ) => void;
   whichTheme: Theme;
   themeChange: () => void;
 };
@@ -188,8 +181,6 @@ export default function PersistentDrawerLeft(props: props) {
                             primary={primary}
                             id={id}
                             secondary={secondary}
-                            bookmarks={props.bookmarks}
-                            handlebookmark={props.handlebookmark}
                             isVisible={!open}
                           />
                         </Grid>
@@ -209,11 +200,7 @@ export default function PersistentDrawerLeft(props: props) {
         <div className={classes.drawerHeader} />
         <Grid container>
           <Grid item xs={12}>
-            <Search
-              bookmarks={props.bookmarks}
-              handlebookmark={props.handlebookmark}
-              isVisible={open}
-            />
+            <Search isVisible={open} />
           </Grid>
         </Grid>
       </main>

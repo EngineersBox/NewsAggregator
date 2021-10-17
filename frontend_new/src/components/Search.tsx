@@ -43,13 +43,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 type props = {
-  bookmarks: object;
-  handlebookmark: (
-    web_link: string,
-    primary: string,
-    secondary: string,
-    id: number
-  ) => void;
   isVisible: boolean;
 };
 
@@ -181,13 +174,7 @@ function SearchInfo(props: props) {
       <Grid item xs={12} style={{ display: String(props.isVisible) }}>
         {query !== "" && query && (
           <Route path="/search">
-            <Res
-              search={searchType}
-              query={query}
-              handlebookmark={props.handlebookmark}
-              bookmarks={props.bookmarks}
-              isVisible={props.isVisible}
-            />
+            <Res search={searchType} query={query} />
           </Route>
         )}
       </Grid>
@@ -198,11 +185,7 @@ function SearchInfo(props: props) {
 export default function Search(props: props) {
   return (
     <Router>
-      <SearchInfo
-        bookmarks={props.bookmarks}
-        handlebookmark={props.handlebookmark}
-        isVisible={props.isVisible}
-      />
+      <SearchInfo isVisible={props.isVisible} />
     </Router>
   );
 }

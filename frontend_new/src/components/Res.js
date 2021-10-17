@@ -49,8 +49,6 @@ function Res(props) {
                       primary={_source.title}
                       id={_id}
                       secondary={_source.summary}
-                      bookmarks={props.bookmarks}
-                      handlebookmark={props.handlebookmark}
                       isVisible={props.isVisible}
                     />
                   </Grid>
