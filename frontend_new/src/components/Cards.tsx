@@ -13,6 +13,8 @@ import Grid from "@material-ui/core/Grid";
 import { useTheme } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
 import { customColours } from "../themes/customTheme";
+import bookmarkAction from "./BookmarkAction";
+import { BookmarksAction } from "./BookmarkAction";
 
 type props = {
   web_link: string;
@@ -41,27 +43,11 @@ export default function SimpleCard(props: props) {
     if (articleSavedObject && articleSavedObject.hasOwnProperty(props.id)) {
       // Remove the saved article
       setBookmarked(false);
-      delete articleSavedObject[props.id];
-      localStorage.setItem("articles", JSON.stringify(articleSavedObject));
+      bookmarkAction(BookmarksAction.DELETE, props);
     } else {
       // Add article
       setBookmarked(true);
-      let articleDetails = {
-        id: props.id,
-        web_link: props.web_link,
-        primary: props.primary,
-        secondary: props.secondary,
-      };
-      // Check if the Object is null and decalre {}
-      if (
-        articleSavedObject === null ||
-        Object.keys(articleSavedObject).length === 0
-      ) {
-        let articleInitialObject: any = {};
-        articleSavedObject = articleInitialObject;
-      }
-      articleSavedObject[props.id.toString()] = articleDetails;
-      localStorage.setItem("articles", JSON.stringify(articleSavedObject));
+      bookmarkAction(BookmarksAction.ADD, props);
     }
   }
 
