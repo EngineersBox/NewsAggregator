@@ -10,7 +10,6 @@ import getDefaultTheme from "./components/ThemeSetting";
 //using colors from theme - bit hacky but works
 function App() {
   let themeColor = localStorage.getItem("themeChoice") || getDefaultTheme();
-  console.log("themeColor: ", themeColor);
 
   const [themeChoice, setThemeChoice] = React.useState(
     themeColor === "dark" ? dark : light
@@ -26,27 +25,6 @@ function App() {
     localStorage.setItem("themeChoice", themeColourSwitch.palette.type);
   };
 
-  const [bookmarks, setBookmarks] = React.useState<{ [key: number]: any }>({});
-  function handlebookmark(
-    web_link: string,
-    primary: string,
-    secondary: string,
-    id: number
-  ) {
-    if (id in bookmarks) {
-      let temp_bookmarks = bookmarks;
-      delete temp_bookmarks[id];
-      setBookmarks(temp_bookmarks);
-    } else {
-      let temp_bookmarks = bookmarks;
-      temp_bookmarks[id] = {
-        web_link: web_link,
-        primary: primary,
-        secondary: secondary,
-        id: id,
-      };
-    }
-  }
   return (
     <ThemeProvider theme={{ ...themeChoice }}>
       <Grid container>
@@ -54,8 +32,6 @@ function App() {
           <Grow in={true} timeout={600}>
             <BookmarkDrawer
               whichTheme={themeChoice}
-              bookmarks={bookmarks}
-              handlebookmark={handlebookmark}
               themeChange={themeChange}
             />
           </Grow>
